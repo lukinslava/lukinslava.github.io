@@ -22,6 +22,10 @@ tools/
   mirror.mjs          скачивает опубликованный сайт с Framer в raw/
   build.mjs           собирает docs/ из raw/
   serve.mjs           локальный сервер, повторяющий поведение GitHub Pages
+  content.mjs         правки текстов и CSS поверх копии Framer
+  structure.mjs       правки структуры главной: удалённые/переделанные карточки, раздел «AI & side projects»
+  covers.mjs          генерирует типографические обложки карточек в tools/images/ (нужен Google Chrome)
+  images/             обложки карточек и их уменьшенные версии
   404.html            шаблон страницы 404
 ```
 

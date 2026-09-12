@@ -78,6 +78,21 @@ export const contentEdits = [
   },
   { label: "yandex case title", find: "Growing from 3 to 5 Designers", replace: "Growing from 2 to 5 Designers" },
 
+  // Search index for the homepage structure changes in tools/structure.mjs
+  { label: "search index section heading", find: '"Cases"]', replace: '"Cases","AI & side projects"]' },
+  {
+    label: "search index card titles",
+    find: '"82BOX","Hircost","Mindbox","Autodraw","OS Sunrice","Strana Development"]',
+    replace: '"AUF Match","Aleria","Phygital+","Autodraw"]',
+  },
+  {
+    label: "search index card descriptions",
+    find: '"Retail Health and Personal Care Products","Medical Apparel E-commerce Store","A platform for omnichannel campaigns and personalized customer marketing","AI-powered feature for Whiteboard","An operating system for multitasking professionals","Online platform for real estate brokers"',
+    replace:
+      '"Internal AI tool at Pragmatica: screens 2,000+ designer portfolios and shortlists 30–60 per role","Side project · Head of Design for several products built on proprietary AI","Side project · Product designer, first-session experience for a generative AI workspace, 2024","AI shape recognition for the RingCentral whiteboard · ~$700K projected revenue"',
+  },
+  { label: "search index framer badge", find: ',"Create a free website with Framer, the website builder loved by startups, designers and agencies."', replace: "" },
+
   // Em dashes instead of spaced hyphens
   { label: "looch description dash", find: "Product studio - #1 UX", replace: "Product studio — #1 UX" },
   { label: "looch dates dash", find: "Nov 2023 - Oct 2025", replace: "Nov 2023 — Oct 2025" },

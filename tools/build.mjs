@@ -9,6 +9,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { contentEdits, applyContentEdits, styleOverrides } from "./content.mjs";
+import { applyHtmlStructure, applyJsStructure } from "./structure.mjs";
 
 const RAW = path.resolve("raw");
 const OUT = path.resolve("docs");
@@ -247,7 +248,7 @@ for (const page of PAGES) {
   await write(page, html);
 }
 
-// 5. Content edits (tools/content.mjs) across pages, page modules and search indexes.
+// 5a. Content edits (tools/content.mjs) across pages, page modules and search indexes.
 {
   const counts = {};
   const targets = [...PAGES, ...(await fs.readdir(jsDir)).filter((f) => /\.(mjs|json)$/.test(f)).map((f) => "assets/js/" + f)];
@@ -267,6 +268,24 @@ for (const page of PAGES) {
   const missing = contentEdits.map((e) => e.label).filter((l) => !counts[l]);
   if (missing.length) throw new Error(`Content edits matched nothing: ${missing.join(", ")}`);
   console.log("content edits:", counts);
+}
+
+// 5b. Structural homepage edits (tools/structure.mjs) and the images they use (tools/images).
+// Runs after the content edits so text replacements never touch the cards it creates.
+{
+  for (const f of await fs.readdir(path.resolve("tools/images"))) {
+    await write(`/assets/images/${f}`, await fs.readFile(path.resolve("tools/images", f)));
+  }
+  const indexFile = path.join(OUT, "index.html");
+  await fs.writeFile(indexFile, applyHtmlStructure(await fs.readFile(indexFile, "utf8")));
+  const homeModules = [];
+  for (const f of await fs.readdir(jsDir)) {
+    if (!f.endsWith(".mjs")) continue;
+    const text = await fs.readFile(path.join(jsDir, f), "utf8");
+    if (text.includes("children:`Cases`")) homeModules.push([f, text]);
+  }
+  if (homeModules.length !== 1) throw new Error(`Expected one homepage module, found ${homeModules.length}`);
+  await fs.writeFile(path.join(jsDir, homeModules[0][0]), applyJsStructure(homeModules[0][1]));
 }
 
 // 6. Sitemap / robots / 404 / GitHub Pages marker.
