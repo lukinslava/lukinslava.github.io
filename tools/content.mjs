@@ -15,6 +15,11 @@ export const contentEdits = [
     replace: ["", "children:``", ""],
   },
   { label: "experience dates", find: "Sep 2025 - still working", replace: "Dec 2025 — still working" },
+
+  // Em dashes instead of spaced hyphens
+  { label: "looch description dash", find: "Product studio - #1 UX", replace: "Product studio — #1 UX" },
+  { label: "looch dates dash", find: "Nov 2023 - Oct 2025", replace: "Nov 2023 — Oct 2025" },
+  { label: "ring central dates dash", find: "Dec 2021 - July 2023", replace: "Dec 2021 — July 2023" },
 ];
 
 export function applyContentEdits(text, counts) {
