@@ -13,9 +13,9 @@ export const contentEdits = [
       '"Sovereign big data and C-Level AI solution"', // search index
     ],
     replace: [
-      'Grew the outstaff unit <br class="framer-text">from 10 to 30 designers',
-      (_, br) => `children:[\`Grew the outstaff unit \`,${br}(\`br\`,{}),\`from 10 to 30 designers\`]`,
-      '"Grew the outstaff unit from 10 to 30 designers"',
+      'Matching and growing <br class="framer-text">designers of all profiles <br class="framer-text">for big tech and startups',
+      (_, br) => `children:[\`Matching and growing \`,${br}(\`br\`,{}),\`designers of all profiles \`,${br}(\`br\`,{}),\`for big tech and startups\`]`,
+      '"Matching and growing designers of all profiles for big tech and startups"',
     ],
   },
   { label: "experience dates", find: "Sep 2025 - still working", replace: "Dec 2025 — still working" },
