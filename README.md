@@ -64,7 +64,7 @@ SITE_URL=https://example.com CNAME=example.com node tools/build.mjs
 
 ```bash
 node tools/mirror.mjs
-SITE_URL=https://<ваш-логин>.github.io node tools/build.mjs
+SITE_URL=https://lukinslava.github.io node tools/build.mjs
 ```
 
 Скрипт сборки падает с понятной ошибкой, если Framer поменял рантайм так, что точечные правки больше не применяются.
