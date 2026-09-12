@@ -13,12 +13,70 @@ export const contentEdits = [
       '"Sovereign big data and C-Level AI solution"', // search index
     ],
     replace: [
-      'Matching and growing <br class="framer-text">designers of all profiles <br class="framer-text">for big tech and startups',
-      (_, br) => `children:[\`Matching and growing \`,${br}(\`br\`,{}),\`designers of all profiles \`,${br}(\`br\`,{}),\`for big tech and startups\`]`,
-      '"Matching and growing designers of all profiles for big tech and startups"',
+      'Grew the outstaff unit <br class="framer-text">from 10 to 30 designers',
+      (_, br) => `children:[\`Grew the outstaff unit \`,${br}(\`br\`,{}),\`from 10 to 30 designers\`]`,
+      '"Grew the outstaff unit from 10 to 30 designers"',
     ],
   },
   { label: "experience dates", find: "Sep 2025 - still working", replace: "Dec 2025 — still working" },
+
+  // Positioning: design leader
+  { label: "hero title", find: "product design lead", replace: "design leader" },
+  {
+    label: "meta description",
+    find: ['content="Product Design Lead "', "description:`Product Design Lead `", '"description":"Product Design Lead "'],
+    replace: [
+      'content="Design leader — Head of Design / Design Lead. Building design teams of up to 30 people and AI tools."',
+      "description:`Design leader — Head of Design / Design Lead. Building design teams of up to 30 people and AI tools.`",
+      '"description":"Design leader — Head of Design / Design Lead. Building design teams of up to 30 people and AI tools."',
+    ],
+  },
+  { label: "summary scope", find: "Products and startups. B2B and B2C. ", replace: "Big tech and startups. B2B and B2C. " },
+  { label: "summary team size", find: "Led a team of up to 29 people", replace: "Led teams of up to 30 designers" },
+  {
+    label: "summary about",
+    find: "Built and led a team aligned with product needs. Skilled at bringing structure to complexity, planning workloads, and driving solutions in uncertain environments. Reliable, proactive, ",
+    replace: "I build and grow design teams, products and companies. I set up processes that make designers stronger and tie design to business results. ",
+  },
+  { label: "summary about ending", find: "and accountable.", replace: "I also design and build AI tools myself." },
+
+  // Core skills — column 1
+  { label: "skills 1 heading", find: ["&amp; Organization", "& Organization"], replace: ["&amp; Scaling", "& Scaling"] },
+  { label: "skills 1.1", find: "Building and scaling design teams", replace: "Building and scaling design teams of up to 30 people" },
+  { label: "skills 1.2", find: "Mentorship, 1:1s, and career development", replace: "Matching, hiring and onboarding designers" },
+  { label: "skills 1.3", find: "Resource planning and capacity management", replace: "Mentorship, 1:1s and career growth" },
+  { label: "skills 1.4", find: "Shaping design culture and team rituals", replace: "Resource, budget and capacity planning" },
+  { label: "skills 1.5", find: "Establishing design processes", replace: "Design culture, rituals and processes" },
+  // Core skills — column 2
+  { label: "skills 2 heading", find: ["&amp; Cross-functional Collaboration", "& Cross-functional Collaboration"], replace: ["&amp; Business Impact", "& Business Impact"] },
+  {
+    label: "skills 2.1",
+    find: [
+      'Close collaboration with Product <br class="framer-text">and Engineering', // HTML
+      /children:\[`Close collaboration with Product `,\w+\(`br`,\{\}\),`and Engineering`\]/, // JS module
+      "Close collaboration with Product and Engineering", // search index
+    ],
+    replace: ["Close partnership with Product and Engineering", "children:`Close partnership with Product and Engineering`", "Close partnership with Product and Engineering"],
+  },
+  { label: "skills 2.2", find: "Balancing user needs with business objectives", replace: "Tying design to metrics and business goals" },
+  { label: "skills 2.3", find: "Driving product strategy through UX insights", replace: "Design systems and quality at scale" },
+  // Core skills — column 3
+  {
+    label: "skills 3 heading",
+    find: ['"Design Systems, UX & Visual Craft"', "Design Systems, ", "UX &amp; Visual Craft", "UX & Visual Craft"],
+    replace: ['"AI Experiments & Building"', "AI Experiments ", "&amp; Building", "& Building"],
+  },
+  { label: "skills 3.1", find: "End-to-end design: research, UX/UI, prototyping", replace: "Designing AI-powered products and features" },
+  { label: "skills 3.2", find: "Designing both complex B2B products and engaging B2C experiences", replace: "Building internal AI tools end-to-end" },
+  { label: "skills 3.3", find: "Creating and scaling design systems", replace: "Prototyping and shipping with Claude and GitHub" },
+
+  // Yandex Market case: 2 -> 5 designers
+  {
+    label: "yandex card number",
+    find: ['class="framer-text">1+2</span>', "children:`1+2`", '"1+2 -> 5"'],
+    replace: ['class="framer-text">2</span>', "children:`2`", '"2 -> 5"'],
+  },
+  { label: "yandex case title", find: "Growing from 3 to 5 Designers", replace: "Growing from 2 to 5 Designers" },
 
   // Em dashes instead of spaced hyphens
   { label: "looch description dash", find: "Product studio - #1 UX", replace: "Product studio — #1 UX" },
@@ -31,6 +89,9 @@ export const styleOverrides = [
   // Experience cards: Framer clips the text stacks (overflow: hidden) exactly at the last line box,
   // and with line-height 1em descenders on the last line ("g" in "big") get cut off.
   ".framer-1gtkbji, .framer-18a0lfp, .framer-1n7e9z2, .framer-13cru1x, .framer-1pcs9tt, .framer-1pf0meu { overflow: visible !important; }",
+  // Core skills cards: Framer pins the list to the bottom (space-between); with lists of different length
+  // the third column's list floats far below its heading. Keep lists right under the headings instead.
+  ".framer-1yijn1p, .framer-1k2wkeh, .framer-1sy1c41 { justify-content: flex-start !important; }",
 ];
 
 export function applyContentEdits(text, counts) {
