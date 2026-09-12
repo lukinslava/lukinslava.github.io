@@ -8,7 +8,7 @@
 //  - removes the "Made in Framer" badge, Framer analytics and the Framer on-page editor bar
 import fs from "node:fs/promises";
 import path from "node:path";
-import { contentEdits, applyContentEdits } from "./content.mjs";
+import { contentEdits, applyContentEdits, styleOverrides } from "./content.mjs";
 
 const RAW = path.resolve("raw");
 const OUT = path.resolve("docs");
@@ -256,6 +256,13 @@ for (const page of PAGES) {
     const before = await fs.readFile(file, "utf8");
     const after = applyContentEdits(before, counts);
     if (after !== before) await fs.writeFile(file, after);
+  }
+  if (styleOverrides.length) {
+    const css = `<style data-content-overrides>${styleOverrides.join("\n")}</style>`;
+    for (const page of PAGES) {
+      const file = path.join(OUT, page);
+      await fs.writeFile(file, replaceOnce(await fs.readFile(file, "utf8"), "</head>", `${css}</head>`, `${page}: style overrides`));
+    }
   }
   const missing = contentEdits.map((e) => e.label).filter((l) => !counts[l]);
   if (missing.length) throw new Error(`Content edits matched nothing: ${missing.join(", ")}`);
