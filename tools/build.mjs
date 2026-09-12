@@ -8,6 +8,7 @@
 //  - removes the "Made in Framer" badge, Framer analytics and the Framer on-page editor bar
 import fs from "node:fs/promises";
 import path from "node:path";
+import { contentEdits, applyContentEdits } from "./content.mjs";
 
 const RAW = path.resolve("raw");
 const OUT = path.resolve("docs");
@@ -246,7 +247,22 @@ for (const page of PAGES) {
   await write(page, html);
 }
 
-// 5. Sitemap / robots / 404 / GitHub Pages marker.
+// 5. Content edits (tools/content.mjs) across pages, page modules and search indexes.
+{
+  const counts = {};
+  const targets = [...PAGES, ...(await fs.readdir(jsDir)).filter((f) => /\.(mjs|json)$/.test(f)).map((f) => "assets/js/" + f)];
+  for (const rel of targets) {
+    const file = path.join(OUT, rel);
+    const before = await fs.readFile(file, "utf8");
+    const after = applyContentEdits(before, counts);
+    if (after !== before) await fs.writeFile(file, after);
+  }
+  const missing = contentEdits.map((e) => e.label).filter((l) => !counts[l]);
+  if (missing.length) throw new Error(`Content edits matched nothing: ${missing.join(", ")}`);
+  console.log("content edits:", counts);
+}
+
+// 6. Sitemap / robots / 404 / GitHub Pages marker.
 if (SITE_URL) {
   const urls = PAGES.map((p) => `<url><loc>${SITE_URL}/${p === "index.html" ? "" : p.replace(/\.html$/, "")}</loc></url>`).join("\n");
   await write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
