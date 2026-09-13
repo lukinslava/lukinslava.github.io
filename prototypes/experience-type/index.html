@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Experience cards — Braun typography</title>
+<style>
+  @font-face { font-family: "Antonio"; src: url("antonio-latin.woff2") format("woff2"); font-display: swap; }
+  :root { --bg: #f5f5f5; --muted: rgba(0, 0, 0, 0.5); --orange: #f97029; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: #000; }
+
+  .variant { max-width: 1440px; margin: 0 auto; padding: 56px 0 24px; }
+  .variant:last-of-type { padding-bottom: 96px; }
+  .variant-title { display: flex; align-items: baseline; gap: 12px; margin: 0 24px 20px; flex-wrap: wrap; }
+  .variant-title b { font-family: "Antonio", sans-serif; font-weight: 400; font-size: 44px; line-height: 1; }
+  .variant-title span { color: var(--muted); font-size: 18px; }
+
+  /* The site's Experience block (light Braun body), 1440px */
+  .experience {
+    position: relative; border-radius: 64px; padding: 64px 0;
+    background: linear-gradient(180deg, #f1f1ee 0%, #e9e9e5 100%);
+    box-shadow: inset 0 1.5px 0 #ffffff, inset 0 -2px 0 rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06), 0 30px 60px -30px rgba(0, 0, 0, 0.25);
+  }
+  .experience h2 { margin: 0 0 32px; text-align: center; color: #1b1b1a; font-family: "Antonio", sans-serif; font-weight: 400; font-size: 64px; line-height: 1.2; letter-spacing: -0.04em; }
+  .cards { display: flex; justify-content: center; gap: 10px; padding: 0 24px; overflow-x: auto; }
+  .card {
+    flex: 0 0 380px; height: 268px; background: #fff; border-radius: 32px; padding: 32px; display: flex; flex-direction: column;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.08);
+  }
+  .footer { margin: 32px 0 0; text-align: center; font-size: 24px; line-height: 1; color: var(--muted); }
+  .footer span { color: var(--orange); }
+
+  /* ---------- 1 · current ---------- */
+  .v-current .name { margin: 0 0 16px; font-size: 28px; line-height: 1.1; letter-spacing: -0.04em; }
+  .v-current .role { margin: 0; font-size: 24px; line-height: 1; letter-spacing: -0.01em; }
+  .v-current .desc { margin: 4px 0 0; font-size: 24px; line-height: 1; color: var(--muted); }
+  .v-current .date { margin: auto 0 0; font-size: 24px; line-height: 1; color: var(--muted); }
+
+  /* ---------- Braun rule ----------
+     One "logotype" per object (company name), everything else is a small quiet label:
+     lowercase, regular weight, one size (~0.55 of the name), one warm grey, lots of air. */
+  .braun .name { margin: 0; font-size: 28px; line-height: 1.1; letter-spacing: -0.03em; color: #1b1b1a; }
+  .braun .labels { margin-top: 20px; display: grid; gap: 6px; }
+  .braun .role, .braun .desc, .braun .date { margin: 0; font-size: 16px; line-height: 1.3; letter-spacing: 0.005em; text-transform: lowercase; color: #6a6964; }
+  .braun .date { margin-top: auto; font-variant-numeric: tabular-nums; }
+  .braun .footer { font-size: 16px; text-transform: lowercase; color: #6a6964; }
+
+  /* ---------- 2 · strict: all labels identical ---------- */
+
+  /* ---------- 3 · soft: role a step darker ---------- */
+  .v-soft .labels { gap: 2px; }
+  .v-soft .role { color: #2f2f2d; }
+  .v-soft .desc, .v-soft .date { color: #85847f; }
+  .v-soft .footer { color: #85847f; }
+
+  @media (max-width: 809.98px) {
+    .variant { padding-top: 40px; }
+    .variant-title b { font-size: 34px; }
+    .variant-title span { font-size: 15px; }
+    .experience { border-radius: 40px; padding: 48px 0; }
+    .experience h2 { font-size: 48px; margin-bottom: 24px; }
+    .cards { justify-content: flex-start; padding: 0 16px; scroll-snap-type: x mandatory; }
+    .card { flex-basis: 85%; height: 230px; padding: 24px; scroll-snap-align: center; }
+    .v-current .name { font-size: 24px; margin-bottom: 12px; }
+    .v-current .role, .v-current .desc, .v-current .date { font-size: 18px; }
+    .v-current .footer { font-size: 18px; margin-top: 24px; }
+    .braun .name { font-size: 24px; }
+    .braun .labels { margin-top: 14px; }
+    .braun .role, .braun .desc, .braun .date { font-size: 14px; }
+    .braun .footer { font-size: 14px; margin-top: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<section class="variant v-current">
+  <div class="variant-title"><b>1 · Now</b><span>name 28 · role 24 black · description and dates 24 grey</span></div>
+  <div class="experience">
+    <h2>Experience</h2>
+    <div class="cards">
+      <div class="card"><p class="name">Pragmatica</p><p class="role">Outstaff Design Lead</p><p class="desc">Matching and growing<br>designers of all profiles<br>for big tech and startups</p><p class="date">Dec 2025 — still working</p></div>
+      <div class="card"><p class="name">Looch</p><p class="role">Product Design Lead</p><p class="desc">Product studio — #1 UX<br>and research in Russia</p><p class="date">Nov 2023 — Oct 2025</p></div>
+      <div class="card"><p class="name">Ring Central</p><p class="role">Senior Product Designer</p><p class="desc">#1 global UCaaS<br>and CCaaS solution</p><p class="date">Dec 2021 — July 2023</p></div>
+    </div>
+    <p class="footer">and other from <span>Feb 2018</span></p>
+  </div>
+</section>
+
+<section class="variant braun v-strict">
+  <div class="variant-title"><b>2 · Braun strict</b><span>name 28 as the logotype · every label 16, lowercase, one grey</span></div>
+  <div class="experience">
+    <h2>Experience</h2>
+    <div class="cards">
+      <div class="card"><p class="name">Pragmatica</p><div class="labels"><p class="role">Outstaff Design Lead</p><p class="desc">Matching and growing designers<br>of all profiles for big tech and startups</p></div><p class="date">Dec 2025 — still working</p></div>
+      <div class="card"><p class="name">Looch</p><div class="labels"><p class="role">Product Design Lead</p><p class="desc">Product studio — #1 UX<br>and research in Russia</p></div><p class="date">Nov 2023 — Oct 2025</p></div>
+      <div class="card"><p class="name">Ring Central</p><div class="labels"><p class="role">Senior Product Designer</p><p class="desc">#1 global UCaaS<br>and CCaaS solution</p></div><p class="date">Dec 2021 — July 2023</p></div>
+    </div>
+    <p class="footer">and other from <span>Feb 2018</span></p>
+  </div>
+</section>
+
+<section class="variant braun v-soft">
+  <div class="variant-title"><b>3 · Braun soft</b><span>same sizes · role a step darker, description and dates lighter</span></div>
+  <div class="experience">
+    <h2>Experience</h2>
+    <div class="cards">
+      <div class="card"><p class="name">Pragmatica</p><div class="labels"><p class="role">Outstaff Design Lead</p><p class="desc">Matching and growing designers<br>of all profiles for big tech and startups</p></div><p class="date">Dec 2025 — still working</p></div>
+      <div class="card"><p class="name">Looch</p><div class="labels"><p class="role">Product Design Lead</p><p class="desc">Product studio — #1 UX<br>and research in Russia</p></div><p class="date">Nov 2023 — Oct 2025</p></div>
+      <div class="card"><p class="name">Ring Central</p><div class="labels"><p class="role">Senior Product Designer</p><p class="desc">#1 global UCaaS<br>and CCaaS solution</p></div><p class="date">Dec 2021 — July 2023</p></div>
+    </div>
+    <p class="footer">and other from <span>Feb 2018</span></p>
+  </div>
+</section>
+
+</body>
+</html>

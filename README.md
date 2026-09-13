@@ -90,6 +90,7 @@ node tools/serve.mjs 4100 prototypes
 
 - http://localhost:4100/compare/ — варианты элемента наград (мелок, желе, Braun, тюнер); тюнер берётся с запущенного сайта на :4000
 - http://localhost:4100/awards/, http://localhost:4100/radial/ — ранние прототипы раздела наград
+- http://localhost:4100/experience-type/ — типографика карточек опыта по мотивам Braun (в релизе вариант «Braun soft»)
 
 ## Что изменено относительно Framer
 
