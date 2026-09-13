@@ -123,6 +123,8 @@
 .at-lit line.on { stroke: #262923; }
 .at-lit circle { fill: transparent; }
 .at-lit circle.on { fill: #262923; }
+.at-lit .at-custom line { stroke: transparent; }
+.at-lit .at-custom.on line { stroke: #262923; }
 .at-screen.boot .at-lit line.on { stroke: #3a3e35; }
 .at-screen.flicker .at-lit { opacity: 0.35; }
 .at-screen.off .at-lit { opacity: 0; transition: opacity 0.2s ease; }

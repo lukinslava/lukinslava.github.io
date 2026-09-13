@@ -14,7 +14,7 @@
   const GLYPHS = {
     " ": 0x0000, "-": 0x00c0, ".": 0x4000, "/": 0x0c00, "'": 0x0200,
     0: 0x0c3f, 1: 0x0006, 2: 0x00db, 3: 0x008f, 4: 0x00e6, 5: 0x2069, 6: 0x00fd, 7: 0x0007, 8: 0x00ff, 9: 0x00ef,
-    A: 0x00f7, B: 0x128f, C: 0x0039, D: 0x00de, /* drawn as a lowercase d: reads clearly on 14 segments */ E: 0x00f9, F: 0x00f1, G: 0x00bd, H: 0x00f6, I: 0x1209, J: 0x001e,
+    A: 0x00f7, B: 0x128f, C: 0x0039, D: 0x0000, /* drawn with CUSTOM strokes below */ E: 0x00f9, F: 0x00f1, G: 0x00bd, H: 0x00f6, I: 0x1209, J: 0x001e,
     K: 0x2470, L: 0x0038, M: 0x0536, N: 0x2136, O: 0x003f, P: 0x00f3, Q: 0x203f, R: 0x20f3, S: 0x018d, T: 0x1201,
     U: 0x003e, V: 0x0c30, W: 0x2836, X: 0x2d00, Y: 0x1500, Z: 0x0c09,
   };
@@ -24,6 +24,10 @@
     [2.3, 12, 6.1, 12], [7.9, 12, 11.7, 12], [2.6, 2.8, 5.9, 10.2], [7, 2.3, 7, 10.7], [11.4, 2.8, 8.1, 10.2],
     [5.9, 13.8, 2.6, 21.2], [7, 13.3, 7, 21.7], [8.1, 13.8, 11.4, 21.2],
   ];
+  // Letters that can't be drawn legibly with the 14 standard segments get their own strokes (same weight and slant)
+  const CUSTOM = {
+    D: [[1, 2.3, 1, 21.7], [2.3, 1, 8.6, 1], [9.8, 1.6, 12.4, 4.6], [13, 6, 13, 18], [12.4, 19.4, 9.8, 22.4], [2.3, 23, 8.6, 23]],
+  };
   const CELL = 17;
   const CHARS = 18;
 
@@ -34,7 +38,10 @@
       const x = c * CELL + 3;
       const segs = SEGMENTS.map(([x1, y1, x2, y2], i) => `<line data-s="${i}" x1="${x + x1}" y1="${y1 + 2}" x2="${x + x2}" y2="${y2 + 2}"/>`).join("");
       ghost += segs;
-      cells += `<g data-c="${c}">${segs}<circle data-s="14" cx="${x + 15.2}" cy="25" r="1"/></g>`;
+      const custom = Object.entries(CUSTOM)
+        .map(([glyph, lines]) => `<g class="at-custom" data-glyph="${glyph}">${lines.map(([x1, y1, x2, y2]) => `<line x1="${x + x1}" y1="${y1 + 2}" x2="${x + x2}" y2="${y2 + 2}"/>`).join("")}</g>`)
+        .join("");
+      cells += `<g data-c="${c}">${segs}<circle data-s="14" cx="${x + 15.2}" cy="25" r="1"/>${custom}</g>`;
     }
     return `<svg class="at-lcd-svg" viewBox="0 0 ${chars * CELL + 4} 28" aria-hidden="true">
       <g class="at-ghost" transform="skewX(-7) translate(3 0)">${ghost}</g>
@@ -43,13 +50,14 @@
   }
 
   function renderText(svgEl, text) {
-    const cells = svgEl.querySelectorAll(".at-lit > g");
+    const cells = svgEl.querySelectorAll(".at-lit > g[data-c]");
     cells.forEach((cell, i) => {
       const ch = (text[i] || " ").toUpperCase();
       const bits = GLYPHS[ch] ?? 0;
       cell.querySelectorAll("[data-s]").forEach((seg) => {
         seg.classList.toggle("on", Boolean(bits & (1 << Number(seg.dataset.s))));
       });
+      cell.querySelectorAll(".at-custom").forEach((g) => g.classList.toggle("on", g.dataset.glyph === ch));
     });
   }
 
