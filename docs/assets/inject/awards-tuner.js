@@ -5,8 +5,8 @@
   const AWARDS = [
     { name: "Tagline Awards" },
     { name: "Golden Site Award" },
-    { name: "Workspace Digital Awards 2024" },
-    { name: "Workspace Digital Awards 2025", jury: true },
+    { name: "Workspace Digital Awards 2024", lcd: "WDA 24" },
+    { name: "Workspace Digital Awards 2025", lcd: "WDA 25", jury: true },
   ];
 
   // ---------- 14-segment display ----------
@@ -14,7 +14,7 @@
   const GLYPHS = {
     " ": 0x0000, "-": 0x00c0, ".": 0x4000, "/": 0x0c00, "'": 0x0200,
     0: 0x0c3f, 1: 0x0006, 2: 0x00db, 3: 0x008f, 4: 0x00e6, 5: 0x2069, 6: 0x00fd, 7: 0x0007, 8: 0x00ff, 9: 0x00ef,
-    A: 0x00f7, B: 0x128f, C: 0x0039, D: 0x120f, E: 0x00f9, F: 0x00f1, G: 0x00bd, H: 0x00f6, I: 0x1209, J: 0x001e,
+    A: 0x00f7, B: 0x128f, C: 0x0039, D: 0x00de, /* drawn as a lowercase d: reads clearly on 14 segments */ E: 0x00f9, F: 0x00f1, G: 0x00bd, H: 0x00f6, I: 0x1209, J: 0x001e,
     K: 0x2470, L: 0x0038, M: 0x0536, N: 0x2136, O: 0x003f, P: 0x00f3, Q: 0x203f, R: 0x20f3, S: 0x018d, T: 0x1201,
     U: 0x003e, V: 0x0c30, W: 0x2836, X: 0x2d00, Y: 0x1500, Z: 0x0c09,
   };
@@ -97,7 +97,7 @@
     function show(i, { flicker = true } = {}) {
       index = (i + AWARDS.length) % AWARDS.length;
       const award = AWARDS[index];
-      const text = award.name.toUpperCase();
+      const text = (award.lcd || award.name).toUpperCase();
       count.textContent = String(index + 1);
       jury.classList.toggle("on", Boolean(award.jury));
       sr.textContent = `${award.name}${award.jury ? ", jury member" : ""}. ${index + 1} of ${AWARDS.length}`;
