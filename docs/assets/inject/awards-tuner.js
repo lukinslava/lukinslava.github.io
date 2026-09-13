@@ -2,6 +2,15 @@
 // The LCD renders award names with a hand-built 14-segment display (SVG), long names scroll like an old car radio.
 // On the site it pins itself to the Experience block on the homepage; pages that set window.AW_MANUAL mount it themselves.
 (() => {
+  // ---------- sounds: procedural UI sounds from github.com/mishanaer/sound (lib/ui-sounds.js, loaded on demand) ----------
+  const SCRIPT_SRC = document.currentScript?.src;
+  let soundModule = null;
+  const loadSounds = () => {
+    if (!SCRIPT_SRC) return Promise.resolve(null);
+    return (soundModule ||= import(new URL("lib/ui-sounds.js", SCRIPT_SRC).href).catch(() => null));
+  };
+  const sound = (name) => loadSounds().then((m) => m?.playUISound(name));
+
   const AWARDS = [
     { name: "Tagline Awards" },
     { name: "Golden Site Award" },
@@ -173,17 +182,20 @@
       setTimeout(() => btn.classList.remove("pressed"), 140);
     }
 
-    mainBtn.addEventListener("click", () => setOpen(!open));
+    mainBtn.addEventListener("click", () => { sound("toggle"); setOpen(!open); });
+    // Warm the sound module before the first press so the first click isn't silent or late
+    mainBtn.addEventListener("pointerenter", loadSounds, { once: true });
+    mainBtn.addEventListener("focus", loadSounds, { once: true });
     device.querySelectorAll("[data-dir]").forEach((btn) =>
-      btn.addEventListener("click", () => { press(btn); show(index + Number(btn.dataset.dir)); }),
+      btn.addEventListener("click", () => { sound("tick"); press(btn); show(index + Number(btn.dataset.dir)); }),
     );
     device.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight") { show(index + 1); press(device.querySelector("[data-dir='1']")); }
-      if (e.key === "ArrowLeft") { show(index - 1); press(device.querySelector("[data-dir='-1']")); }
-      if (e.key === "Escape") { setOpen(false); mainBtn.focus({ preventScroll: true }); }
+      if (e.key === "ArrowRight") { sound("tick"); show(index + 1); press(device.querySelector("[data-dir='1']")); }
+      if (e.key === "ArrowLeft") { sound("tick"); show(index - 1); press(device.querySelector("[data-dir='-1']")); }
+      if (e.key === "Escape") { sound("toggle"); setOpen(false); mainBtn.focus({ preventScroll: true }); }
     });
     document.addEventListener("pointerdown", (e) => {
-      if (open && !device.contains(e.target) && !trigger.contains(e.target)) setOpen(false);
+      if (open && !device.contains(e.target) && !trigger.contains(e.target)) { sound("toggle"); setOpen(false); }
     });
 
     // ---------- positioning: button in the block's corner, device hangs below it ----------

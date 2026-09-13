@@ -291,8 +291,13 @@ for (const page of PAGES) {
 // 5c. Standalone interactive elements (tools/inject): plain CSS/JS living outside the React tree.
 {
   const injectDir = path.resolve("tools/inject");
-  const files = (await fs.readdir(injectDir)).sort();
-  for (const f of files) await write(`/assets/inject/${f}`, await fs.readFile(path.join(injectDir, f)));
+  // Copy everything (sub-folders hold modules the elements load on demand); only top-level files are injected into pages
+  for (const entry of await fs.readdir(injectDir, { recursive: true, withFileTypes: true })) {
+    if (!entry.isFile()) continue;
+    const rel = path.relative(injectDir, path.join(entry.parentPath ?? entry.path, entry.name));
+    await write(`/assets/inject/${rel}`, await fs.readFile(path.join(injectDir, rel)));
+  }
+  const files = (await fs.readdir(injectDir, { withFileTypes: true })).filter((e) => e.isFile()).map((e) => e.name).sort();
   const css = files.filter((f) => f.endsWith(".css")).map((f) => `<link rel="stylesheet" href="/assets/inject/${f}">`).join("");
   const js = files.filter((f) => f.endsWith(".js")).map((f) => `<script src="/assets/inject/${f}" defer></script>`).join("");
   for (const page of PAGES) {
