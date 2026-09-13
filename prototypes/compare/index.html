@@ -80,6 +80,11 @@
   <div class="experience experience--braun" id="block-braun"></div>
 </section>
 
+<section class="variant">
+  <div class="variant-title"><b>C2 · Braun flat button</b><span>solid orange, darker bottom edge instead of a gradient</span></div>
+  <div class="experience experience--braun" id="block-braun-flat"></div>
+</section>
+
 <template id="experience-content">
   <h2>Experience</h2>
   <div class="cards">
@@ -98,6 +103,9 @@
   for (const b of Object.values(blocks)) b.appendChild(tpl.content.cloneNode(true));
 
   const instances = Object.entries(blocks).map(([style, el]) => window.AwardsRadial.mount(() => el, style));
+  const flatBlock = document.getElementById("block-braun-flat");
+  flatBlock.appendChild(tpl.content.cloneNode(true));
+  instances.push(window.AwardsRadial.mount(() => flatBlock, "braun", { button: "flat" }));
   const setAll = (open) => instances.forEach((i) => i.setOpen(open));
   document.getElementById("open").addEventListener("click", (e) => { e.stopPropagation(); setAll(true); });
   document.getElementById("close").addEventListener("click", () => setAll(false));

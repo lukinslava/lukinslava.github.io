@@ -202,6 +202,7 @@
     const root = document.createElement("div");
     root.className = "aw-radial";
     root.dataset.icons = style;
+    if (options.button) root.dataset.button = options.button;
     root.hidden = true;
     root.innerHTML = `<button class="aw-trigger" type="button" aria-expanded="false" aria-label="Show awards">
         ${svg(SET, "trophy", "aw-ico-open")}${svg(SET, "close", "aw-ico-close")}
