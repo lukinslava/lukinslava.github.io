@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Awards icons — crayon, jelly, keycaps</title>
+<title>Awards icons — crayon, jelly, Braun</title>
 <link rel="stylesheet" href="http://localhost:4000/assets/inject/awards-radial.css">
 <style>
   @font-face { font-family: "Antonio"; src: url("antonio-latin.woff2") format("woff2"); font-display: swap; }
@@ -34,6 +34,15 @@
   .footer { margin: 32px 0 0; text-align: center; font-size: 24px; line-height: 1; color: var(--muted); }
   .footer span { color: #fff; }
 
+  /* Variant C: the Experience block as a light Braun device body */
+  .experience--braun {
+    background: linear-gradient(180deg, #f1f1ee 0%, #e9e9e5 100%);
+    box-shadow: inset 0 1.5px 0 #ffffff, inset 0 -2px 0 rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06), 0 30px 60px -30px rgba(0, 0, 0, 0.25);
+  }
+  .experience--braun h2 { color: #1b1b1a; }
+  .experience--braun .card { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.08); }
+  .experience--braun .footer span { color: var(--orange); }
+
   @media (max-width: 809.98px) {
     .variant { padding-top: 40px; }
     .variant-title b { font-size: 34px; }
@@ -41,14 +50,17 @@
     .experience { border-radius: 40px; padding: 48px 0; }
     .experience h2 { font-size: 48px; margin-bottom: 24px; }
     .cards { justify-content: flex-start; padding: 0 16px; scroll-snap-type: x mandatory; }
-    .card { flex-basis: 85%; scroll-snap-align: center; }
+    .card { flex-basis: 85%; height: 230px; padding: 24px; scroll-snap-align: center; }
+    .card .name { font-size: 24px; margin-bottom: 12px; }
+    .card .role, .card .desc, .card .date { font-size: 18px; }
+    .footer { font-size: 18px; margin-top: 24px; }
   }
 </style>
 </head>
 <body>
 
 <div class="bar">
-  <strong>Awards icons — crayon, jelly, keycaps</strong>
+  <strong>Awards icons — crayon, jelly, Braun</strong>
   <button type="button" id="open">Open all</button>
   <button type="button" id="close" class="ghost">Close all</button>
 </div>
@@ -64,8 +76,8 @@
 </section>
 
 <section class="variant">
-  <div class="variant-title"><b>C · Keycaps</b><span>tactile keys and cursor tags, SberDesign style</span></div>
-  <div class="experience" id="block-keycap"></div>
+  <div class="variant-title"><b>C · Braun</b><span>no orange background, physical orange button, LCD labels</span></div>
+  <div class="experience experience--braun" id="block-braun"></div>
 </section>
 
 <template id="experience-content">
@@ -82,7 +94,7 @@
 <script src="http://localhost:4000/assets/inject/awards-radial.js"></script>
 <script>
   const tpl = document.getElementById("experience-content");
-  const blocks = { crayon: document.getElementById("block-crayon"), jelly: document.getElementById("block-jelly"), keycap: document.getElementById("block-keycap") };
+  const blocks = { crayon: document.getElementById("block-crayon"), jelly: document.getElementById("block-jelly"), braun: document.getElementById("block-braun") };
   for (const b of Object.values(blocks)) b.appendChild(tpl.content.cloneNode(true));
 
   const instances = Object.entries(blocks).map(([style, el]) => window.AwardsRadial.mount(() => el, style));

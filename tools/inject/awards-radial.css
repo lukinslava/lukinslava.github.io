@@ -178,93 +178,105 @@
 .framer-h3ifuw-container { z-index: 10 !important; }
 
 /* =========================================================
-   Icon set 3 — keycaps (SberDesign canvas reference)
+   Icon set 3 — Braun (physical device buttons)
    ========================================================= */
-.aw-keycap { filter: url(#awk-engrave); }
-.aw-radial[data-icons="keycap"] .aw-trigger,
-.aw-radial[data-icons="keycap"] .aw-item {
-  border-radius: 28%;
-  color: #2b2c30;
-  background: linear-gradient(180deg, #ffffff 0%, #f1f1f3 55%, #e6e7ea 100%);
+.aw-radial[data-icons="braun"] .aw-trigger::after { border-color: rgba(249, 112, 41, 0.75); }
+
+/* Main button: convex orange cap sitting in a light bezel */
+.aw-radial[data-icons="braun"] .aw-trigger {
+  background: radial-gradient(circle at 38% 30%, #ff9f5c 0%, #fa762f 42%, #e45d17 100%);
   box-shadow:
-    inset 0 1.5px 0 #ffffff,
-    inset 0 -6px 0 #cfd0d5,
-    inset 0 0 0 1px rgba(0, 0, 0, 0.07),
-    0 2px 0 rgba(0, 0, 0, 0.12),
-    0 12px 20px -8px rgba(0, 0, 0, 0.4);
+    0 0 0 6px #e6e6e2,
+    0 0 0 7px rgba(0, 0, 0, 0.07),
+    inset 0 2px 3px rgba(255, 255, 255, 0.38),
+    inset 0 -4px 6px rgba(130, 45, 0, 0.28),
+    0 7px 10px -3px rgba(170, 70, 10, 0.5);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.2s ease;
+}
+.aw-radial[data-icons="braun"] .aw-trigger svg { width: 46%; height: 46%; }
+.aw-radial[data-icons="braun"] .aw-trigger .aw-ico-close { width: 46%; height: 46%; }
+@media (hover: hover) {
+  .aw-radial[data-icons="braun"] .aw-trigger:hover {
+    transform: translateY(1px);
+    box-shadow:
+      0 0 0 6px #e6e6e2,
+      0 0 0 7px rgba(0, 0, 0, 0.07),
+      inset 0 2px 3px rgba(255, 255, 255, 0.34),
+      inset 0 -3px 5px rgba(130, 45, 0, 0.28),
+      0 4px 7px -3px rgba(170, 70, 10, 0.5);
+  }
+}
+.aw-radial[data-icons="braun"] .aw-trigger:active,
+.aw-radial[data-icons="braun"].open .aw-trigger {
+  transform: translateY(2px);
+  background: radial-gradient(circle at 40% 34%, #fb8a45 0%, #f06a24 48%, #d85414 100%);
+  box-shadow:
+    0 0 0 6px #e6e6e2,
+    0 0 0 7px rgba(0, 0, 0, 0.07),
+    inset 0 3px 6px rgba(120, 40, 0, 0.35),
+    inset 0 -1px 2px rgba(255, 255, 255, 0.2),
+    0 2px 3px -1px rgba(170, 70, 10, 0.45);
+}
+
+/* Secondary buttons: light grey caps with engraved glyphs */
+.aw-radial[data-icons="braun"] .aw-item {
+  background: radial-gradient(circle at 40% 30%, #ffffff 0%, #f2f2ef 55%, #e2e2de 100%);
+  box-shadow:
+    0 0 0 4px #e6e6e2,
+    0 0 0 5px rgba(0, 0, 0, 0.06),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.9),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.08),
+    0 6px 9px -4px rgba(0, 0, 0, 0.28);
   transition:
     transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) var(--delay-in, 0ms),
     opacity 0.25s ease var(--delay-in, 0ms),
-    box-shadow 0.12s ease,
-    background 0.12s ease;
+    box-shadow 0.12s ease;
 }
-.aw-radial[data-icons="keycap"] .aw-item svg,
-.aw-radial[data-icons="keycap"] .aw-trigger .aw-ico-open,
-.aw-radial[data-icons="keycap"] .aw-trigger .aw-ico-close { width: 50%; height: 50%; transform: translateY(-2px); }
-.aw-radial[data-icons="keycap"] .aw-trigger .aw-ico-close { opacity: 0; transform: translateY(-2px) scale(0.5); }
-.aw-radial[data-icons="keycap"].open .aw-trigger .aw-ico-close { opacity: 1; transform: translateY(-1px); }
-.aw-radial[data-icons="keycap"].open .aw-trigger .aw-ico-open { opacity: 0; transform: translateY(-2px) scale(0.5); }
-/* no rotation/tilt for keys: they press straight down */
-.aw-radial[data-icons="keycap"] .aw-trigger:hover { transform: translateY(2px); }
-.aw-radial[data-icons="keycap"] .aw-trigger:active,
-.aw-radial[data-icons="keycap"].open .aw-trigger {
-  transform: translateY(4px);
-  background: linear-gradient(180deg, #ececef 0%, #e2e3e7 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.7),
-    inset 0 -2px 0 #c7c8cd,
-    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
-    0 1px 0 rgba(0, 0, 0, 0.12),
-    0 6px 12px -6px rgba(0, 0, 0, 0.35);
-}
-.aw-radial[data-icons="keycap"] .aw-trigger::after { border-radius: 30%; }
+.aw-radial[data-icons="braun"] .aw-item svg { width: 46%; height: 46%; filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.9)); }
+.aw-radial[data-icons="braun"] .aw-item g { transition: stroke 0.15s ease; }
 @media (hover: hover) {
-  .aw-radial[data-icons="keycap"].open .aw-item:hover { --press: 3px; }
-  .aw-radial[data-icons="keycap"].open .aw-item:hover svg { transform: translateY(-1px); }
+  .aw-radial[data-icons="braun"].open .aw-item:hover { --press: 2px; }
+  .aw-radial[data-icons="braun"].open .aw-item:hover svg { transform: none; }
 }
-.aw-radial[data-icons="keycap"].open .aw-item:hover,
-.aw-radial[data-icons="keycap"].open .aw-item.active {
-  background: linear-gradient(180deg, #f3f3f5 0%, #e7e8eb 100%);
+.aw-radial[data-icons="braun"].open .aw-item:hover,
+.aw-radial[data-icons="braun"].open .aw-item.active {
   box-shadow:
-    inset 0 1px 0 #ffffff,
-    inset 0 -2.5px 0 #c9cacf,
-    inset 0 0 0 1px rgba(0, 0, 0, 0.08),
-    0 1px 0 rgba(0, 0, 0, 0.12),
-    0 6px 12px -6px rgba(0, 0, 0, 0.35);
+    0 0 0 4px #e6e6e2,
+    0 0 0 5px rgba(0, 0, 0, 0.06),
+    inset 0 2px 4px rgba(0, 0, 0, 0.12),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.8),
+    0 2px 3px -2px rgba(0, 0, 0, 0.25);
 }
-.aw-radial[data-icons="keycap"].open .aw-item.active { --press: 3px; }
-.aw-radial[data-icons="keycap"].open .aw-item.active svg { transform: translateY(-1px); }
+.aw-radial[data-icons="braun"].open .aw-item:hover g,
+.aw-radial[data-icons="braun"].open .aw-item.active g { stroke: #f97029; }
+.aw-radial[data-icons="braun"].open .aw-item.active { --press: 2px; }
+.aw-radial[data-icons="braun"].open .aw-item.active svg { transform: none; }
 
-/* Multiplayer cursor name tags instead of plain labels */
-.aw-label.aw-tag {
-  top: 72%;
-  right: auto;
-  left: 62%;
-  display: flex;
-  align-items: flex-start;
-  gap: 0;
-  padding: 0;
-  background: none;
-  box-shadow: none;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  text-transform: none;
-  letter-spacing: 0;
-  text-align: left;
-  transform: translate(-6px, -6px) scale(0.9);
-  transform-origin: top left;
+/* Status LED: off grey, lights up orange while the menu is open */
+.aw-led {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #cfcfcb;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  transition: background 0.2s ease, box-shadow 0.3s ease;
+  pointer-events: none;
 }
-.aw-tag .aw-cursor { width: 15px; height: 15px; flex: none; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.25)); }
-.aw-tag .aw-tag-text {
-  margin: 12px 0 0 -2px;
-  padding: 3px 7px 4px;
-  border-radius: 5px;
-  background: var(--tag);
-  color: #fff;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 1.2;
-  box-shadow: 0 4px 10px -4px rgba(0, 0, 0, 0.35);
+.aw-radial.open .aw-led {
+  background: #ff7a2e;
+  box-shadow: 0 0 0 2px rgba(249, 112, 41, 0.18), 0 0 10px 2px rgba(249, 112, 41, 0.55);
 }
-.aw-item:hover .aw-label.aw-tag,
-.aw-item:focus-visible .aw-label.aw-tag,
-.aw-item.active .aw-label.aw-tag { transform: none; }
+
+/* LCD label */
+.aw-radial[data-icons="braun"] .aw-label {
+  background: #1f211e;
+  color: #dfe6d7;
+  border-radius: 7px;
+  padding: 6px 10px 7px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06), inset 0 2px 6px rgba(0, 0, 0, 0.6), 0 0 0 3px #e6e6e2, 0 8px 18px -8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 0 6px rgba(223, 230, 215, 0.35);
+}
+.aw-radial[data-icons="braun"] .aw-label small { color: #ff8a45; text-shadow: 0 0 6px rgba(255, 138, 69, 0.4); }
