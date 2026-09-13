@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Awards radial — prototype</title>
+<style>
+  @font-face { font-family: "Antonio"; src: url("antonio-latin.woff2") format("woff2"); font-display: swap; }
+
+  :root {
+    --bg: #f5f5f5;
+    --card: #ffffff;
+    --ink: #000000;
+    --muted: rgba(0, 0, 0, 0.5);
+    --line: rgba(0, 0, 0, 0.1);
+    --orange: #f97029;
+    --display: "Antonio", "Antonio Placeholder", Impact, sans-serif;
+    --text: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--text); -webkit-font-smoothing: antialiased; }
+
+  /* ---------- prototype chrome ---------- */
+  .proto-bar {
+    position: sticky; top: 0; z-index: 50; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    padding: 12px 24px; background: rgba(245, 245, 245, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); font-size: 14px;
+  }
+  .proto-bar strong { margin-right: 8px; }
+  .proto-bar a { color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; background: var(--card); }
+  .proto-bar a:hover { background: var(--orange); color: #fff; }
+  .variant-label {
+    display: block; width: fit-content; margin: 0 auto; padding: 6px 14px; border-radius: 999px;
+    background: var(--card); color: var(--muted); font-size: 13px;
+  }
+  .variant-label b { color: var(--ink); font-weight: 500; }
+
+  /* =========================================================
+     Radial menu component
+     Markup: .radial[data-radius][data-arc][data-start][data-stagger] > button.radial-trigger + .radial-items > button.radial-item
+     ========================================================= */
+  .radial { position: relative; display: inline-grid; place-items: center; --size: 64px; --item: 52px; }
+  .radial-trigger, .radial-item {
+    appearance: none; border: 0; padding: 0; margin: 0; cursor: pointer; color: var(--ink);
+    display: grid; place-items: center; border-radius: 50%; background: var(--card);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 8px 24px -8px rgba(0, 0, 0, 0.18);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .radial-trigger:focus-visible, .radial-item:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+
+  .radial-trigger {
+    position: relative; z-index: 2; width: var(--size); height: var(--size);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, background 0.3s ease, color 0.3s ease;
+  }
+  @media (hover: hover) { .radial-trigger:hover { transform: scale(1.06); } }
+  .radial-trigger:active { transform: scale(0.92); }
+  .radial-trigger .ico { position: absolute; transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease; }
+  .radial-trigger .ico-open { width: 44%; height: 44%; }
+  .radial-trigger .ico-close { width: 34%; height: 34%; opacity: 0; transform: rotate(-90deg) scale(0.4); }
+  .radial.open .radial-trigger { background: var(--ink); color: #fff; }
+  .radial.open .radial-trigger .ico-open { opacity: 0; transform: rotate(90deg) scale(0.4); }
+  .radial.open .radial-trigger .ico-close { opacity: 1; transform: none; }
+
+  /* Idle hint: a soft orange pulse so the trigger reads as interactive */
+  .radial-trigger::after {
+    content: ""; position: absolute; inset: -6px; border-radius: 50%; border: 1.5px solid var(--orange); opacity: 0; pointer-events: none;
+    animation: hint 2.8s ease-out infinite;
+  }
+  .radial.open .radial-trigger::after, .radial.touched .radial-trigger::after { animation: none; }
+  @keyframes hint { 0% { opacity: 0.55; transform: scale(0.92); } 70%, 100% { opacity: 0; transform: scale(1.25); } }
+
+  .radial-items { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+  .radial-item {
+    grid-area: 1 / 1; width: var(--item); height: var(--item); pointer-events: none; opacity: 0;
+    transform: translate(0, 0) scale(0.3);
+    transition:
+      transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) var(--delay-out, 0ms),
+      opacity 0.2s ease var(--delay-out, 0ms),
+      background 0.25s ease, color 0.25s ease;
+  }
+  .radial-item svg { width: 44%; height: 44%; transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .radial.open .radial-item {
+    pointer-events: auto; opacity: 1; transform: translate(var(--x), var(--y)) scale(1);
+    transition:
+      transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) var(--delay-in, 0ms),
+      opacity 0.25s ease var(--delay-in, 0ms),
+      background 0.25s ease, color 0.25s ease;
+  }
+  @media (hover: hover) {
+    .radial.open .radial-item:hover { background: var(--orange); color: #fff; }
+    .radial.open .radial-item:hover svg { transform: scale(1.12) rotate(-6deg); }
+  }
+  .radial.open .radial-item.active { background: var(--orange); color: #fff; }
+
+  /* Label under the hovered/focused item */
+  .radial-label {
+    position: absolute; top: calc(100% + 10px); left: 50%; translate: -50% 0; white-space: nowrap; pointer-events: none;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink);
+    padding: 5px 9px; border-radius: 6px; background: var(--card); box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.2);
+    opacity: 0; transform: translateY(-4px) scale(0.96); transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .radial-item.label-start .radial-label { left: 0; translate: 0 0; }
+  .radial-item.label-end .radial-label { left: auto; right: 0; translate: 0 0; }
+  .radial-item.label-top .radial-label { top: auto; bottom: calc(100% + 10px); transform: translateY(4px) scale(0.96); }
+  .radial-label small { display: block; margin-top: 2px; color: var(--orange); font-size: 10px; }
+  .radial-item:hover .radial-label, .radial-item:focus-visible .radial-label, .radial-item.active .radial-label { opacity: 1; transform: none; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .radial-trigger::after { animation: none; }
+    .radial-item, .radial.open .radial-item { transition: opacity 0.2s ease !important; }
+  }
+
+  /* =========================================================
+     Placement 1 — hero avatar badge
+     ========================================================= */
+  .hero { min-height: 88vh; display: grid; place-items: center; padding: 48px 16px; }
+  .hero-inner { display: grid; justify-items: center; gap: 14px; }
+  .avatar-wrap { position: relative; width: 120px; height: 120px; margin-bottom: 18px; }
+  .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+  /* The radial is centred on the avatar; only its trigger is small and sits on the avatar's edge */
+  .avatar-wrap .radial { position: absolute; inset: 0; --size: 40px; --item: 48px; }
+  .avatar-wrap .radial-trigger { position: absolute; right: -6px; bottom: -2px; }
+  .avatar-wrap .radial-trigger .ico-open { width: 50%; height: 50%; }
+  .hero-hey { margin: 0; font-size: clamp(32px, 4vw, 44px); color: var(--orange); letter-spacing: -0.02em; }
+  .hero-title { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(64px, 11vw, 160px); line-height: 0.9; }
+
+  /* =========================================================
+     Placement 2 — replaces the Awards section
+     ========================================================= */
+  .awards { padding: 96px 16px 140px; display: grid; justify-items: center; gap: 28px; border-top: 1px dashed var(--line); }
+  .awards h2 { margin: 24px 0 0; font-family: var(--display); font-weight: 400; font-size: clamp(56px, 8vw, 96px); line-height: 1; }
+  .awards .stage { position: relative; width: min(100%, 520px); height: 300px; display: grid; place-items: end center; padding-bottom: 40px; }
+  .awards .hint { font-family: var(--mono); font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); transition: opacity 0.3s ease; }
+  .awards .radial.open ~ .hint { opacity: 0; }
+
+  .controls { display: flex; flex-wrap: wrap; gap: 10px 18px; justify-content: center; font-size: 13px; color: var(--muted); }
+  .controls label { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: var(--card); }
+  .controls input { width: 110px; accent-color: var(--orange); }
+  .controls output { min-width: 44px; color: var(--ink); font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+
+<nav class="proto-bar">
+  <strong>Awards radial prototype</strong>
+  <a href="#hero">1 · Avatar badge</a>
+  <a href="#awards">2 · Awards section</a>
+</nav>
+
+<!-- Placement 1 — hero -->
+<section class="hero" id="hero">
+  <div class="hero-inner">
+    <span class="variant-label"><b>1</b> · Badge on the avatar — tap the trophy</span>
+    <div class="avatar-wrap" style="margin-top: 150px;">
+      <video class="avatar" src="avatar.mp4" autoplay muted loop playsinline aria-label="Slava Lukin"></video>
+      <div class="radial" data-radius="112" data-arc="200" data-start="-190" data-stagger="40">
+        <button class="radial-trigger" type="button" aria-expanded="false" aria-label="Show awards">
+          <svg class="ico ico-open" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-trophy"/></svg>
+          <svg class="ico ico-close" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg>
+        </button>
+        <div class="radial-items" data-awards></div>
+      </div>
+    </div>
+    <p class="hero-hey">Hey, I'm Slava</p>
+    <h1 class="hero-title">design leader</h1>
+  </div>
+</section>
+
+<!-- Placement 2 — Awards section -->
+<section class="awards" id="awards">
+  <span class="variant-label"><b>2</b> · Instead of the Awards section — tune it below</span>
+  <h2>Awards</h2>
+  <div class="stage">
+    <div class="radial" id="tunable" data-radius="120" data-arc="180" data-start="-180" data-stagger="40">
+      <button class="radial-trigger" type="button" aria-expanded="false" aria-label="Show awards">
+        <svg class="ico ico-open" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-trophy"/></svg>
+        <svg class="ico ico-close" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-close"/></svg>
+      </button>
+      <div class="radial-items" data-awards></div>
+    </div>
+    <span class="hint">Press to see 4 awards</span>
+  </div>
+  <div class="controls" data-controls>
+    <label>Radius <input type="range" min="80" max="200" step="1" value="120" data-key="radius"><output>120px</output></label>
+    <label>Arc <input type="range" min="90" max="360" step="5" value="180" data-key="arc"><output>180°</output></label>
+    <label>Stagger <input type="range" min="0" max="120" step="2" value="40" data-key="stagger"><output>40ms</output></label>
+    <label>Size <input type="range" min="44" max="72" step="1" value="52" data-key="item"><output>52px</output></label>
+  </div>
+</section>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4z"/><path d="M17 6h2.5a2 2 0 0 1 0 4H17M7 6H4.5a2 2 0 0 0 0 4H7"/>
+    </symbol>
+    <symbol id="i-star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+      <path d="M12 3.2l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.6l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>
+    </symbol>
+    <symbol id="i-medal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8.5 3h7l-2 6h-3z"/><circle cx="12" cy="15" r="5.5"/><path d="M12 12.6l.8 1.6 1.7.2-1.2 1.2.3 1.7-1.6-.8-1.6.8.3-1.7-1.2-1.2 1.7-.2z"/>
+    </symbol>
+    <symbol id="i-gavel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M13.5 10.5l6.8 6.8a1.6 1.6 0 0 1-2.3 2.3l-6.8-6.8"/><path d="M8.6 3.4l6 6-3.2 3.2-6-6z"/><path d="M7.4 4.6L10.6 1.4M13.4 10.6l3.2-3.2M3 21h8"/>
+    </symbol>
+    <symbol id="i-rosette" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="9" r="6"/><circle cx="12" cy="9" r="2.4"/><path d="M8.6 13.9L7 21.5l5-2.6 5 2.6-1.6-7.6"/>
+    </symbol>
+  </defs>
+</svg>
+
+<script>
+  // ---------- data ----------
+  const AWARDS = [
+    { icon: "i-rosette", name: "Tagline Awards" },
+    { icon: "i-star", name: "Golden Site Award" },
+    { icon: "i-medal", name: "Workspace Digital Awards 2024" },
+    { icon: "i-gavel", name: "Workspace Digital Awards 2025", note: "Jury member" },
+  ];
+
+  // ---------- radial menu ----------
+  function layout(radial) {
+    const items = [...radial.querySelectorAll(".radial-item")];
+    const radius = Number(radial.dataset.radius), arc = Number(radial.dataset.arc), start = Number(radial.dataset.start);
+    const stagger = Number(radial.dataset.stagger);
+    const full = arc >= 360;
+    const steps = full ? items.length : Math.max(1, items.length - 1);
+    items.forEach((item, i) => {
+      const deg = start + (arc / steps) * i;
+      const rad = (deg * Math.PI) / 180;
+      item.style.setProperty("--x", `${(Math.cos(rad) * radius).toFixed(1)}px`);
+      item.style.setProperty("--y", `${(Math.sin(rad) * radius).toFixed(1)}px`);
+      item.classList.toggle("label-top", Math.sin(rad) < -0.2);
+      // Long labels on side items grow away from the centre so they stay on screen
+      item.classList.toggle("label-end", Math.cos(rad) > 0.35);
+      item.classList.toggle("label-start", Math.cos(rad) < -0.35);
+      item.style.setProperty("--delay-in", `${i * stagger}ms`);
+      item.style.setProperty("--delay-out", `${(items.length - 1 - i) * (stagger * 0.6)}ms`);
+    });
+  }
+
+  function setOpen(radial, open) {
+    radial.classList.toggle("open", open);
+    radial.classList.add("touched");
+    const trigger = radial.querySelector(".radial-trigger");
+    trigger.setAttribute("aria-expanded", String(open));
+    trigger.setAttribute("aria-label", open ? "Hide awards" : "Show awards");
+    radial.querySelectorAll(".radial-item").forEach((item) => {
+      item.tabIndex = open ? 0 : -1;
+      if (!open) item.classList.remove("active");
+    });
+  }
+
+  for (const radial of document.querySelectorAll(".radial")) {
+    const holder = radial.querySelector("[data-awards]");
+    AWARDS.forEach((award) => {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "radial-item";
+      item.tabIndex = -1;
+      item.setAttribute("aria-label", award.note ? `${award.name}, ${award.note}` : award.name);
+      item.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#${award.icon}"/></svg>
+        <span class="radial-label" aria-hidden="true">${award.name}${award.note ? `<small>${award.note}</small>` : ""}</span>`;
+      // Touch: tap shows the label (hover doesn't exist there)
+      item.addEventListener("click", () => {
+        const wasActive = item.classList.contains("active");
+        holder.querySelectorAll(".radial-item").forEach((i) => i.classList.remove("active"));
+        item.classList.toggle("active", !wasActive);
+      });
+      holder.appendChild(item);
+    });
+    layout(radial);
+
+    const trigger = radial.querySelector(".radial-trigger");
+    trigger.addEventListener("click", () => setOpen(radial, !radial.classList.contains("open")));
+    radial.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && radial.classList.contains("open")) { setOpen(radial, false); trigger.focus(); }
+    });
+    document.addEventListener("pointerdown", (e) => {
+      if (radial.classList.contains("open") && !radial.contains(e.target)) setOpen(radial, false);
+    });
+  }
+
+  // ---------- playground controls for placement 2 ----------
+  const tunable = document.getElementById("tunable");
+  for (const input of document.querySelectorAll("[data-controls] input")) {
+    const out = input.nextElementSibling;
+    const unit = { radius: "px", arc: "°", stagger: "ms", item: "px" }[input.dataset.key];
+    const apply = () => {
+      out.textContent = input.value + unit;
+      if (input.dataset.key === "item") tunable.style.setProperty("--item", input.value + "px");
+      else {
+        tunable.dataset[input.dataset.key] = input.value;
+        if (input.dataset.key === "arc") tunable.dataset.start = String(-90 - Number(input.value) / 2);
+      }
+      layout(tunable);
+    };
+    input.addEventListener("input", apply);
+  }
+</script>
+</body>
+</html>

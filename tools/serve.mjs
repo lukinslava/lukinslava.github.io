@@ -1,10 +1,10 @@
 // Local preview that behaves like GitHub Pages: /page -> page.html, 404.html for unknown paths.
-// Usage: node tools/serve.mjs [port]
+// Usage: node tools/serve.mjs [port] [root]   (root defaults to docs/, e.g. `node tools/serve.mjs 4100 prototypes`)
 import http from "node:http";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const ROOT = path.resolve("docs");
+const ROOT = path.resolve(process.argv[3] || "docs");
 const PORT = Number(process.argv[2] || process.env.PORT || 4000);
 const TYPES = {
   ".html": "text/html; charset=utf-8", ".mjs": "text/javascript", ".js": "text/javascript",
@@ -22,7 +22,11 @@ http.createServer(async (req, res) => {
   const base = path.join(ROOT, path.normalize(pathname).replace(/^(\.\.[/\\])+/, ""));
   const file = (await tryFile(base)) || (await tryFile(base + ".html")) || (await tryFile(path.join(base, "index.html")));
   const status = file ? 200 : 404;
-  const target = file || path.join(ROOT, "404.html");
+  const target = file || (await tryFile(path.join(ROOT, "404.html")));
+  if (!target) {
+    res.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
+    return res.end("Not found");
+  }
   const data = await fs.readFile(target);
   const type = TYPES[path.extname(target)] || "application/octet-stream";
   // Videos need range support for seeking in some browsers.
@@ -35,4 +39,4 @@ http.createServer(async (req, res) => {
   }
   res.writeHead(status, { "content-type": type, "content-length": data.length });
   res.end(data);
-}).listen(PORT, () => console.log(`Serving docs/ at http://localhost:${PORT}`));
+}).listen(PORT, () => console.log(`Serving ${path.relative(process.cwd(), ROOT)}/ at http://localhost:${PORT}`));

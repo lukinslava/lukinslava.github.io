@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Awards — prototype</title>
+<style>
+  @font-face { font-family: "Antonio"; src: url("antonio-latin.woff2") format("woff2"); font-display: swap; }
+
+  :root {
+    --bg: #f5f5f5;
+    --card: #ffffff;
+    --ink: #000000;
+    --muted: rgba(0, 0, 0, 0.5);
+    --line: rgba(0, 0, 0, 0.12);
+    --orange: #f97029;
+    --display: "Antonio", "Antonio Placeholder", "Impact", sans-serif;
+    --text: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --radius: 32px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--text); -webkit-font-smoothing: antialiased; }
+
+  /* ---------- prototype chrome ---------- */
+  .proto-bar {
+    position: sticky; top: 0; z-index: 10; display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+    padding: 12px 24px; background: rgba(245, 245, 245, 0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .proto-bar strong { margin-right: 8px; }
+  .proto-bar a { color: var(--ink); text-decoration: none; padding: 6px 12px; border-radius: 999px; background: var(--card); }
+  .proto-bar a:hover { background: var(--orange); color: #fff; }
+  .proto-bar button { margin-left: auto; font: inherit; border: 0; border-radius: 999px; padding: 6px 14px; background: var(--ink); color: #fff; cursor: pointer; }
+
+  .variant { padding: 96px 16px 120px; border-bottom: 1px dashed var(--line); }
+  .variant-label {
+    display: block; width: fit-content; margin: 0 auto 40px; padding: 6px 14px; border-radius: 999px;
+    background: var(--card); color: var(--muted); font-size: 13px; letter-spacing: 0.02em;
+  }
+  .variant-label b { color: var(--ink); font-weight: 500; }
+
+  /* ---------- shared: section heading like the site ("Awards" in Antonio) ---------- */
+  .section-title {
+    margin: 0 0 56px; text-align: center; font-family: var(--display); font-weight: 400;
+    font-size: clamp(56px, 8vw, 96px); line-height: 1; letter-spacing: -0.01em;
+  }
+
+  /* ---------- Text Animate (Magic UI "blurInUp", by character) ---------- */
+  .ta .word { display: inline-block; white-space: nowrap; }
+  .ta .ch { display: inline-block; opacity: 0; filter: blur(10px); transform: translateY(0.35em); }
+  .in-view .ta .ch, .ta.in-view .ch {
+    animation: blurInUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--i) * 28ms + var(--base, 0ms));
+  }
+  @keyframes blurInUp { to { opacity: 1; filter: blur(0); transform: none; } }
+
+  /* =========================================================
+     A — Editorial list
+     ========================================================= */
+  .list { max-width: 1100px; margin: 0 auto; list-style: none; padding: 0; counter-reset: award; }
+  .list li {
+    position: relative; display: grid; grid-template-columns: 56px 1fr auto; align-items: center; gap: 16px;
+    padding: 28px 8px 26px; border-top: 1px solid var(--line); counter-increment: award;
+  }
+  .list li:last-child { border-bottom: 1px solid var(--line); }
+  .list li::before {
+    content: counter(award, decimal-leading-zero); font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums;
+  }
+  .list .name {
+    font-family: var(--display); font-size: clamp(36px, 5vw, 72px); line-height: 0.95; letter-spacing: -0.01em;
+    transition: color 0.35s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .list .tag {
+    align-self: center; padding: 6px 14px; border-radius: 999px; background: var(--card); font-size: 14px; white-space: nowrap;
+    transition: background 0.35s ease, color 0.35s ease;
+  }
+  .list li::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--orange);
+    transform: scaleX(0); transform-origin: left; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  @media (hover: hover) {
+    .list li:hover .name { color: var(--orange); transform: translateX(12px); }
+    .list li:hover::after { transform: scaleX(1); }
+    .list li:hover .tag { background: var(--orange); color: #fff; }
+  }
+  @media (max-width: 640px) {
+    .list li { grid-template-columns: 36px 1fr; row-gap: 10px; padding: 22px 4px; }
+    .list .tag { grid-column: 2; justify-self: start; }
+  }
+
+  /* =========================================================
+     B — Marquee
+     ========================================================= */
+  .marquee-wrap { position: relative; overflow: hidden; display: grid; gap: 12px; }
+  .marquee-wrap::before, .marquee-wrap::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 12vw; z-index: 2; pointer-events: none;
+  }
+  .marquee-wrap::before { left: 0; background: linear-gradient(90deg, var(--bg), transparent); }
+  .marquee-wrap::after { right: 0; background: linear-gradient(-90deg, var(--bg), transparent); }
+  .marquee { display: flex; width: max-content; }
+  .marquee .track { display: flex; align-items: center; animation: marquee 38s linear infinite; }
+  .marquee.reverse .track { animation-direction: reverse; animation-duration: 46s; }
+  .marquee-wrap:hover .track { animation-play-state: paused; }
+  .marquee .item {
+    font-family: var(--display); font-size: clamp(64px, 10vw, 150px); line-height: 1.05; white-space: nowrap; padding: 0 0.35em;
+  }
+  .marquee.reverse .item { color: transparent; -webkit-text-stroke: 1.5px var(--ink); }
+  .marquee .item em { font-style: normal; color: var(--orange); }
+  .marquee.reverse .item em { -webkit-text-stroke: 1.5px var(--orange); }
+  .marquee .star { width: clamp(28px, 4vw, 56px); height: auto; flex: none; color: var(--orange); }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+
+  /* =========================================================
+     C — Badge cards with Border Beam
+     ========================================================= */
+  .badges { max-width: 1290px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  @media (max-width: 1000px) { .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) {
+    .badges { gap: 8px; }
+    .badges .badge { min-height: 0; padding: 24px 10px 20px; gap: 10px; border-radius: 24px; }
+    .badges .badge .laurel { width: 76px; }
+    .badges .badge .laurel-year { font-size: 20px; }
+    .badges .badge .award-name { font-size: 15px; }
+    .badges .badge .jury { font-size: 12px; }
+  }
+
+  .badge {
+    position: relative; isolation: isolate; min-height: 280px; padding: 32px 28px; border-radius: var(--radius); background: var(--card);
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start; text-align: center; gap: 18px; padding-top: 48px;
+    opacity: 0; transform: translateY(24px);
+  }
+  .in-view .badge { animation: rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: calc(var(--i) * 90ms); }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  /* Border Beam: a short conic highlight orbiting the card edge, masked to the border only */
+  @property --beam-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+  .badge::before {
+    content: ""; position: absolute; inset: 0; padding: 1.5px; border-radius: inherit; z-index: -1;
+    background: conic-gradient(from var(--beam-angle), transparent 0deg, transparent 290deg, rgba(249, 112, 41, 0.15) 320deg, var(--orange) 350deg, transparent 360deg);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor; mask-composite: exclude;
+    opacity: 0; transition: opacity 0.4s ease;
+    animation: beam 3.2s linear infinite; animation-delay: calc(var(--i) * -0.8s);
+  }
+  .badge.beam-always::before { opacity: 1; }
+  @media (hover: hover) { .badge:hover::before { opacity: 1; } }
+  @keyframes beam { to { --beam-angle: 360deg; } }
+
+  .badge .laurel { width: 132px; height: auto; color: var(--ink); transition: color 0.4s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); }
+  @media (hover: hover) { .badge:hover .laurel { color: var(--orange); transform: scale(1.06); } }
+  .badge .laurel-wrap { position: relative; display: grid; place-items: center; }
+  .badge .laurel-year {
+    position: absolute; font-family: var(--display); font-size: 30px; line-height: 1; transform: translateY(-4px);
+  }
+  .badge .award-name { font-size: 22px; line-height: 1.15; letter-spacing: -0.02em; }
+  .badge .jury { font-size: 14px; color: var(--muted); }
+
+
+  /* =========================================================
+     D — Number Ticker + compact list
+     ========================================================= */
+  .ticker-layout { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 48px; align-items: end; }
+  .ticker-layout .section-title { text-align: left; margin: 0 0 28px; }
+  .ticker-num {
+    display: block; font-family: var(--display); font-size: clamp(160px, 22vw, 300px); line-height: 0.8; letter-spacing: -0.02em;
+    color: var(--orange); font-variant-numeric: tabular-nums; line-height: 1; margin-bottom: -0.04em;
+  }
+  .ticker-caption { margin-top: 36px; font-size: 16px; color: var(--muted); }
+  .ticker-list { list-style: none; margin: 0; padding: 0; }
+  .ticker-list li {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px; padding: 22px 0; border-top: 1px solid var(--line);
+    font-size: clamp(22px, 2.4vw, 32px); letter-spacing: -0.02em; opacity: 0; transform: translateY(16px);
+  }
+  .ticker-list li:last-child { border-bottom: 1px solid var(--line); }
+  .in-view .ticker-list li { animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: calc(300ms + var(--i) * 110ms); }
+  .ticker-list small { font-size: 14px; color: var(--muted); letter-spacing: 0; white-space: nowrap; }
+  @media (max-width: 760px) {
+    .ticker-layout { grid-template-columns: 1fr; gap: 24px; }
+    .ticker-layout .section-title { text-align: center; }
+    .ticker-side { text-align: center; }
+  }
+
+  /* =========================================================
+     E — Spotlight stack
+     ========================================================= */
+  .spot { max-width: 1290px; margin: 0 auto; text-align: center; }
+  .spot .row {
+    display: block; font-family: var(--display); font-size: clamp(44px, 7.4vw, 124px); line-height: 1.08; letter-spacing: -0.015em;
+    color: var(--ink); transition: color 0.4s ease, opacity 0.4s ease, filter 0.4s ease; cursor: default;
+  }
+  .spot .row sup {
+    font-family: var(--text); font-size: 14px; letter-spacing: 0; vertical-align: top; position: relative; top: 1.1em; margin-left: 10px;
+    padding: 4px 10px; border-radius: 999px; background: var(--card); color: var(--ink);
+  }
+  @media (hover: hover) {
+    .spot:hover .row { opacity: 0.14; filter: blur(1px); }
+    .spot .row:hover { opacity: 1; filter: none; color: var(--orange); }
+  }
+  @media (max-width: 640px) { .spot .row + .row { margin-top: 0.32em; } }
+  @media (hover: none) {
+    .spot .row { opacity: 0.18; }
+    .spot .row.active { opacity: 1; color: var(--orange); }
+  }
+
+  /* =========================================================
+     F — Orange panel grid (Experience block style)
+     ========================================================= */
+  .panel { max-width: 1410px; margin: 0 auto; padding: 72px clamp(20px, 5vw, 72px) 64px; border-radius: 48px; background: var(--orange); color: #fff; }
+  .panel .section-title { color: #fff; }
+  .panel-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid rgba(255, 255, 255, 0.35); }
+  .panel-cell {
+    position: relative; min-height: 190px; padding: 28px 24px 32px 0; display: flex; flex-direction: column; justify-content: space-between; gap: 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+  }
+  .panel-cell:nth-child(odd) { border-right: 1px solid rgba(255, 255, 255, 0.35); padding-right: 32px; }
+  .panel-cell:nth-child(even) { padding-left: 32px; }
+  .panel-cell .idx { font-size: 14px; opacity: 0.75; }
+  .panel-cell .pname { font-family: var(--display); font-size: clamp(36px, 4.4vw, 64px); line-height: 0.98; }
+  .panel-cell .pill { position: absolute; top: 24px; right: 0; padding: 6px 14px; border-radius: 999px; background: #fff; color: var(--orange); font-size: 14px; }
+  .panel-cell:nth-child(even) .pill { right: 0; }
+  .ta-word .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+  .ta-word .w > span { display: inline-block; transform: translateY(105%); }
+  .in-view .ta-word .w > span { animation: slideUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; animation-delay: calc(var(--i) * 70ms + var(--base, 0ms)); }
+  @keyframes slideUp { to { transform: none; } }
+  @media (max-width: 700px) {
+    .panel { border-radius: 32px; padding-top: 56px; }
+    .panel-grid { grid-template-columns: 1fr; }
+    .panel-cell, .panel-cell:nth-child(odd), .panel-cell:nth-child(even) { border-right: 0; padding: 22px 0 26px; min-height: 0; }
+  }
+
+  /* =========================================================
+     G — Compact shiny pills
+     ========================================================= */
+  .pills-wrap { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: auto 1fr; gap: 48px; align-items: center; }
+  .pills-wrap .section-title { margin: 0; text-align: left; }
+  .pills { display: flex; flex-wrap: wrap; gap: 10px; }
+  .pill-award {
+    display: inline-flex; align-items: center; gap: 10px; padding: 14px 22px 14px 16px; border-radius: 999px; background: var(--card);
+    font-size: clamp(16px, 1.6vw, 20px); letter-spacing: -0.01em; opacity: 0; transform: scale(0.92);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s ease;
+  }
+  .in-view .pill-award { animation: pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; animation-delay: calc(var(--i) * 90ms); }
+  @keyframes pop { to { opacity: 1; transform: none; } }
+  @media (hover: hover) { .pill-award:hover { box-shadow: 0 0 0 1.5px var(--orange); } }
+  .pill-award svg { width: 16px; height: 16px; color: var(--orange); flex: none; }
+  .pill-award.jury { background: transparent; box-shadow: inset 0 0 0 1.5px rgba(0, 0, 0, 0.18); }
+  .shiny {
+    background: linear-gradient(110deg, var(--ink) 0%, var(--ink) 40%, var(--orange) 50%, var(--ink) 60%, var(--ink) 100%);
+    background-size: 250% 100%; background-position: 120% 0; -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: shine 3.6s ease-in-out infinite; animation-delay: calc(var(--i) * 0.45s);
+  }
+  @keyframes shine { 0% { background-position: 120% 0; } 45%, 100% { background-position: -20% 0; } }
+  .pill-award small { color: var(--muted); font-size: 0.8em; }
+  @media (max-width: 760px) {
+    .pills-wrap { grid-template-columns: 1fr; gap: 28px; }
+    .pills-wrap .section-title { text-align: center; }
+    .pills { justify-content: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .ta .ch, .badge, .ticker-list li, .pill-award, .ta-word .w > span { opacity: 1 !important; filter: none !important; transform: none !important; }
+    .shiny { color: var(--ink); background: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="proto-bar">
+  <strong>Awards prototype</strong>
+  <a href="#a">A · Editorial list</a>
+  <a href="#b">B · Marquee</a>
+  <a href="#c">C · Badges + beam</a>
+  <a href="#d">D · Counter</a>
+  <a href="#e">E · Spotlight</a>
+  <a href="#f">F · Orange panel</a>
+  <a href="#g">G · Pills</a>
+  <button type="button" id="replay">Replay animations</button>
+</nav>
+
+<!-- A — Editorial list -->
+<section class="variant reveal" id="a">
+  <span class="variant-label"><b>A</b> · Editorial list — Magic UI Text Animate (blurInUp) + hover underline</span>
+  <h2 class="section-title ta" data-split>Awards</h2>
+  <ol class="list">
+    <li><span class="name ta" data-split style="--base:120ms">Tagline Awards</span></li>
+    <li><span class="name ta" data-split style="--base:260ms">Golden Site Award</span></li>
+    <li><span class="name ta" data-split style="--base:400ms">Workspace Digital Awards 2024</span></li>
+    <li><span class="name ta" data-split style="--base:540ms">Workspace Digital Awards 2025</span><span class="tag">Jury member</span></li>
+  </ol>
+</section>
+
+<!-- B — Marquee -->
+<section class="variant reveal" id="b">
+  <span class="variant-label"><b>B</b> · Marquee — Magic UI Marquee, pauses on hover</span>
+  <h2 class="section-title ta" data-split>Awards</h2>
+  <div class="marquee-wrap">
+    <div class="marquee" data-marquee>
+      <div class="track">
+        <span class="item">Tagline Awards</span><svg class="star" viewBox="0 0 24 24"><use href="#star"/></svg>
+        <span class="item">Golden Site Award</span><svg class="star" viewBox="0 0 24 24"><use href="#star"/></svg>
+        <span class="item">Workspace Digital Awards <em>24</em></span><svg class="star" viewBox="0 0 24 24"><use href="#star"/></svg>
+      </div>
+    </div>
+    <div class="marquee reverse" data-marquee>
+      <div class="track">
+        <span class="item">Workspace Digital Awards <em>25</em> · Jury</span><svg class="star" viewBox="0 0 24 24"><use href="#star"/></svg>
+        <span class="item">Tagline Awards</span><svg class="star" viewBox="0 0 24 24"><use href="#star"/></svg>
+        <span class="item">Golden Site Award</span><svg class="star" viewBox="0 0 24 24"><use href="#star"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- C — Badge cards with Border Beam -->
+<section class="variant reveal" id="c">
+  <span class="variant-label"><b>C</b> · Badges — libraries.dev Border Beam on hover</span>
+  <h2 class="section-title ta" data-split>Awards</h2>
+  <div class="badges">
+    <div class="badge" style="--i:0">
+      <div class="laurel-wrap"><svg class="laurel" viewBox="0 0 132 96"><use href="#laurel"/></svg></div>
+      <div class="award-name">Tagline<br>Awards</div>
+    </div>
+    <div class="badge" style="--i:1">
+      <div class="laurel-wrap"><svg class="laurel" viewBox="0 0 132 96"><use href="#laurel"/></svg></div>
+      <div class="award-name">Golden Site<br>Award</div>
+    </div>
+    <div class="badge" style="--i:2">
+      <div class="laurel-wrap"><svg class="laurel" viewBox="0 0 132 96"><use href="#laurel"/></svg><span class="laurel-year">24</span></div>
+      <div class="award-name">Workspace<br>Digital Awards</div>
+    </div>
+    <div class="badge beam-always" style="--i:3">
+      <div class="laurel-wrap"><svg class="laurel" viewBox="0 0 132 96"><use href="#laurel"/></svg><span class="laurel-year">25</span></div>
+      <div class="award-name">Workspace<br>Digital Awards</div>
+      <div class="jury">Jury member</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- D — Number Ticker -->
+<section class="variant reveal" id="d">
+  <span class="variant-label"><b>D</b> · Counter — Magic UI Number Ticker + compact list</span>
+  <div class="ticker-layout">
+    <div class="ticker-side">
+      <h2 class="section-title ta" data-split>Awards</h2>
+      <span class="ticker-num" data-ticker="4" data-pad="2">00</span>
+      <div class="ticker-caption">industry recognitions</div>
+    </div>
+    <ol class="ticker-list">
+      <li style="--i:0">Tagline Awards</li>
+      <li style="--i:1">Golden Site Award</li>
+      <li style="--i:2">Workspace Digital Awards 2024</li>
+      <li style="--i:3">Workspace Digital Awards 2025 <small>Jury member</small></li>
+    </ol>
+  </div>
+</section>
+
+<!-- E — Spotlight -->
+<section class="variant reveal" id="e">
+  <span class="variant-label"><b>E</b> · Spotlight — hover (or scroll on touch) lights up one line</span>
+  <h2 class="section-title ta" data-split>Awards</h2>
+  <div class="spot" data-spot>
+    <span class="row">Tagline Awards</span>
+    <span class="row">Golden Site Award</span>
+    <span class="row">Workspace Digital Awards 24</span>
+    <span class="row">Workspace Digital Awards 25<sup>Jury</sup></span>
+  </div>
+</section>
+
+<!-- F — Orange panel -->
+<section class="variant reveal" id="f">
+  <span class="variant-label"><b>F</b> · Orange panel — Experience block style, Text Animate slideUp by word</span>
+  <div class="panel">
+    <h2 class="section-title ta" data-split>Awards</h2>
+    <div class="panel-grid">
+      <div class="panel-cell"><span class="idx">01</span><span class="pname ta-word" data-words style="--base:100ms">Tagline Awards</span></div>
+      <div class="panel-cell"><span class="idx">02</span><span class="pname ta-word" data-words style="--base:220ms">Golden Site Award</span></div>
+      <div class="panel-cell"><span class="idx">03</span><span class="pname ta-word" data-words style="--base:340ms">Workspace Digital Awards 2024</span></div>
+      <div class="panel-cell"><span class="idx">04</span><span class="pill">Jury member</span><span class="pname ta-word" data-words style="--base:460ms">Workspace Digital Awards 2025</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- G — Compact shiny pills -->
+<section class="variant reveal" id="g">
+  <span class="variant-label"><b>G</b> · Compact pills — Magic UI Animated Shiny Text</span>
+  <div class="pills-wrap">
+    <h2 class="section-title ta" data-split>Awards</h2>
+    <div class="pills">
+      <span class="pill-award" style="--i:0"><svg viewBox="0 0 24 24"><use href="#star"/></svg><span class="shiny" style="--i:0">Tagline Awards</span></span>
+      <span class="pill-award" style="--i:1"><svg viewBox="0 0 24 24"><use href="#star"/></svg><span class="shiny" style="--i:1">Golden Site Award</span></span>
+      <span class="pill-award" style="--i:2"><svg viewBox="0 0 24 24"><use href="#star"/></svg><span class="shiny" style="--i:2">Workspace Digital Awards 2024</span></span>
+      <span class="pill-award jury" style="--i:3"><svg viewBox="0 0 24 24"><use href="#star"/></svg><span class="shiny" style="--i:3">Workspace Digital Awards 2025</span><small>Jury</small></span>
+    </div>
+  </div>
+</section>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="star" viewBox="0 0 24 24"><path fill="currentColor" d="M12 0c.6 6.6 5.4 11.4 12 12-6.6.6-11.4 5.4-12 12-.6-6.6-5.4-11.4-12-12C6.6 11.4 11.4 6.6 12 0z"/></symbol>
+    <!-- Laurel wreath: generated in the script below (leaves placed along two mirrored arcs) -->
+    <symbol id="laurel" viewBox="0 0 132 96"></symbol>
+  </defs>
+</svg>
+
+<script>
+  // Laurel wreath: leaves along an arc from the bottom centre up each side, alternating outside/inside.
+  (() => {
+    const NS = "http://www.w3.org/2000/svg";
+    const symbol = document.getElementById("laurel");
+    const cx = 66, cy = 46, r = 40;
+    const leaf = (x, y, angle, len, width) => {
+      const p = document.createElementNS(NS, "path");
+      // Pointed leaf shape along +x, then rotated to follow the branch.
+      p.setAttribute("d", `M0 0 Q ${len * 0.5} ${-width} ${len} 0 Q ${len * 0.5} ${width} 0 0 Z`);
+      p.setAttribute("transform", `translate(${x.toFixed(2)} ${y.toFixed(2)}) rotate(${angle.toFixed(1)})`);
+      p.setAttribute("fill", "currentColor");
+      return p;
+    };
+    for (const side of [-1, 1]) {
+      const stem = document.createElementNS(NS, "path");
+      const a0 = Math.PI / 2 + side * 0.12, a1 = Math.PI / 2 + side * (Math.PI * 0.78);
+      const pt = (a) => [cx + r * Math.cos(a), cy + r * Math.sin(a)];
+      const [x0, y0] = pt(a0), [x1, y1] = pt(a1);
+      stem.setAttribute("d", `M${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 0 ${side < 0 ? 0 : 1} ${x1.toFixed(2)} ${y1.toFixed(2)}`);
+      stem.setAttribute("fill", "none");
+      stem.setAttribute("stroke", "currentColor");
+      stem.setAttribute("stroke-width", "1.6");
+      stem.setAttribute("stroke-linecap", "round");
+      symbol.appendChild(stem);
+      const count = 7;
+      for (let i = 0; i < count; i++) {
+        const t = (i + 0.6) / count;
+        const a = a0 + (a1 - a0) * t;
+        const [x, y] = pt(a);
+        // Tangent direction pointing up the branch (towards the tip).
+        const tangent = (Math.atan2(Math.cos(a), -Math.sin(a)) * 180) / Math.PI * (side < 0 ? 1 : 1);
+        const up = side < 0 ? tangent + 180 : tangent;
+        const len = 15 - t * 5, width = 4.6 - t * 1.4;
+        symbol.appendChild(leaf(x, y, up - side * 38, len, width)); // outside leaf
+        symbol.appendChild(leaf(x, y, up + side * 32, len * 0.85, width * 0.9)); // inside leaf
+      }
+      const tip = leaf(x1, y1, (side < 0 ? 180 : 0) + (Math.atan2(Math.cos(a1), -Math.sin(a1)) * 180) / Math.PI, 12, 3.4);
+      symbol.appendChild(tip);
+    }
+  })();
+
+  // Split [data-split] text into per-character spans (what Magic UI TextAnimate does with by="character").
+  // Characters are grouped per word so lines only break between words.
+  for (const el of document.querySelectorAll("[data-split]")) {
+    const text = el.textContent;
+    el.textContent = "";
+    el.setAttribute("aria-label", text);
+    let i = 0;
+    text.split(" ").forEach((word, w) => {
+      if (w > 0) el.appendChild(document.createTextNode(" "));
+      const wordEl = document.createElement("span");
+      wordEl.className = "word";
+      wordEl.setAttribute("aria-hidden", "true");
+      for (const ch of word) {
+        const span = document.createElement("span");
+        span.className = "ch";
+        span.style.setProperty("--i", i++);
+        span.textContent = ch;
+        wordEl.appendChild(span);
+      }
+      i++; // keep a beat for the space
+      el.appendChild(wordEl);
+    });
+  }
+
+  // Duplicate marquee tracks so the loop is seamless.
+  for (const m of document.querySelectorAll("[data-marquee]")) {
+    const track = m.querySelector(".track");
+    m.appendChild(track.cloneNode(true)).setAttribute("aria-hidden", "true");
+  }
+
+  // Word-by-word slide up (TextAnimate by="word", animation="slideUp").
+  for (const el of document.querySelectorAll("[data-words]")) {
+    const words = el.textContent.split(" ");
+    el.setAttribute("aria-label", el.textContent);
+    el.textContent = "";
+    words.forEach((word, i) => {
+      if (i) el.appendChild(document.createTextNode(" "));
+      const w = document.createElement("span");
+      w.className = "w";
+      w.setAttribute("aria-hidden", "true");
+      const inner = document.createElement("span");
+      inner.style.setProperty("--i", i);
+      inner.textContent = word;
+      w.appendChild(inner);
+      el.appendChild(w);
+    });
+  }
+
+  // Number Ticker: count up with ease-out once the section is visible.
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const runTicker = (el) => {
+    const target = Number(el.dataset.ticker), pad = Number(el.dataset.pad || 0);
+    const fmt = (n) => String(n).padStart(pad, "0");
+    if (reduceMotion) { el.textContent = fmt(target); return; }
+    const start = performance.now(), duration = 1400;
+    const step = (now) => {
+      const t = Math.min(1, (now - start) / duration);
+      el.textContent = fmt(Math.round(target * (1 - Math.pow(1 - t, 3))));
+      if (t < 1) requestAnimationFrame(step);
+    };
+    el.textContent = fmt(0);
+    requestAnimationFrame(step);
+  };
+
+  // Spotlight on touch devices: highlight the row closest to the viewport centre.
+  if (matchMedia("(hover: none)").matches) {
+    const rows = [...document.querySelectorAll("[data-spot] .row")];
+    const update = () => {
+      const mid = innerHeight / 2;
+      let best = null, bestD = Infinity;
+      for (const r of rows) {
+        const b = r.getBoundingClientRect();
+        const d = Math.abs(b.top + b.height / 2 - mid);
+        if (d < bestD) { bestD = d; best = r; }
+      }
+      rows.forEach((r) => r.classList.toggle("active", r === best));
+    };
+    addEventListener("scroll", update, { passive: true });
+    update();
+  }
+
+  // Start animations when a variant scrolls into view (startOnView, once).
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) if (e.isIntersecting) {
+      e.target.classList.add("in-view");
+      e.target.querySelectorAll("[data-ticker]").forEach(runTicker);
+      io.unobserve(e.target);
+    }
+  }, { threshold: 0.25 });
+  const sections = document.querySelectorAll(".reveal");
+  sections.forEach((s) => io.observe(s));
+
+  document.getElementById("replay").addEventListener("click", () => {
+    sections.forEach((s) => { s.classList.remove("in-view"); void s.offsetWidth; });
+    sections.forEach((s) => {
+      const r = s.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0) { s.classList.add("in-view"); s.querySelectorAll("[data-ticker]").forEach(runTicker); } else io.observe(s);
+    });
+  });
+</script>
+</body>
+</html>

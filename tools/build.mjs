@@ -288,6 +288,22 @@ for (const page of PAGES) {
   await fs.writeFile(path.join(jsDir, homeModules[0][0]), applyJsStructure(homeModules[0][1]));
 }
 
+// 5c. Standalone interactive elements (tools/inject): plain CSS/JS living outside the React tree.
+{
+  const injectDir = path.resolve("tools/inject");
+  const files = (await fs.readdir(injectDir)).sort();
+  for (const f of files) await write(`/assets/inject/${f}`, await fs.readFile(path.join(injectDir, f)));
+  const css = files.filter((f) => f.endsWith(".css")).map((f) => `<link rel="stylesheet" href="/assets/inject/${f}">`).join("");
+  const js = files.filter((f) => f.endsWith(".js")).map((f) => `<script src="/assets/inject/${f}" defer></script>`).join("");
+  for (const page of PAGES) {
+    const file = path.join(OUT, page);
+    let html = await fs.readFile(file, "utf8");
+    html = replaceOnce(html, "</head>", `${css}</head>`, `${page}: inject css`);
+    html = replaceOnce(html, "</body>", `${js}</body>`, `${page}: inject js`);
+    await fs.writeFile(file, html);
+  }
+}
+
 // 6. Sitemap / robots / 404 / GitHub Pages marker.
 if (SITE_URL) {
   const urls = PAGES.map((p) => `<url><loc>${SITE_URL}/${p === "index.html" ? "" : p.replace(/\.html$/, "")}</loc></url>`).join("\n");
