@@ -3,10 +3,10 @@
 // through Framer's appear animations, resizes and client-side navigation. Shown on the homepage only.
 (() => {
   const AWARDS = [
-    { icon: "rosette", name: "Tagline Awards" },
-    { icon: "star", name: "Golden Site Award" },
-    { icon: "medal", name: "Workspace Digital Awards 2024" },
-    { icon: "gavel", name: "Workspace Digital Awards 2025", note: "Jury member" },
+    { icon: "rosette", name: "Tagline Awards", tag: "#e8479f" },
+    { icon: "star", name: "Golden Site Award", tag: "#7c5cf5" },
+    { icon: "medal", name: "Workspace Digital Awards 2024", tag: "#2f7bff" },
+    { icon: "gavel", name: "Workspace Digital Awards 2025", note: "Jury member", tag: "#21a038" },
   ];
 
   // Crayon palette (from the pastel crayon-on-photo reference)
@@ -161,9 +161,29 @@
     <filter id="awj-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".45"/></filter>
   </defs></svg>`;
 
+
+  // ---------- icon set 3: keycaps (SberDesign canvas reference) ----------
+  // Tactile light keycaps with engraved glyphs; labels become multiplayer-cursor name tags.
+  const glyph = (d) => `<g transform="scale(2)" stroke="#2b2c30" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" fill="none">${d}</g>`;
+  const KEYCAP_ICONS = {
+    trophy: glyph('<path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4z"/><path d="M17 6h2.5a2 2 0 0 1 0 4H17M7 6H4.5a2 2 0 0 0 0 4H7"/>'),
+    rosette: glyph('<circle cx="12" cy="9" r="6"/><circle cx="12" cy="9" r="2.4"/><path d="M8.6 13.9L7 21.5l5-2.6 5 2.6-1.6-7.6"/>'),
+    star: glyph('<path d="M12 3.2l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.6l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>'),
+    medal: glyph('<path d="M8.5 3h7l-2 6h-3z"/><circle cx="12" cy="15" r="5.5"/><path d="M12 12.6l.8 1.6 1.7.2-1.2 1.2.3 1.7-1.6-.8-1.6.8.3-1.7-1.2-1.2 1.7-.2z"/>'),
+    gavel: glyph('<path d="M13.5 10.5l6.8 6.8a1.6 1.6 0 0 1-2.3 2.3l-6.8-6.8"/><path d="M8.6 3.4l6 6-3.2 3.2-6-6z"/><path d="M7.4 4.6L10.6 1.4M13.4 10.6l3.2-3.2M3 21h8"/>'),
+    close: glyph('<path d="M6.5 6.5l11 11M17.5 6.5l-11 11" stroke-width="2"/>'),
+  };
+  // Engraved legend: a light edge below the glyph, like print pressed into plastic
+  const KEYCAP_SPRITE = `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <filter id="awk-engrave" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="1.1" stdDeviation="0" flood-color="#ffffff" flood-opacity=".9"/>
+    </filter>
+  </defs></svg>`;
+
   const ICON_SETS = {
     crayon: { icons: CRAYON_ICONS, sprite: CRAYON_SPRITE, group: "aw-crayon", stroke: true },
     jelly: { icons: JELLY_ICONS, sprite: JELLY_SPRITE, group: "aw-jelly", stroke: false },
+    keycap: { icons: KEYCAP_ICONS, sprite: KEYCAP_SPRITE, group: "aw-keycap", stroke: false, cursorTags: true },
   };
   const svg = (set, name, cls = "") =>
     `<svg class="aw-art ${cls}" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="${set.group}">${set.icons[name]}</g></svg>`;
@@ -197,7 +217,9 @@
       item.className = "aw-item";
       item.tabIndex = -1;
       item.setAttribute("aria-label", award.note ? `${award.name}, ${award.note}` : award.name);
-      item.innerHTML = `${svg(SET, award.icon)}<span class="aw-label" aria-hidden="true">${award.name}${award.note ? `<small>${award.note}</small>` : ""}</span>`;
+      item.innerHTML = SET.cursorTags
+        ? `${svg(SET, award.icon)}<span class="aw-label aw-tag" style="--tag:${award.tag}" aria-hidden="true"><svg class="aw-cursor" viewBox="0 0 16 16"><path d="M1.5 1.2l12.3 5.2-5.3 1.7-2 5.2z" fill="${award.tag}" stroke="#fff" stroke-width="1.2" stroke-linejoin="round"/></svg><span class="aw-tag-text">${award.name}${award.note ? ` · ${award.note}` : ""}</span></span>`
+        : `${svg(SET, award.icon)}<span class="aw-label" aria-hidden="true">${award.name}${award.note ? `<small>${award.note}</small>` : ""}</span>`;
       item.addEventListener("click", () => {
         const wasActive = item.classList.contains("active");
         items.forEach((i) => i.classList.remove("active"));

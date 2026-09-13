@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Awards icons — crayon vs jelly</title>
+<title>Awards icons — crayon, jelly, keycaps</title>
 <link rel="stylesheet" href="http://localhost:4000/assets/inject/awards-radial.css">
 <style>
   @font-face { font-family: "Antonio"; src: url("antonio-latin.woff2") format("woff2"); font-display: swap; }
@@ -17,6 +17,7 @@
   .bar button.ghost { background: #fff; color: #000; }
 
   .variant { max-width: 1440px; margin: 0 auto; padding: 56px 0 24px; }
+  .variant:last-of-type { padding-bottom: 120px; }
   .variant-title { display: flex; align-items: baseline; gap: 12px; margin: 0 24px 20px; }
   .variant-title b { font-family: "Antonio", sans-serif; font-weight: 400; font-size: 44px; line-height: 1; }
   .variant-title span { color: var(--muted); font-size: 18px; }
@@ -47,9 +48,9 @@
 <body>
 
 <div class="bar">
-  <strong>Awards icons — crayon vs jelly</strong>
-  <button type="button" id="open">Open both</button>
-  <button type="button" id="close" class="ghost">Close both</button>
+  <strong>Awards icons — crayon, jelly, keycaps</strong>
+  <button type="button" id="open">Open all</button>
+  <button type="button" id="close" class="ghost">Close all</button>
 </div>
 
 <section class="variant">
@@ -60,6 +61,11 @@
 <section class="variant">
   <div class="variant-title"><b>B · Jelly</b><span>glossy rubber toys</span></div>
   <div class="experience" id="block-jelly"></div>
+</section>
+
+<section class="variant">
+  <div class="variant-title"><b>C · Keycaps</b><span>tactile keys and cursor tags, SberDesign style</span></div>
+  <div class="experience" id="block-keycap"></div>
 </section>
 
 <template id="experience-content">
@@ -76,14 +82,14 @@
 <script src="http://localhost:4000/assets/inject/awards-radial.js"></script>
 <script>
   const tpl = document.getElementById("experience-content");
-  const blocks = { crayon: document.getElementById("block-crayon"), jelly: document.getElementById("block-jelly") };
+  const blocks = { crayon: document.getElementById("block-crayon"), jelly: document.getElementById("block-jelly"), keycap: document.getElementById("block-keycap") };
   for (const b of Object.values(blocks)) b.appendChild(tpl.content.cloneNode(true));
 
   const instances = Object.entries(blocks).map(([style, el]) => window.AwardsRadial.mount(() => el, style));
   const setAll = (open) => instances.forEach((i) => i.setOpen(open));
   document.getElementById("open").addEventListener("click", (e) => { e.stopPropagation(); setAll(true); });
   document.getElementById("close").addEventListener("click", () => setAll(false));
-  // Open both a moment after load so the icons are visible right away
+  // Open all a moment after load so the icons are visible right away
   setTimeout(() => setAll(true), 700);
 </script>
 </body>
