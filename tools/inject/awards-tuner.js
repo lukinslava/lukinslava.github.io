@@ -55,7 +55,6 @@
 
   // ---------- markup ----------
   const POWER = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5v8M7 6.6a7.5 7.5 0 1 0 10 0" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
-  const TROPHY = '<svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4z"/><path d="M17 6h2.5a2 2 0 0 1 0 4H17M7 6H4.5a2 2 0 0 0 0 4H7"/></g></svg>';
 
   function mount(getBlock, options = {}) {
     const active = options.active || (() => true);
@@ -63,9 +62,7 @@
     const trigger = document.createElement("div");
     trigger.className = "at-corner";
     trigger.hidden = true;
-    trigger.innerHTML = `<button class="at-button at-button--main" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Turn on awards">
-        <span class="at-ico at-ico--off">${TROPHY}</span><span class="at-ico at-ico--on">${POWER}</span>
-      </button><span class="at-led" aria-hidden="true"></span>`;
+    trigger.innerHTML = `<button class="at-button at-button--main" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Turn on awards">${POWER}</button><span class="at-led" aria-hidden="true"></span>`;
     const mainBtn = trigger.querySelector("button");
 
     const device = document.createElement("div");
