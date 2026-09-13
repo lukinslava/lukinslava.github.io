@@ -18,6 +18,7 @@ docs/                 готовый сайт (его публикует GitHub 
   assets/files/       видео и шрифты
   assets/fonts/       Google Fonts
   assets/icon-libs/   иконки (Iconoir, Hero)
+  assets/inject/      интерактивные элементы из tools/inject
 tools/
   mirror.mjs          скачивает опубликованный сайт с Framer в raw/
   build.mjs           собирает docs/ из raw/
@@ -25,6 +26,8 @@ tools/
   content.mjs         правки текстов и CSS поверх копии Framer
   structure.mjs       правки структуры главной: удалённые/переделанные карточки, раздел «AI & side projects»
   covers.mjs          генерирует типографические обложки карточек в tools/images/ (нужен Google Chrome)
+  inject/             самостоятельные интерактивные элементы поверх страницы (вне React), подключаются сборкой:
+                      awards-tuner — оранжевая кнопка питания в блоке Experience и прибор с LCD-экраном наград
   images/             обложки карточек и их уменьшенные версии
   404.html            шаблон страницы 404
 ```
@@ -77,6 +80,15 @@ SITE_URL=https://lukinslava.github.io node tools/build.mjs
 и в JS-модуле страницы (`docs/assets/js/*.mjs`), из которого React восстанавливает страницу.
 Менять нужно в обоих местах, иначе после загрузки JS текст откатится. Для заметных изменений
 удобнее перенести сайт на собственный код (например, Astro/Next.js), используя эту копию как референс.
+
+## Прототипы
+
+```bash
+node tools/serve.mjs 4100 prototypes
+```
+
+- http://localhost:4100/compare/ — варианты элемента наград (мелок, желе, Braun, тюнер); тюнер берётся с запущенного сайта на :4000
+- http://localhost:4100/awards/, http://localhost:4100/radial/ — ранние прототипы раздела наград
 
 ## Что изменено относительно Framer
 

@@ -1,6 +1,6 @@
 // Awards "tuner": an orange corner button that powers a small Braun-style device with an LCD on and off.
 // The LCD renders award names with a hand-built 14-segment display (SVG), long names scroll like an old car radio.
-// Exposes window.AwardsTuner.mount(getBlock, options). Not auto-mounted on the site (preview only).
+// On the site it pins itself to the Experience block on the homepage; pages that set window.AW_MANUAL mount it themselves.
 (() => {
   const AWARDS = [
     { name: "Tagline Awards" },
@@ -234,4 +234,21 @@
   }
 
   window.AwardsTuner = { mount, awards: AWARDS };
+  if (window.AW_MANUAL) return;
+
+  // ---------- on the site: Experience block on the homepage ----------
+  let block = null;
+  function findExperienceBlock() {
+    if (block && block.isConnected) return block;
+    block = null;
+    const heading = [...document.querySelectorAll("h2")].find((h) => h.textContent.trim() === "Experience" && h.getClientRects().length);
+    for (let el = heading?.parentElement; el && el !== document.body; el = el.parentElement) {
+      const bg = getComputedStyle(el).backgroundImage !== "none" ? "image" : getComputedStyle(el).backgroundColor;
+      if (bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent") { block = el; break; }
+    }
+    return block;
+  }
+  const start = () => mount(findExperienceBlock, { active: () => location.pathname === "/" });
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
 })();

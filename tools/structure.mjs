@@ -93,7 +93,26 @@ function htmlCardRange(html, cls) {
 
 const escapeHtml = (s) => s.replace(/&/g, "&amp;");
 
+// The standalone Awards section (both breakpoint variants in the server HTML, one node in the page module).
+const AWARDS_SECTION = "framer-1bt27sf";
+
+function removeHtmlBlock(html, start) {
+  const re = /<(\/?)div\b[^>]*>/g;
+  re.lastIndex = start;
+  let depth = 0;
+  for (let m; (m = re.exec(html)); ) {
+    depth += m[1] ? -1 : 1;
+    if (depth === 0) return html.slice(0, start) + html.slice(re.lastIndex);
+  }
+  throw new Error("structure: unbalanced div");
+}
+
 export function applyHtmlStructure(html) {
+  const variantRe = new RegExp(`<div class="ssr-variant[^"]*"><div class="${AWARDS_SECTION}"`);
+  let removed = 0;
+  for (let m; (m = html.match(variantRe)); removed++) html = removeHtmlBlock(html, m.index);
+  if (removed !== 2) throw new Error(`structure: expected 2 awards section variants, removed ${removed}`);
+
   for (const cls of removedCards) {
     const [s, e] = htmlCardRange(html, cls);
     html = html.slice(0, s) + html.slice(e);
@@ -131,6 +150,17 @@ function jsCardRange(js, cls) {
 }
 
 export function applyJsStructure(js) {
+  {
+    const anchor = once(js, `className:\`${AWARDS_SECTION}\``, "js awards section");
+    const re = /\w+\(\w+,\{breakpoint:\w+,overrides:/g;
+    let start = -1;
+    for (let m; (m = re.exec(js)) && m.index < anchor; ) start = m.index;
+    const end = matchParen(js, js.indexOf("(", start));
+    if (start === -1 || end < anchor) throw new Error("structure: awards section wrapper not found");
+    if (js[start - 1] !== ",") throw new Error("structure: expected a comma before the awards section");
+    js = js.slice(0, start - 1) + js.slice(end);
+  }
+
   for (const cls of removedCards) {
     const [s, e] = jsCardRange(js, cls);
     if (js[s - 1] !== ",") throw new Error(`structure: expected a comma before card ${cls}`);

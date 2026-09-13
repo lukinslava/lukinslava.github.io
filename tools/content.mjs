@@ -107,6 +107,13 @@ export const styleOverrides = [
   // Core skills cards: Framer pins the list to the bottom (space-between); with lists of different length
   // the third column's list floats far below its heading. Keep lists right under the headings instead.
   ".framer-1yijn1p, .framer-1k2wkeh, .framer-1sy1c41 { justify-content: flex-start !important; }",
+  // Experience block: light Braun-like device body instead of the orange background
+  ".framer-pzIB3 .framer-1rf8pco { background: linear-gradient(180deg, #f1f1ee 0%, #e9e9e5 100%) !important; box-shadow: inset 0 1.5px 0 #ffffff, inset 0 -2px 0 rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06), 0 30px 60px -30px rgba(0, 0, 0, 0.25); }",
+  ".framer-1rf8pco h2.framer-text { --framer-text-color: #1b1b1a !important; }",
+  ".framer-1v4d6le span.framer-text { --framer-text-color: #f97029 !important; }",
+  ".framer-7g0arg, .framer-1u1wxsm, .framer-1b1i3vk { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.08); }",
+  // Keep the fixed header above the awards device when the Experience block scrolls under it
+  ".framer-h3ifuw-container { z-index: 10 !important; }",
 ];
 
 export function applyContentEdits(text, counts) {
