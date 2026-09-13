@@ -86,6 +86,7 @@
         <span class="at-sr" aria-live="polite"></span>
       </div>
       <div class="at-controls">
+        <span class="at-label" aria-hidden="true">awards</span>
         <div class="at-small"><span class="at-cap">prev</span><button class="at-button at-button--small" type="button" data-dir="-1" aria-label="Previous award"></button></div>
         <div class="at-small"><span class="at-cap">next</span><button class="at-button at-button--small" type="button" data-dir="1" aria-label="Next award"></button></div>
       </div>`;
