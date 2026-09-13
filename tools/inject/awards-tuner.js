@@ -25,7 +25,7 @@
     [5.9, 13.8, 2.6, 21.2], [7, 13.3, 7, 21.7], [8.1, 13.8, 11.4, 21.2],
   ];
   const CELL = 17;
-  const CHARS = 11;
+  const CHARS = 18;
 
   function lcdSvg(chars = CHARS) {
     let ghost = "";

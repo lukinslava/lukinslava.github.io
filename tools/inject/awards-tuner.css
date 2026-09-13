@@ -117,7 +117,7 @@
     0 1px 0 rgba(255, 255, 255, 0.9);
 }
 .at-lcd-svg { display: block; width: 100%; height: auto; overflow: visible; }
-.at-lcd-svg line { stroke-width: 1.9; stroke-linecap: round; }
+.at-lcd-svg line { stroke-width: 2.2; stroke-linecap: round; }
 .at-ghost line { stroke: rgba(40, 44, 36, 0.07); }
 .at-lit line { stroke: transparent; }
 .at-lit line.on { stroke: #262923; }
