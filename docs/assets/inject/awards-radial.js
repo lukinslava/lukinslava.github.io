@@ -14,7 +14,7 @@
 
   // Hand-drawn icons on a 48x48 grid: slightly wobbly shapes, a fill in one colour and a scribbled outline in another.
   // They are rendered through the #aw-crayon filter (rough edges + chalky grain), see SPRITE below.
-  const ICONS = {
+  const CRAYON_ICONS = {
     trophy: `
       <path d="M16.5 40.6c2.4-.5 12.6-.7 15.2.1" stroke="${C.sky}" stroke-width="4.3"/>
       <path d="M23.4 31.5c.3 3 .1 6.3-.4 8.6M25.2 31.4c-.1 3.1.2 6.1.6 8.7" stroke="${C.pink}" stroke-width="3.1"/>
@@ -47,12 +47,10 @@
       <path d="M9.4 13.9l9.9-10.2M25.3 29.1l9.7-10.1" stroke="${C.pink}" stroke-width="4.1"/>`,
     close: `<path d="M13 13.4c7.3 6.7 14.8 14 21.6 21.4M34.9 13c-7.4 7.2-14.6 14.5-21.5 22" stroke="#fff" stroke-width="4.3"/>`,
   };
-  const svg = (name, cls = "") =>
-    `<svg class="aw-art ${cls}" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="aw-crayon">${ICONS[name]}</g></svg>`;
 
   // Crayon filters: wobbly edges + chalky grain. The "boil" version re-rolls the noise a few times a second
   // (hand-drawn animation feel) and is used on hover.
-  const SPRITE = `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  const CRAYON_SPRITE = `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
     <filter id="aw-crayon" x="-15%" y="-15%" width="130%" height="130%" color-interpolation-filters="sRGB">
       <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="4" result="warp"/>
       <feDisplacementMap in="SourceGraphic" in2="warp" scale="2.2" xChannelSelector="R" yChannelSelector="G" result="rough"/>
@@ -73,9 +71,116 @@
     </filter>
   </defs></svg>`;
 
+
+  // ---------- icon set 2: glossy jelly toys (rubber-duck poster reference) ----------
+  // Translucent yellow "gummy" plastic with bright speculars, orange jelly details and a bit of chrome.
+  const JELLY_ICONS = {
+    trophy: `
+      <path d="M15.2 13.4c-4.6-.9-7.4 1.2-7 4.6.4 3.3 3.6 5.2 8.3 4.6M32.8 13.4c4.6-.9 7.4 1.2 7 4.6-.4 3.3-3.6 5.2-8.3 4.6" stroke="url(#awj-orange)" stroke-width="3.4" fill="none"/>
+      <rect x="20.6" y="29.5" width="6.8" height="8" rx="2.4" fill="url(#awj-orange)"/>
+      <rect x="14.5" y="36" width="19" height="6.6" rx="3.3" fill="url(#awj-chrome)"/>
+      <path d="M16.5 37.4h15" stroke="#fff" stroke-width="1.2" opacity=".8" stroke-linecap="round"/>
+      <path d="M13.2 8.2h21.6v11.6c0 6.6-4.8 11.6-10.8 11.6S13.2 26.4 13.2 19.8z" fill="url(#awj-yellow)"/>
+      <path d="M13.2 8.2h21.6v11.6c0 6.6-4.8 11.6-10.8 11.6S13.2 26.4 13.2 19.8z" fill="none" stroke="#d98200" stroke-width="1.1" opacity=".45"/>
+      <ellipse cx="24" cy="9" rx="10.4" ry="1.7" fill="#fff5b8" opacity=".7"/>
+      <path d="M26.6 28.6c3.4-1 5.6-3.6 6-7" stroke="#fff6b0" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>
+      <path d="M16.2 12.2c-.4 4.2.2 8 2.4 11" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".95"/>
+      <circle cx="30.8" cy="12.6" r="1.3" fill="#fff"/>`,
+    rosette: `
+      <path d="M17.6 26.6l-4.6 14.8 6.2-2.4 3.6 5.2 2.4-14.2z" fill="url(#awj-orange)"/>
+      <path d="M30.4 26.6l4.6 14.8-6.2-2.4-3.6 5.2-2.4-14.2z" fill="url(#awj-orange)"/>
+      <path d="M16.2 32.6l1.4-4.6" stroke="#ffd2b8" stroke-width="1.3" stroke-linecap="round" opacity=".8"/>
+      <circle cx="24" cy="17.4" r="12.6" fill="url(#awj-yellow)"/>
+      <circle cx="24" cy="17.4" r="12.1" fill="none" stroke="#d98200" stroke-width="1.1" opacity=".45"/>
+      <circle cx="24" cy="17.4" r="6.4" fill="url(#awj-orange)"/>
+      <path d="M26.4 22.2c1.6-.8 2.6-2.4 2.8-4.2" stroke="#ffd0ad" stroke-width="1.3" stroke-linecap="round" opacity=".8"/>
+      <path d="M14.2 14.6c1-3.8 4-6.6 7.8-7.4" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".95"/>
+      <circle cx="21.6" cy="14.6" r="1.1" fill="#fff"/>
+      <path d="M17.6 25.8c3.8 2.4 9 2.4 12.8 0" stroke="#fff6b0" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>`,
+    star: `
+      <path d="M24 5.2c1.2 0 2 .7 2.6 1.9l3.8 7.8 8.5 1.2c2.6.4 3.4 2.9 1.5 4.7l-6.2 6 1.5 8.5c.4 2.6-1.7 4.1-4 2.9L24 34.2l-7.7 4c-2.3 1.2-4.4-.3-4-2.9l1.5-8.5-6.2-6c-1.9-1.8-1.1-4.3 1.5-4.7l8.5-1.2 3.8-7.8c.6-1.2 1.4-1.9 2.6-1.9z" fill="url(#awj-yellow)"/>
+      <path d="M24 5.2c1.2 0 2 .7 2.6 1.9l3.8 7.8 8.5 1.2c2.6.4 3.4 2.9 1.5 4.7l-6.2 6 1.5 8.5c.4 2.6-1.7 4.1-4 2.9L24 34.2l-7.7 4c-2.3 1.2-4.4-.3-4-2.9l1.5-8.5-6.2-6c-1.9-1.8-1.1-4.3 1.5-4.7l8.5-1.2 3.8-7.8c.6-1.2 1.4-1.9 2.6-1.9z" fill="none" stroke="#d98200" stroke-width="1.1" opacity=".45"/>
+      <path d="M24 16.4l1.7 3.5 3.9.6-2.8 2.7.7 3.8-3.5-1.8-3.5 1.8.7-3.8-2.8-2.7 3.9-.6z" fill="#fff1a0" opacity=".55"/>
+      <path d="M21.8 9.4l-2.6 5.6-6.4 1" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".95"/>
+      <circle cx="33.6" cy="18.8" r="1.1" fill="#fff"/>
+      <path d="M19.6 33.6c2.8-1.4 6-1.4 8.8 0" stroke="#fff6b0" stroke-width="1.6" stroke-linecap="round" opacity=".7"/>
+      <path d="M40.6 34.4l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z" fill="url(#awj-chrome)"/>`,
+    medal: `
+      <path d="M13.6 3.8h7.6l6.2 14.6h-7.6z" fill="url(#awj-orange)"/>
+      <path d="M34.4 3.8h-7.6l-6.2 14.6h7.6z" fill="url(#awj-yellow)"/>
+      <path d="M16.2 5.6l4.8 11" stroke="#ffd2b8" stroke-width="1.2" stroke-linecap="round" opacity=".7"/>
+      <circle cx="24" cy="30" r="12" fill="url(#awj-chrome)"/>
+      <circle cx="24" cy="30" r="8.6" fill="url(#awj-chrome-inner)"/>
+      <path d="M24 24.2l1.8 3.7 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6z" fill="url(#awj-yellow)"/>
+      <ellipse cx="18.6" cy="24.4" rx="1.8" ry="4" transform="rotate(38 18.6 24.4)" fill="#fff" opacity=".95" filter="url(#awj-soft)"/>
+      <circle cx="30.4" cy="35.6" r="1" fill="#fff" opacity=".8"/>`,
+    gavel: `
+      <rect x="8.4" y="37.6" width="18" height="5.4" rx="2.7" fill="url(#awj-yellow)"/>
+      <path d="M24.4 23.4l14.4 14" stroke="url(#awj-orange)" stroke-width="5" stroke-linecap="round"/>
+      <path d="M26.8 24.4l10.6 10.4" stroke="#ffd2b8" stroke-width="1.2" stroke-linecap="round" opacity=".75"/>
+      <g transform="rotate(45 20.6 16.4)">
+        <rect x="11.6" y="11" width="18" height="10.8" rx="3" fill="url(#awj-chrome-h)"/>
+        <rect x="8.2" y="9.6" width="5" height="13.6" rx="2.4" fill="url(#awj-yellow)"/>
+        <rect x="28" y="9.6" width="5" height="13.6" rx="2.4" fill="url(#awj-yellow)"/>
+        <path d="M13.8 13.2h13.4" stroke="#fff" stroke-width="1.4" stroke-linecap="round" opacity=".9"/>
+      </g>
+      <ellipse cx="11.6" cy="39" rx="2.4" ry=".9" fill="#fff" opacity=".85"/>`,
+    close: `<path d="M14.5 14.5l19 19M33.5 14.5l-19 19" stroke="#fff" stroke-width="4.4" stroke-linecap="round"/>`,
+  };
+
+  const JELLY_SPRITE = `<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+    <radialGradient id="awj-yellow" cx="56%" cy="62%" r="72%">
+      <stop offset="0" stop-color="#fff2a0"/>
+      <stop offset=".28" stop-color="#ffe23e"/>
+      <stop offset=".7" stop-color="#fbbf06"/>
+      <stop offset="1" stop-color="#e58f00"/>
+    </radialGradient>
+    <radialGradient id="awj-orange" cx="56%" cy="60%" r="78%">
+      <stop offset="0" stop-color="#ffb07a"/>
+      <stop offset=".45" stop-color="#ff6a1f"/>
+      <stop offset="1" stop-color="#cf3a07"/>
+    </radialGradient>
+    <linearGradient id="awj-chrome" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset=".35" stop-color="#b9bec4"/>
+      <stop offset=".5" stop-color="#6f757c"/>
+      <stop offset=".62" stop-color="#e9ecef"/>
+      <stop offset="1" stop-color="#8b9097"/>
+    </linearGradient>
+    <linearGradient id="awj-chrome-h" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4f6f8"/>
+      <stop offset=".45" stop-color="#8e949b"/>
+      <stop offset=".6" stop-color="#dfe3e7"/>
+      <stop offset="1" stop-color="#6c7178"/>
+    </linearGradient>
+    <linearGradient id="awj-chrome-inner" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#f2f4f6"/>
+      <stop offset=".5" stop-color="#9aa0a6"/>
+      <stop offset="1" stop-color="#5f646a"/>
+    </linearGradient>
+    <filter id="awj-soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation=".45"/></filter>
+  </defs></svg>`;
+
+  const ICON_SETS = {
+    crayon: { icons: CRAYON_ICONS, sprite: CRAYON_SPRITE, group: "aw-crayon", stroke: true },
+    jelly: { icons: JELLY_ICONS, sprite: JELLY_SPRITE, group: "aw-jelly", stroke: false },
+  };
+  // Preview switch: ?icons=jelly (remembered for the tab so client-side navigation keeps it)
+  let style = "crayon";
+  try {
+    const fromUrl = new URLSearchParams(location.search).get("icons");
+    if (fromUrl && ICON_SETS[fromUrl]) sessionStorage.setItem("aw-icons", fromUrl);
+    const saved = sessionStorage.getItem("aw-icons");
+    if (saved && ICON_SETS[saved]) style = saved;
+  } catch {}
+  const SET = ICON_SETS[style];
+  const svg = (name, cls = "") =>
+    `<svg class="aw-art ${cls}" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="${SET.group}">${SET.icons[name]}</g></svg>`;
+
   // ---------- markup ----------
   const root = document.createElement("div");
   root.className = "aw-radial";
+  root.dataset.icons = style;
   root.hidden = true;
   root.innerHTML = `<button class="aw-trigger" type="button" aria-expanded="false" aria-label="Show awards">
       ${svg("trophy", "aw-ico-open")}${svg("close", "aw-ico-close")}
@@ -190,7 +295,7 @@
   }
 
   const start = () => {
-    document.body.insertAdjacentHTML("beforeend", SPRITE);
+    document.body.insertAdjacentHTML("beforeend", SET.sprite);
     document.body.appendChild(root);
     layout();
     addEventListener("resize", layout);
