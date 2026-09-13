@@ -1,4 +1,4 @@
-// Awards "tuner": an orange corner button that powers on a small Braun-style device with an LCD.
+// Awards "tuner": an orange corner button that powers a small Braun-style device with an LCD on and off.
 // The LCD renders award names with a hand-built 14-segment display (SVG), long names scroll like an old car radio.
 // Exposes window.AwardsTuner.mount(getBlock, options). Not auto-mounted on the site (preview only).
 (() => {
@@ -63,7 +63,9 @@
     const trigger = document.createElement("div");
     trigger.className = "at-corner";
     trigger.hidden = true;
-    trigger.innerHTML = `<button class="at-button at-button--main" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Show awards">${TROPHY}</button><span class="at-led" aria-hidden="true"></span>`;
+    trigger.innerHTML = `<button class="at-button at-button--main" type="button" aria-haspopup="dialog" aria-expanded="false" aria-label="Turn on awards">
+        <span class="at-ico at-ico--off">${TROPHY}</span><span class="at-ico at-ico--on">${POWER}</span>
+      </button><span class="at-led" aria-hidden="true"></span>`;
     const mainBtn = trigger.querySelector("button");
 
     const device = document.createElement("div");
@@ -79,13 +81,9 @@
         <span class="at-sr" aria-live="polite"></span>
       </div>
       <div class="at-controls">
-        <button class="at-button at-button--power" type="button" aria-label="Turn off">${POWER}</button>
-        <div class="at-pair">
-          <div class="at-small"><span class="at-cap">prev</span><button class="at-button at-button--small" type="button" data-dir="-1" aria-label="Previous award"></button></div>
-          <div class="at-small"><span class="at-cap">next</span><button class="at-button at-button--small" type="button" data-dir="1" aria-label="Next award"></button></div>
-        </div>
-      </div>
-      <div class="at-foot"><span class="at-brand">LUKIN</span><span class="at-model">awards 1</span></div>`;
+        <div class="at-small"><span class="at-cap">prev</span><button class="at-button at-button--small" type="button" data-dir="-1" aria-label="Previous award"></button></div>
+        <div class="at-small"><span class="at-cap">next</span><button class="at-button at-button--small" type="button" data-dir="1" aria-label="Next award"></button></div>
+      </div>`;
 
     const lcd = device.querySelector(".at-lcd-svg");
     const screen = device.querySelector(".at-screen");
@@ -131,6 +129,7 @@
       if (next === open) return;
       open = next;
       mainBtn.setAttribute("aria-expanded", String(open));
+      mainBtn.setAttribute("aria-label", open ? "Turn off awards" : "Turn on awards");
       trigger.classList.toggle("on", open);
       trigger.classList.add("touched");
       clearTimeout(scrollTimer);
@@ -169,10 +168,6 @@
     }
 
     mainBtn.addEventListener("click", () => setOpen(!open));
-    device.querySelector(".at-button--power").addEventListener("click", (e) => {
-      press(e.currentTarget);
-      setTimeout(() => { setOpen(false); mainBtn.focus({ preventScroll: true }); }, 120);
-    });
     device.querySelectorAll("[data-dir]").forEach((btn) =>
       btn.addEventListener("click", () => { press(btn); show(index + Number(btn.dataset.dir)); }),
     );
