@@ -68,20 +68,7 @@
   transition: background 0.2s ease, box-shadow 0.3s ease;
 }
 .at-corner.on .at-led { background: #ff7a2e; box-shadow: 0 0 0 2px rgba(249, 112, 41, 0.18), 0 0 10px 2px rgba(249, 112, 41, 0.55); }
-/* idle hint ring until first use */
-.at-corner .at-button--main::after {
-  content: "";
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(249, 112, 41, 0.7);
-  opacity: 0;
-  pointer-events: none;
-  animation: at-hint 2.8s ease-out infinite;
-}
 .at-corner .at-button--main { position: relative; }
-.at-corner.touched .at-button--main::after { animation: none; }
-@keyframes at-hint { 0% { opacity: 0.8; transform: scale(0.9); } 70%, 100% { opacity: 0; transform: scale(1.35); } }
 
 /* ---------- the device ---------- */
 .at-device {
@@ -159,5 +146,4 @@
 
 @media (prefers-reduced-motion: reduce) {
   .at-device { transition: opacity 0.2s ease; transform: none; }
-  .at-corner .at-button--main::after { animation: none; }
 }
