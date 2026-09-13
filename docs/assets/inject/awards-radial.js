@@ -165,98 +165,142 @@
     crayon: { icons: CRAYON_ICONS, sprite: CRAYON_SPRITE, group: "aw-crayon", stroke: true },
     jelly: { icons: JELLY_ICONS, sprite: JELLY_SPRITE, group: "aw-jelly", stroke: false },
   };
-  // Preview switch: ?icons=jelly (remembered for the tab so client-side navigation keeps it)
-  let style = "crayon";
-  try {
-    const fromUrl = new URLSearchParams(location.search).get("icons");
-    if (fromUrl && ICON_SETS[fromUrl]) sessionStorage.setItem("aw-icons", fromUrl);
-    const saved = sessionStorage.getItem("aw-icons");
-    if (saved && ICON_SETS[saved]) style = saved;
-  } catch {}
-  const SET = ICON_SETS[style];
-  const svg = (name, cls = "") =>
-    `<svg class="aw-art ${cls}" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="${SET.group}">${SET.icons[name]}</g></svg>`;
+  const svg = (set, name, cls = "") =>
+    `<svg class="aw-art ${cls}" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><g class="${set.group}">${set.icons[name]}</g></svg>`;
 
-  // ---------- markup ----------
-  const root = document.createElement("div");
-  root.className = "aw-radial";
-  root.dataset.icons = style;
-  root.hidden = true;
-  root.innerHTML = `<button class="aw-trigger" type="button" aria-expanded="false" aria-label="Show awards">
-      ${svg("trophy", "aw-ico-open")}${svg("close", "aw-ico-close")}
-    </button>`;
-  const trigger = root.querySelector(".aw-trigger");
-  const items = AWARDS.map((award) => {
-    const item = document.createElement("button");
-    item.type = "button";
-    item.className = "aw-item";
-    item.tabIndex = -1;
-    item.setAttribute("aria-label", award.note ? `${award.name}, ${award.note}` : award.name);
-    item.innerHTML = `${svg(award.icon)}<span class="aw-label" aria-hidden="true">${award.name}${award.note ? `<small>${award.note}</small>` : ""}</span>`;
-    item.addEventListener("click", () => {
-      const wasActive = item.classList.contains("active");
-      items.forEach((i) => i.classList.remove("active"));
-      item.classList.toggle("active", !wasActive);
-      fitLabel(item);
-    });
-    item.addEventListener("pointerenter", () => fitLabel(item));
-    item.addEventListener("focus", () => fitLabel(item));
-    root.appendChild(item);
-    return item;
-  });
-
-  // Keep a label inside the viewport (long names on the leftmost item on phones).
-  function fitLabel(item) {
-    const label = item.querySelector(".aw-label");
-    label.style.setProperty("--shift", "0px");
-    const r = label.getBoundingClientRect();
-    const margin = 8;
-    let dx = 0;
-    if (r.left < margin) dx = margin - r.left;
-    else if (r.right > innerWidth - margin) dx = innerWidth - margin - r.right;
-    label.style.setProperty("--shift", `${Math.round(dx)}px`);
+  const spritesAdded = new Set();
+  function addSprite(style) {
+    if (spritesAdded.has(style)) return;
+    spritesAdded.add(style);
+    document.body.insertAdjacentHTML("beforeend", ICON_SETS[style].sprite);
   }
 
-  // ---------- layout: items fly out to the left along the block's top strip, with a slight droop ----------
-  function layout() {
-    const mobile = innerWidth < 810;
-    const gap = mobile ? 60 : 76;
-    const droop = 2;
-    const stagger = 40;
-    items.forEach((item, i) => {
-      const n = i + 1;
-      item.style.setProperty("--x", `${-n * gap}px`);
-      item.style.setProperty("--y", `${n * n * droop}px`);
-      item.style.setProperty("--delay-in", `${i * stagger}ms`);
-      item.style.setProperty("--delay-out", `${(items.length - 1 - i) * stagger * 0.6}ms`);
-    });
-  }
+  // Creates one awards element pinned to the top-right area of the element returned by getBlock().
+  // options.active(): whether it should be shown right now (e.g. only on the homepage).
+  function mount(getBlock, style = "crayon", options = {}) {
+    const SET = ICON_SETS[style] || ICON_SETS.crayon;
+    const active = options.active || (() => true);
+    addSprite(style);
 
-  function setOpen(open) {
-    root.classList.toggle("open", open);
-    root.classList.add("touched");
-    trigger.setAttribute("aria-expanded", String(open));
-    trigger.setAttribute("aria-label", open ? "Hide awards" : "Show awards");
-    items.forEach((item) => {
-      item.tabIndex = open ? 0 : -1;
-      if (!open) item.classList.remove("active");
+    // ---------- markup ----------
+    const root = document.createElement("div");
+    root.className = "aw-radial";
+    root.dataset.icons = style;
+    root.hidden = true;
+    root.innerHTML = `<button class="aw-trigger" type="button" aria-expanded="false" aria-label="Show awards">
+        ${svg(SET, "trophy", "aw-ico-open")}${svg(SET, "close", "aw-ico-close")}
+      </button>`;
+    const trigger = root.querySelector(".aw-trigger");
+    const items = AWARDS.map((award) => {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "aw-item";
+      item.tabIndex = -1;
+      item.setAttribute("aria-label", award.note ? `${award.name}, ${award.note}` : award.name);
+      item.innerHTML = `${svg(SET, award.icon)}<span class="aw-label" aria-hidden="true">${award.name}${award.note ? `<small>${award.note}</small>` : ""}</span>`;
+      item.addEventListener("click", () => {
+        const wasActive = item.classList.contains("active");
+        items.forEach((i) => i.classList.remove("active"));
+        item.classList.toggle("active", !wasActive);
+        fitLabel(item);
+      });
+      item.addEventListener("pointerenter", () => fitLabel(item));
+      item.addEventListener("focus", () => fitLabel(item));
+      root.appendChild(item);
+      return item;
     });
-  }
 
-  trigger.addEventListener("click", () => setOpen(!root.classList.contains("open")));
-  root.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && root.classList.contains("open")) {
-      setOpen(false);
-      trigger.focus();
+    // Keep a label inside the viewport (long names on the leftmost item on phones).
+    function fitLabel(item) {
+      const label = item.querySelector(".aw-label");
+      label.style.setProperty("--shift", "0px");
+      const r = label.getBoundingClientRect();
+      const margin = 8;
+      let dx = 0;
+      if (r.left < margin) dx = margin - r.left;
+      else if (r.right > innerWidth - margin) dx = innerWidth - margin - r.right;
+      label.style.setProperty("--shift", `${Math.round(dx)}px`);
     }
-  });
-  document.addEventListener("pointerdown", (e) => {
-    if (root.classList.contains("open") && !root.contains(e.target)) setOpen(false);
-  });
 
-  // ---------- pin to the Experience block ----------
+    // ---------- layout: items fly out to the left along the block's top strip, with a slight droop ----------
+    function layout() {
+      const mobile = innerWidth < 810;
+      const gap = mobile ? 60 : 76;
+      const droop = 2;
+      const stagger = 40;
+      items.forEach((item, i) => {
+        const n = i + 1;
+        item.style.setProperty("--x", `${-n * gap}px`);
+        item.style.setProperty("--y", `${n * n * droop}px`);
+        item.style.setProperty("--delay-in", `${i * stagger}ms`);
+        item.style.setProperty("--delay-out", `${(items.length - 1 - i) * stagger * 0.6}ms`);
+      });
+    }
+
+    function setOpen(open) {
+      root.classList.toggle("open", open);
+      root.classList.add("touched");
+      trigger.setAttribute("aria-expanded", String(open));
+      trigger.setAttribute("aria-label", open ? "Hide awards" : "Show awards");
+      items.forEach((item) => {
+        item.tabIndex = open ? 0 : -1;
+        if (!open) item.classList.remove("active");
+      });
+    }
+
+    trigger.addEventListener("click", () => setOpen(!root.classList.contains("open")));
+    root.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && root.classList.contains("open")) {
+        setOpen(false);
+        trigger.focus();
+      }
+    });
+    document.addEventListener("pointerdown", (e) => {
+      if (root.classList.contains("open") && !root.contains(e.target)) setOpen(false);
+    });
+
+    // ---------- follow the block ----------
+    let last = "";
+    function sync() {
+      const el = active() ? getBlock() : null;
+      if (!el) {
+        if (!root.hidden) { root.hidden = true; setOpen(false); }
+      } else {
+        const r = el.getBoundingClientRect();
+        const mobile = innerWidth < 810;
+        const insetX = mobile ? 64 : 100; // distance of the button centre from the block's right edge
+        const insetY = mobile ? 62 : 90; // ... and from its top edge
+        const size = root.offsetWidth || 66;
+        const left = r.right + scrollX - insetX - size / 2;
+        const top = r.top + scrollY + insetY - size / 2;
+        // Follow the block's appear animation (it fades in)
+        const opacity = getComputedStyle(el).opacity;
+        const key = `${left}|${top}|${opacity}`;
+        if (key !== last) {
+          root.style.left = `${left}px`;
+          root.style.top = `${top}px`;
+          root.style.opacity = opacity;
+          last = key;
+        }
+        if (root.hidden) root.hidden = false;
+      }
+      requestAnimationFrame(sync);
+    }
+
+    document.body.appendChild(root);
+    layout();
+    addEventListener("resize", layout);
+    requestAnimationFrame(sync);
+    return { root, setOpen };
+  }
+
+  window.AwardsRadial = { mount, styles: Object.keys(ICON_SETS) };
+
+  // ---------- on the site: pin to the orange Experience block on the homepage ----------
+  if (window.AW_MANUAL) return;
+
   let block = null;
-  function findBlock() {
+  function findExperienceBlock() {
     if (block && block.isConnected) return block;
     block = null;
     const heading = [...document.querySelectorAll("h2")].find((h) => h.textContent.trim() === "Experience" && h.getClientRects().length);
@@ -267,40 +311,16 @@
     return block;
   }
 
-  let last = "";
-  function sync() {
-    const el = location.pathname === "/" ? findBlock() : null;
-    if (!el) {
-      if (!root.hidden) { root.hidden = true; setOpen(false); }
-    } else {
-      const r = el.getBoundingClientRect();
-      const mobile = innerWidth < 810;
-      const insetX = mobile ? 64 : 100; // distance of the button centre from the block's right edge
-      const insetY = mobile ? 62 : 90; // ... and from its top edge
-      const size = root.offsetWidth || 66;
-      const left = r.right + scrollX - insetX - size / 2;
-      const top = r.top + scrollY + insetY - size / 2;
-      // Follow the block's appear animation (it fades in)
-      const opacity = getComputedStyle(el).opacity;
-      const key = `${left}|${top}|${opacity}`;
-      if (key !== last) {
-        root.style.left = `${left}px`;
-        root.style.top = `${top}px`;
-        root.style.opacity = opacity;
-        last = key;
-      }
-      if (root.hidden) root.hidden = false;
-    }
-    requestAnimationFrame(sync);
-  }
+  // Preview switch: ?icons=jelly (remembered for the tab so client-side navigation keeps it)
+  let style = "crayon";
+  try {
+    const fromUrl = new URLSearchParams(location.search).get("icons");
+    if (fromUrl && ICON_SETS[fromUrl]) sessionStorage.setItem("aw-icons", fromUrl);
+    const saved = sessionStorage.getItem("aw-icons");
+    if (saved && ICON_SETS[saved]) style = saved;
+  } catch {}
 
-  const start = () => {
-    document.body.insertAdjacentHTML("beforeend", SET.sprite);
-    document.body.appendChild(root);
-    layout();
-    addEventListener("resize", layout);
-    requestAnimationFrame(sync);
-  };
+  const start = () => mount(findExperienceBlock, style, { active: () => location.pathname === "/" });
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
   else start();
 })();
