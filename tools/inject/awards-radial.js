@@ -167,12 +167,12 @@
   const glyph = (d, color) => `<g transform="scale(2)" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none">${d}</g>`;
   const BRAUN_GLYPH = "#5d5e5a";
   const BRAUN_ICONS = {
-    trophy: glyph('<path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4z"/><path d="M17 6h2.5a2 2 0 0 1 0 4H17M7 6H4.5a2 2 0 0 0 0 4H7"/>', "#a8430c"),
+    trophy: glyph('<path d="M8 21h8M12 17v4M7 4h10v6a5 5 0 0 1-10 0V4z"/><path d="M17 6h2.5a2 2 0 0 1 0 4H17M7 6H4.5a2 2 0 0 0 0 4H7"/>', "#ffffff"),
     rosette: glyph('<circle cx="12" cy="9" r="6"/><circle cx="12" cy="9" r="2.4"/><path d="M8.6 13.9L7 21.5l5-2.6 5 2.6-1.6-7.6"/>', BRAUN_GLYPH),
     star: glyph('<path d="M12 3.2l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.6l-5.2 2.8 1-5.9-4.3-4.1 5.9-.8z"/>', BRAUN_GLYPH),
     medal: glyph('<path d="M8.5 3h7l-2 6h-3z"/><circle cx="12" cy="15" r="5.5"/><path d="M12 12.6l.8 1.6 1.7.2-1.2 1.2.3 1.7-1.6-.8-1.6.8.3-1.7-1.2-1.2 1.7-.2z"/>', BRAUN_GLYPH),
     gavel: glyph('<path d="M13.5 10.5l6.8 6.8a1.6 1.6 0 0 1-2.3 2.3l-6.8-6.8"/><path d="M8.6 3.4l6 6-3.2 3.2-6-6z"/><path d="M7.4 4.6L10.6 1.4M13.4 10.6l3.2-3.2M3 21h8"/>', BRAUN_GLYPH),
-    close: glyph('<path d="M7 7l10 10M17 7L7 17" stroke-width="1.9"/>', "#a8430c"),
+    close: glyph('<path d="M7 7l10 10M17 7L7 17" stroke-width="1.9"/>', "#ffffff"),
   };
   const BRAUN_SPRITE = "";
 
