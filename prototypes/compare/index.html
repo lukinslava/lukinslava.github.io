@@ -3,8 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Awards icons — crayon, jelly, Braun</title>
+<title>Awards — crayon, jelly, Braun, tuner</title>
 <link rel="stylesheet" href="http://localhost:4000/assets/inject/awards-radial.css">
+<link rel="stylesheet" href="http://localhost:4000/assets/inject/awards-tuner.css">
 <style>
   @font-face { font-family: "Antonio"; src: url("antonio-latin.woff2") format("woff2"); font-display: swap; }
   :root { --bg: #f5f5f5; --orange: rgb(249, 112, 41); --muted: rgba(0, 0, 0, 0.5); }
@@ -17,7 +18,7 @@
   .bar button.ghost { background: #fff; color: #000; }
 
   .variant { max-width: 1440px; margin: 0 auto; padding: 56px 0 24px; }
-  .variant:last-of-type { padding-bottom: 120px; }
+  .variant:last-of-type { padding-bottom: 420px; }
   .variant-title { display: flex; align-items: baseline; gap: 12px; margin: 0 24px 20px; }
   .variant-title b { font-family: "Antonio", sans-serif; font-weight: 400; font-size: 44px; line-height: 1; }
   .variant-title span { color: var(--muted); font-size: 18px; }
@@ -60,7 +61,7 @@
 <body>
 
 <div class="bar">
-  <strong>Awards icons — crayon, jelly, Braun</strong>
+  <strong>Awards — crayon, jelly, Braun, tuner</strong>
   <button type="button" id="open">Open all</button>
   <button type="button" id="close" class="ghost">Close all</button>
 </div>
@@ -85,6 +86,11 @@
   <div class="experience experience--braun" id="block-braun-flat"></div>
 </section>
 
+<section class="variant">
+  <div class="variant-title"><b>D · Braun tuner</b><span>orange button opens a tiny device: LCD with the award, prev / next, power off</span></div>
+  <div class="experience experience--braun" id="block-tuner"></div>
+</section>
+
 <template id="experience-content">
   <h2>Experience</h2>
   <div class="cards">
@@ -97,6 +103,7 @@
 
 <script>window.AW_MANUAL = true;</script>
 <script src="http://localhost:4000/assets/inject/awards-radial.js"></script>
+<script src="http://localhost:4000/assets/inject/awards-tuner.js"></script>
 <script>
   const tpl = document.getElementById("experience-content");
   const blocks = { crayon: document.getElementById("block-crayon"), jelly: document.getElementById("block-jelly"), braun: document.getElementById("block-braun") };
@@ -106,6 +113,9 @@
   const flatBlock = document.getElementById("block-braun-flat");
   flatBlock.appendChild(tpl.content.cloneNode(true));
   instances.push(window.AwardsRadial.mount(() => flatBlock, "braun", { button: "flat" }));
+  const tunerBlock = document.getElementById("block-tuner");
+  tunerBlock.appendChild(tpl.content.cloneNode(true));
+  instances.push(window.AwardsTuner.mount(() => tunerBlock));
   const setAll = (open) => instances.forEach((i) => i.setOpen(open));
   document.getElementById("open").addEventListener("click", (e) => { e.stopPropagation(); setAll(true); });
   document.getElementById("close").addEventListener("click", () => setAll(false));
