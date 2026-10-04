@@ -8,7 +8,7 @@ const SECTION_HEADING = "AI & side projects";
 export const cardEdits = [
   {
     cls: "framer-1fzv8qv", // was 82BOX
-    href: ["https://82box.ru/", "https://www.pragmatica.design/outstaff"],
+    href: ["https://82box.ru/", "./ai-match"],
     title: ["82BOX", "AI Match"],
     description: ["Retail Health and Personal Care Products", "Internal AI tool at Pragmatica: screens 2,000+ designer portfolios and shortlists 30–60 per role"],
     image: [/Z05mJp17Eq5RNItbzKiMZrmMDzo((?:\.sd\d+)?)\.png/g, "cover-auf-match$1.png"],

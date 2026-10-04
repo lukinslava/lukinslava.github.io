@@ -315,6 +315,16 @@ if (SITE_URL) {
   await write("sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`);
   await write("robots.txt", `User-agent: *\nAllow: /\nSitemap: ${SITE_URL}/sitemap.xml\n`);
 }
+// Отдельные страницы вне Framer (кейс AI Match): свой HTML, медиа готовит
+// tools/case-media.mjs — зашифрованные кадры в docs/assets/case/.
+for (const file of await fs.readdir(path.resolve("tools/case")).catch(() => [])) {
+  if (file.endsWith(".html")) await write(file, await fs.readFile(path.resolve("tools/case", file)));
+}
+for (const dir of await fs.readdir(path.resolve("tools/case/media")).catch(() => [])) {
+  for (const file of await fs.readdir(path.resolve("tools/case/media", dir))) {
+    await write(path.join("assets/case", dir, file), await fs.readFile(path.resolve("tools/case/media", dir, file)));
+  }
+}
 await write("404.html", await fs.readFile(path.resolve("tools/404.html")));
 await write(".nojekyll", "");
 if (process.env.CNAME) await write("CNAME", process.env.CNAME + "\n");

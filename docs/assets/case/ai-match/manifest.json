@@ -1,0 +1,135 @@
+{
+ "v": 1,
+ "kdf": {
+  "name": "PBKDF2",
+  "hash": "SHA-256",
+  "iterations": 600000,
+  "salt": "l2wixVb6IGyMct06Pgo6QQ=="
+ },
+ "check": {
+  "iv": "RU4Wad0QOV0ocsY1",
+  "data": "00zUJlRKKhfbQqYuGxc23cFDJWTz3xqo"
+ },
+ "files": {
+  "01-hero.mp4": {
+   "file": "01-hero.mp4.enc",
+   "iv": "81MTYioQ3e4NW2x7",
+   "type": "video/mp4"
+  },
+  "03-principles-data-match.png": {
+   "file": "03-principles-data-match.png.enc",
+   "iv": "bTovmNpxkp930ZHL",
+   "type": "image/png"
+  },
+  "03-principles-human-in-loop.png": {
+   "file": "03-principles-human-in-loop.png.enc",
+   "iv": "AM+72AvQ60V5NGZ0",
+   "type": "image/png"
+  },
+  "04-candidate-overview.png": {
+   "file": "04-candidate-overview.png.enc",
+   "iv": "B3f62dMhXScQE9N8",
+   "type": "image/png"
+  },
+  "04-candidate-portfolio.png": {
+   "file": "04-candidate-portfolio.png.enc",
+   "iv": "AiYccY/2B1WVGVrQ",
+   "type": "image/png"
+  },
+  "04-client-shortlist.png": {
+   "file": "04-client-shortlist.png.enc",
+   "iv": "EJYcedCN7biIKxnB",
+   "type": "image/png"
+  },
+  "04-match.mp4": {
+   "file": "04-match.mp4.enc",
+   "iv": "f3jn11hbAv6YXeIq",
+   "type": "video/mp4"
+  },
+  "04-pipeline-board.png": {
+   "file": "04-pipeline-board.png.enc",
+   "iv": "TD+z+YiBBzShNnTh",
+   "type": "image/png"
+  },
+  "04-recruiter-dashboard.png": {
+   "file": "04-recruiter-dashboard.png.enc",
+   "iv": "tumxUCwJb5RTCgN8",
+   "type": "image/png"
+  },
+  "04-vacancy-from-text.mp4": {
+   "file": "04-vacancy-from-text.mp4.enc",
+   "iv": "0u+WnBvehddfHL3N",
+   "type": "video/mp4"
+  },
+  "07-detail-approve.mp4": {
+   "file": "07-detail-approve.mp4.enc",
+   "iv": "mV/U4qXi4S3Ppa7N",
+   "type": "video/mp4"
+  },
+  "07-detail-click.mp4": {
+   "file": "07-detail-click.mp4.enc",
+   "iv": "xN5XOsUf6kUquS2n",
+   "type": "video/mp4"
+  },
+  "07-detail-filters.mp4": {
+   "file": "07-detail-filters.mp4.enc",
+   "iv": "ztvUTm2IUeaUZyNL",
+   "type": "video/mp4"
+  },
+  "07-detail-reject.mp4": {
+   "file": "07-detail-reject.mp4.enc",
+   "iv": "kccU46lYJKEhIGMV",
+   "type": "video/mp4"
+  },
+  "07-detail-stage-menu.mp4": {
+   "file": "07-detail-stage-menu.mp4.enc",
+   "iv": "Ir5W6jgYUIiSoSAg",
+   "type": "video/mp4"
+  },
+  "07-detail-weights.mp4": {
+   "file": "07-detail-weights.mp4.enc",
+   "iv": "YXpV5MBpXHtWfC1/",
+   "type": "video/mp4"
+  },
+  "poster/04-match.jpg": {
+   "file": "poster-04-match.jpg.enc",
+   "iv": "e1DAQHpO45qc6+Lo",
+   "type": "image/jpeg"
+  },
+  "poster/04-vacancy-from-text.jpg": {
+   "file": "poster-04-vacancy-from-text.jpg.enc",
+   "iv": "K1XVaYGGm7sDs7iA",
+   "type": "image/jpeg"
+  },
+  "poster/07-detail-approve.jpg": {
+   "file": "poster-07-detail-approve.jpg.enc",
+   "iv": "LP0H8HC+LCwsONGN",
+   "type": "image/jpeg"
+  },
+  "poster/07-detail-click.jpg": {
+   "file": "poster-07-detail-click.jpg.enc",
+   "iv": "bLkuBcYI6OPMYKID",
+   "type": "image/jpeg"
+  },
+  "poster/07-detail-filters.jpg": {
+   "file": "poster-07-detail-filters.jpg.enc",
+   "iv": "YvmdcAOhMUvh6vq2",
+   "type": "image/jpeg"
+  },
+  "poster/07-detail-reject.jpg": {
+   "file": "poster-07-detail-reject.jpg.enc",
+   "iv": "08CM0Mph1B2ybjpj",
+   "type": "image/jpeg"
+  },
+  "poster/07-detail-stage-menu.jpg": {
+   "file": "poster-07-detail-stage-menu.jpg.enc",
+   "iv": "GSERWC88EdcWr8Ze",
+   "type": "image/jpeg"
+  },
+  "poster/07-detail-weights.jpg": {
+   "file": "poster-07-detail-weights.jpg.enc",
+   "iv": "1CwsMtQPDpGC6FBt",
+   "type": "image/jpeg"
+  }
+ }
+}

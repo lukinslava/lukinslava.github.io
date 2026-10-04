@@ -1,0 +1,640 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI Match — Slava Lukin</title>
+<meta name="robots" content="noindex">
+<style>
+  @font-face { font-family: "Antonio"; src: url("../experience-type/antonio-latin.woff2") format("woff2"); font-display: swap; }
+  :root {
+    --bg: #f5f5f5; --panel: #fff; --ink: #1b1b1a; --text: #2f2f2d; --body: #55544f; --label: #85847f;
+    --line: rgba(0,0,0,.08); --orange: #f97029; --orange-edge: #cf5412;
+    --hairline: 0 0 0 1px rgba(0,0,0,.05), 0 2px 6px -2px rgba(0,0,0,.08);
+    --lift: 0 0 0 1px rgba(0,0,0,.05), 0 30px 60px -30px rgba(0,0,0,.25);
+    --wrap: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  img, video { display: block; max-width: 100%; }
+  a { color: inherit; }
+
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: 1291px; margin: 0 auto; padding: 0 24px; }
+
+  h1, h2, h3 { margin: 0; font-weight: 400; }
+  h1 { font-family: "Antonio", sans-serif; font-size: 96px; line-height: .95; letter-spacing: -0.04em; }
+  h2 { font-family: "Antonio", sans-serif; font-size: 64px; line-height: 1.1; letter-spacing: -0.04em; }
+  h3 { font-size: 28px; line-height: 1.15; letter-spacing: -0.03em; }
+  p { margin: 0; font-size: 20px; line-height: 1.5; color: var(--body); }
+  p + p { margin-top: 16px; }
+  .lead { font-size: 24px; line-height: 1.4; color: var(--text); }
+  .kicker { font-size: 16px; line-height: 1; letter-spacing: .14em; text-transform: uppercase; color: var(--label); }
+  .meta { font-size: 16px; line-height: 1.4; color: var(--label); }
+  strong { font-weight: 400; color: var(--ink); }
+  .orange { color: var(--orange); }
+
+  section { padding: 96px 0; }
+  section + section { padding-top: 0; }
+  .sec-head { display: grid; gap: 20px; margin-bottom: 44px; }
+  .sec-head p { max-width: 760px; }
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .cols-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 0 64px; }
+  .hero .title { display: grid; gap: 20px; justify-items: start; }
+  .hero .lead { max-width: 720px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 10px 40px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .hero-meta div { display: grid; gap: 6px; }
+  .hero-meta dt { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--label); }
+  .hero-meta dd { margin: 0; font-size: 18px; color: var(--text); }
+
+  /* ---------- media frames ---------- */
+  figure { margin: 0; display: grid; gap: 12px; }
+  figcaption { font-size: 15px; line-height: 1.4; color: var(--label); }
+  .screen { position: relative; background: var(--panel); border-radius: 24px; overflow: hidden; box-shadow: var(--lift); }
+  .screen.flat { box-shadow: var(--hairline); }
+  .screen img, .screen video { width: 100%; }
+  .scrollbox { max-height: 620px; overflow-y: auto; scrollbar-width: thin; }
+  .scroll-x { overflow-x: auto; }
+  .scroll-x img { max-width: none; width: 1600px; }
+  .hint { position: absolute; right: 14px; bottom: 14px; z-index: 2; background: rgba(27,27,26,.82); color: #fff; font-size: 12px; letter-spacing: .04em; padding: 7px 12px; border-radius: 999px; backdrop-filter: blur(6px); pointer-events: none; }
+  .phones { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .phone { border-radius: 28px; overflow: hidden; background: #000; box-shadow: var(--lift); height: 560px; }
+  .phone img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+
+  /* play button (Braun) */
+  .player { position: relative; }
+  .player video { background: #e9e9e5; }
+  .pbtn { position: absolute; inset: auto 16px 16px auto; --edge: 3px; width: 52px; height: 52px; border: 0; border-radius: 50%; background: var(--orange); color: #fff; cursor: pointer; display: grid; place-items: center;
+          box-shadow: inset 0 calc(var(--edge) * -1) 0 var(--orange-edge), 0 6px 16px -6px rgba(207,84,18,.7); transition: transform .08s, box-shadow .08s, opacity .25s; }
+  .pbtn:active { transform: translateY(2px); box-shadow: inset 0 -1px 0 var(--orange-edge); }
+  .pbtn svg { width: 20px; height: 20px; }
+  .pbtn.center { inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: 76px; height: 76px; }
+  .pbtn.center:active { transform: translate(-50%, -50%) translateY(2px); }
+  .pbtn.hidden { opacity: 0; pointer-events: none; }
+
+  /* ---------- cards ---------- */
+  .card { background: var(--panel); border-radius: 24px; box-shadow: var(--hairline); padding: 28px; display: grid; gap: 12px; align-content: start; }
+  .card h3 { font-size: 24px; }
+  .card p { font-size: 17px; line-height: 1.45; }
+  .card .num { font-family: "Antonio", sans-serif; font-size: 20px; color: var(--orange); }
+
+  /* numbers */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .stat { background: var(--panel); border-radius: 24px; box-shadow: var(--hairline); padding: 26px 28px; display: grid; gap: 8px; align-content: start; }
+  .stat b { font-family: "Antonio", sans-serif; font-weight: 400; font-size: 56px; line-height: 1; letter-spacing: -0.03em; }
+  .stat span { font-size: 16px; line-height: 1.35; color: var(--label); }
+
+  /* lessons */
+  .lesson { display: grid; grid-template-columns: 132px 1fr; gap: 24px; padding: 24px 0; border-top: 1px solid var(--line); }
+  .lesson .date { font-size: 16px; color: var(--orange); letter-spacing: .02em; }
+  .lesson p { font-size: 18px; }
+  .lesson .rule { margin-top: 10px; font-size: 18px; color: var(--ink); }
+
+  /* todo chips */
+  .todo { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; color: #9a6a1c; background: #fff5e6; border: 1px dashed #e0ae5e; border-radius: 999px; padding: 7px 14px; }
+  .todo::before { content: "to add"; white-space: nowrap; align-self: flex-start; padding-top: 3px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #b98433; }
+  .todos { display: grid; gap: 10px; justify-items: start; margin-top: 20px; }
+
+  .note { font-size: 15px; line-height: 1.45; color: var(--label); }
+  .divider { height: 1px; background: var(--line); margin: 0 auto; max-width: 1291px; }
+
+  /* details grid */
+  .loops { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .loop { display: grid; gap: 10px; }
+  .loop .screen { border-radius: 18px; }
+  .loop .t { font-size: 17px; color: var(--text); }
+  .loop .d { font-size: 15px; color: var(--label); }
+  .sound { position: absolute; left: 12px; bottom: 12px; z-index: 2; border: 0; cursor: pointer; background: rgba(27,27,26,.82); color: #fff; font-size: 12px; letter-spacing: .04em; padding: 7px 12px; border-radius: 999px; }
+
+  /* reveal */
+  .r { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); }
+  .r.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .r { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+
+  /* ---------- password gate ---------- */
+  .screen.is-locked { background: linear-gradient(180deg, #f1f1ee, #e7e7e3); box-shadow: var(--hairline); }
+  .screen.is-locked > video, .screen.is-locked > img, .screen.is-locked .scrollbox, .screen.is-locked .scroll-x,
+  .screen.is-locked .pbtn, .screen.is-locked .hint, .screen.is-locked .sound { display: none !important; }
+  .plate { aspect-ratio: var(--ar, 16 / 9); width: 100%; border: 0; background: none; cursor: pointer; display: grid; place-content: center; gap: 14px; justify-items: center; color: var(--label); font: inherit; padding: 24px; }
+  .plate .ico { width: 52px; height: 52px; border-radius: 50%; background: var(--orange); color: #fff; display: grid; place-items: center; box-shadow: inset 0 -3px 0 var(--orange-edge), 0 6px 16px -6px rgba(207,84,18,.55); transition: transform .08s, box-shadow .08s; }
+  .plate:active .ico { transform: translateY(2px); box-shadow: inset 0 -1px 0 var(--orange-edge); }
+  .plate .ico svg { width: 20px; height: 20px; }
+  .plate .t { font-size: 17px; color: var(--text); }
+  .plate .d { font-size: 14px; text-align: center; max-width: 280px; }
+  .loop .plate { padding: 14px; gap: 8px; }
+  .loop .plate .ico { width: 40px; height: 40px; } .loop .plate .ico svg { width: 16px; height: 16px; }
+  .loop .plate .t { font-size: 15px; } .loop .plate .d { display: none; }
+
+  .gate-bar { position: sticky; top: 0; z-index: 30; display: flex; justify-content: center; pointer-events: none; }
+  .gate-bar span { pointer-events: auto; margin-top: 12px; background: rgba(27,27,26,.9); color: #fff; font-size: 13px; letter-spacing: .02em; padding: 8px 14px; border-radius: 999px; display: flex; gap: 10px; align-items: center; backdrop-filter: blur(6px); }
+  .gate-bar button { border: 0; background: none; color: #f9a46f; font: inherit; cursor: pointer; padding: 0; }
+  .gate-bar.hide { display: none; }
+
+  .pop-back { position: fixed; inset: 0; z-index: 60; background: rgba(27,27,26,.25); backdrop-filter: blur(2px); opacity: 0; transition: opacity .2s; }
+  .pop-back.in { opacity: 1; }
+  .pop { position: fixed; z-index: 61; width: 320px; background: var(--panel); border-radius: 24px; padding: 24px; box-shadow: 0 30px 60px -20px rgba(0,0,0,.35), var(--hairline); display: grid; gap: 16px; justify-items: center;
+         opacity: 0; transform: translateY(8px) scale(.97); transition: opacity .2s, transform .25s cubic-bezier(.2,.8,.2,1); }
+  .pop.in { opacity: 1; transform: none; }
+  .pop h4 { margin: 0; font-size: 20px; font-weight: 400; letter-spacing: -0.02em; }
+  .pop p { font-size: 14px; line-height: 1.4; text-align: center; color: var(--label); }
+  .pins { display: flex; gap: 10px; }
+  .pins input { width: 52px; height: 62px; border: 1px solid var(--line); border-radius: 14px; background: var(--bg); text-align: center; font-family: "Antonio", sans-serif; font-size: 34px; color: var(--ink); caret-color: var(--orange); outline: none; transition: border-color .15s, background .15s; }
+  .pins input:focus { border-color: var(--orange); background: #fff; }
+  .pop.bad .pins { animation: shake .35s; }
+  .pop.bad .pins input { border-color: #d64545; }
+  @keyframes shake { 25% { transform: translateX(-6px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-3px); } }
+  .pop .err { font-size: 13px; color: #d64545; min-height: 16px; }
+  .pop.busy .pins input { opacity: .5; }
+  .pop.busy::after { content: "checking…"; position: absolute; bottom: 22px; font-size: 13px; color: var(--label); }
+  @media (prefers-reduced-motion: reduce) { .pop, .pop-back { transition: none; } .pop.bad .pins { animation: none; } }
+
+  /* footer */
+  footer { padding: 72px 0 96px; }
+  .next { display: flex; align-items: center; gap: 16px; font-size: 20px; color: var(--label); }
+
+  @media (max-width: 1099.98px) {
+    .cols, .loops { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 809.98px) {
+    .wrap, .wide { padding: 0 16px; }
+    h1 { font-size: 56px; }
+    h2 { font-size: 40px; }
+    h3 { font-size: 22px; }
+    p { font-size: 17px; }
+    .lead { font-size: 19px; }
+    section { padding: 64px 0; }
+    .sec-head { margin-bottom: 28px; }
+    .cols, .cols-2, .loops, .stats, .phones { grid-template-columns: 1fr; }
+    .phones { grid-template-columns: repeat(2, 1fr); }
+    .card { padding: 20px; border-radius: 20px; }
+    .stat b { font-size: 42px; }
+    .lesson { grid-template-columns: 1fr; gap: 8px; padding: 20px 0; }
+    .scrollbox { max-height: 420px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="gate-bar hide"><span>Screens unlocked <button type="button">hide again</button></span></div>
+
+<!-- ======== hero ======== -->
+<header class="hero wrap">
+  <div class="title r">
+    <span class="kicker">Pragmatica · internal product</span>
+    <h1>AI Match</h1>
+    <p class="lead">An internal AI tool for a design agency that hires designers. It reads CVs and portfolios, sorts them out and matches people to a role: instead of a base of 5,577, the design lead gets a working pool of 30–60.</p>
+  </div>
+  <dl class="hero-meta r">
+    <div><dt>Role</dt><dd>Design lead · product, design and build</dd></div>
+    <div><dt>Team</dt><dd>Me and AI agents, no dev team</dd></div>
+    <div><dt>Dates</dt><dd>March — October 2026 · live in production</dd></div>
+    <div><dt>Stack</dt><dd>Next.js, PostgreSQL, Gemini</dd></div>
+  </dl>
+</header>
+
+<section class="wide" style="padding-top: 40px">
+  <figure class="r">
+    <div class="screen player" data-player>
+      <video data-locked="01-hero" data-enc="01-hero.mp4" data-poster="/assets/case/ai-match/01-hero-poster.png" playsinline preload="none"></video>
+      <button class="pbtn center" aria-label="Play the overview">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>
+      </button>
+    </div>
+    <figcaption>A 25-second walk through the product: recruiter dashboard → vacancy → matching → candidate card → portfolio → pipeline board. Every person, company and portfolio on screen is invented — this is a demo build on a local copy.</figcaption>
+  </figure>
+</section>
+
+<!-- ======== pain ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>The problem</h2>
+    <p>The agency's base holds 5,577 designers — from Huntflow, from Behance, from referrals. On paper that is wealth. In practice it was a dump: roles tagged at random, grades out of touch with reality, portfolios nobody had opened since the day they were uploaded.</p>
+    <p>When a vacancy came in, the recruiter searched from memory and by keywords, and the design lead went through portfolios by hand — dozens of links for one role. Half of them missed: wrong grade, wrong domain, a “product designer” who had been drawing banners for five years.</p>
+    <p>The brief was simple: <strong>a working pool of 30–60 people instead of 5,577</strong>, where most are genuinely worth a look.</p>
+  </div>
+  <figure class="r">
+    <div class="screen flat"><video src="/assets/case/ai-match/02-pain-funnel.mp4" poster="/assets/case/ai-match/02-pain-funnel.png" muted loop playsinline preload="none" data-loop></video></div>
+    <figcaption>5,000 records in the base narrow down to a pool a design lead can actually read.</figcaption>
+  </figure>
+</section>
+
+<!-- ======== principles ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Three decisions</h2>
+    <p>Half the product grew out of these.</p>
+  </div>
+  <div class="cols r">
+    <article class="card">
+      <span class="num">01</span>
+      <h3>Precision over recall</h3>
+      <p>The tool does not have to find everyone who fits. It has to not waste time on people who don't. If the first ten hold fewer than three strong candidates, the product is useless, however much it found.</p>
+    </article>
+    <article class="card">
+      <span class="num">02</span>
+      <h3>A human in the loop</h3>
+      <p>The model is not equally good at everything. On portfolio visuals it is poor: we checked three times — on an abstract 0–100 scale it hugs the top and gives everyone 70–90, and the same work scores differently across runs. So the visual grade is set by the design lead; the model only pulls the interface screens out of the portfolio and puts them next to reference ones. Where the model is reliably wrong, we don't show its number at all.</p>
+    </article>
+    <article class="card">
+      <span class="num">03</span>
+      <h3>Cheap narrowing first, AI last</h3>
+      <p>Running the whole base through a model is slow and expensive. So selection is staged: role and grade are filtered in the database, instantly; everyone who passes is checked against the vacancy in code, with no model, and gets a score you can unfold requirement by requirement; only the best 30 go to the model.</p>
+    </article>
+  </div>
+  <div class="cols-2 r" style="margin-top: 16px">
+    <figure>
+      <div class="screen flat"><img src="/assets/case/ai-match/03-principles-funnel.png" alt="Selection funnel: base → role and grade → data score → the model reads 30 → the design lead decides" loading="lazy"></div>
+      <figcaption>The funnel, as drawn for the team: everything before the model is free and instant.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen flat"><img data-locked="03-principles-data-match" data-enc="03-principles-data-match.png" alt="“Also a fit by data”: score without the model, with the breakdown unfolded" loading="lazy"></div>
+      <figcaption>“Also a fit by data” — a score with no model behind it, unfolded into which requirement is covered and by what.</figcaption>
+    </figure>
+  </div>
+  <figure class="r" style="margin-top: 16px">
+    <div class="screen flat"><div class="scrollbox"><img data-locked="03-principles-human-in-loop" data-enc="03-principles-human-in-loop.png" alt="Candidate card: the visual grade is set by a human, the model's opinion sits next to it" loading="lazy"></div><span class="hint">scroll inside</span></div>
+    <figcaption>The visual grade — strong / medium / weak — is set by the design lead. The model's own guess sits next to it as a second opinion, and the screens it pulled from the portfolio sit underneath.</figcaption>
+  </figure>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== how it works ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>How it works</h2>
+  </div>
+
+  <div class="sec-head r">
+    <h3>A vacancy from anything</h3>
+    <p>The recruiter pastes the client correspondence, uploads a PDF or a recording of the briefing — and gets a filled-in vacancy. Fields the model is unsure about are flagged: “AI isn't sure — check this.”</p>
+  </div>
+  <figure class="r">
+    <div class="screen flat"><video data-locked="04-vacancy-from-text" data-enc="04-vacancy-from-text.mp4" data-enc-poster="poster/04-vacancy-from-text.jpg" muted loop playsinline preload="none" data-loop></video></div>
+    <figcaption>A brief as plain text turns into fields; the uncertain one is highlighted rather than quietly guessed.</figcaption>
+  </figure>
+
+  <div class="sec-head r" style="margin-top: 64px">
+    <h3>Matching</h3>
+    <p>One button, and about three minutes later the pool is ready: a score against the vacancy criteria, strengths, gaps, questions to ask, and a ready first message to the candidate. Below it sits “also a fit by data” — people the model never read, but who are close on the numbers.</p>
+  </div>
+  <figure class="r">
+    <div class="screen flat"><video data-locked="04-match" data-enc="04-match.mp4" data-enc-poster="poster/04-match.jpg" muted loop playsinline preload="none" data-loop></video></div>
+    <figcaption>“Find candidates” → the pool appears → one candidate unfolds.</figcaption>
+  </figure>
+
+  <div class="sec-head r" style="margin-top: 64px">
+    <h3>The candidate card</h3>
+    <p>A scraper walks the portfolio — the homepage and up to eight cases, picked by how much they look like a case rather than by their order on the page. The model reads the CV and the work: role, grade, skills, domains, seven portfolio scales, strengths and gaps. The card is split into tabs: overview, portfolio, experience, notes.</p>
+  </div>
+  <div class="cols-2 r">
+    <figure>
+      <div class="screen flat"><div class="scrollbox"><img data-locked="04-candidate-overview" data-enc="04-candidate-overview.png" alt="Candidate card, overview tab" loading="lazy"></div><span class="hint">scroll inside</span></div>
+      <figcaption>Overview: where the person is now, which vacancies they suit, what to clarify.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen flat"><div class="scrollbox"><img data-locked="04-candidate-portfolio" data-enc="04-candidate-portfolio.png" alt="Candidate card, portfolio tab with seven scales" loading="lazy"></div><span class="hint">scroll inside</span></div>
+      <figcaption>Portfolio: seven scales, each with the sentence that explains the score.</figcaption>
+    </figure>
+  </div>
+
+  <div class="sec-head r" style="margin-top: 64px">
+    <h3>Pipeline and the client shortlist</h3>
+    <p>Approved people move onto a board of stages, from the internal shortlist to an offer. Days on a stage turn red when someone is stuck. The client gets the shortlist by link — no account — and answers right there: “let's interview”, “not sure”.</p>
+  </div>
+  <figure class="r">
+    <div class="screen flat"><div class="scroll-x"><img data-locked="04-pipeline-board" data-enc="04-pipeline-board.png" alt="Pipeline board across all open vacancies" loading="lazy"></div><span class="hint">scroll sideways</span></div>
+    <figcaption>The board across all open vacancies of one recruiter.</figcaption>
+  </figure>
+  <div class="cols-2 r" style="margin-top: 16px">
+    <figure>
+      <div class="screen flat"><div class="scrollbox"><img data-locked="04-client-shortlist" data-enc="04-client-shortlist.png" alt="The shortlist as the client sees it" loading="lazy"></div><span class="hint">scroll inside</span></div>
+      <figcaption>The shortlist as the client sees it.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen flat"><div class="scrollbox"><img data-locked="04-recruiter-dashboard" data-enc="04-recruiter-dashboard.png" alt="Recruiter dashboard" loading="lazy"></div><span class="hint">scroll inside</span></div>
+      <figcaption>The recruiter's dashboard: only their own work — client answers, today's interviews, “time to follow up”, and new people from last night's run who scored into the best for their vacancies.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== public side ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>The public review</h2>
+    <p>The product has a second side. A designer sends a link to their portfolio and, a few minutes later, gets a review written with the same logic the design lead sees: what works, what is missing, case by case.</p>
+    <p>The review is one text for two readers — the internal document is written in the third person, and a separate pass rewrites it for the designer, in second person. While it runs, the page honestly shows the queue — “2 people ahead of you” — instead of an endless spinner. Every request lands in the same base: the agency gets candidates, the designer gets an honest outside look.</p>
+    <p>So far <strong>146 designers</strong> have sent their portfolio through the public form.</p>
+  </div>
+  <div class="cols-2 r">
+    <figure>
+      <div class="screen player" data-player>
+        <video src="/assets/case/ai-match/05-public-flow.mp4" poster="/assets/case/ai-match/05-public-flow.jpg" muted playsinline preload="none"></video>
+        <button class="pbtn" aria-label="Play the public flow"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+      </div>
+      <figcaption>On a phone: the form → waiting with a queue → the review.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen flat"><div class="scrollbox"><img src="/assets/case/ai-match/05-public-result-desktop.png" alt="The review on desktop" loading="lazy"></div><span class="hint">scroll inside</span></div>
+      <figcaption>The same review on desktop.</figcaption>
+    </figure>
+  </div>
+  <div class="phones r" style="margin-top: 16px">
+    <div class="phone"><img src="/assets/case/ai-match/05-public-form-phone.png" alt="Public form on a phone" loading="lazy"></div>
+    <div class="phone"><img src="/assets/case/ai-match/05-public-wait-phone.png" alt="Waiting with a queue" loading="lazy"></div>
+    <div class="phone"><img src="/assets/case/ai-match/05-public-result-phone.png" alt="The review on a phone" loading="lazy"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== how it was built ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>How it was built</h2>
+    <p>There was no development team: the product was built by one designer together with AI agents. Mine are the framing, the decisions and the checking of what came back; the code is written by agents from specs and plans we draft together.</p>
+  </div>
+  <div class="stats r">
+    <div class="stat"><b>357</b><span>commits in six months</span></div>
+    <div class="stat"><b>~50K</b><span>lines of code</span></div>
+    <div class="stat"><b>30</b><span>specs and plans</span></div>
+    <div class="stat"><b>60+</b><span>test files on pure logic</span></div>
+  </div>
+
+  <div class="sec-head r" style="margin-top: 64px">
+    <h3>Economics became part of the design</h3>
+    <p>The expensive part is the model reading a portfolio, so the product spends money on a schedule. During the day a candidate is parsed on demand; the queue from Huntflow runs at night, in batches through the Batch API — half the price, about <strong>two cents per person</strong>. Parsing the whole base costs around a hundred dollars.</p>
+  </div>
+
+  <div class="r">
+    <h3 style="margin-bottom: 8px">Two lessons that became rules in the code</h3>
+    <div class="lesson">
+      <span class="date">26 September</span>
+      <div>
+        <p>The account ran out of money in the middle of a night run, and 802 people were left with “parsing failed” — dropping out of the queue for good.</p>
+        <p class="rule">→ Hopeless errors — money, quota — now keep a person in the queue.</p>
+      </div>
+    </div>
+    <div class="lesson">
+      <span class="date">2 October</span>
+      <div>
+        <p>Google's file storage filled up, and 507 of 567 requests went through at full price.</p>
+        <p class="rule">→ At night we never pay full price in any outcome: if batches aren't accepted, the night stops and waits.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card r" style="margin-top: 40px; background: linear-gradient(180deg, #f1f1ee, #e9e9e5); box-shadow: inset 0 1.5px 0 #fff, var(--hairline)">
+    <h3>A weekend in one chart</h3>
+    <p>From Friday evening to Monday the parsing ran on its own, with nobody watching. As of Sunday night: <strong>1,121 people, $23, not a single full-price request.</strong></p>
+    <div class="todos"><span class="todo">final weekend numbers and the chart — on Monday</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== details ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Details</h2>
+    <p>An internal tool deserves the small things too — people are in it all day.</p>
+  </div>
+  <div class="loops r">
+    <figure class="loop">
+      <div class="screen flat player" data-player data-sound>
+        <video data-locked="07-detail-click" data-enc="07-detail-click.mp4" data-enc-poster="poster/07-detail-click.jpg" muted loop playsinline preload="none" data-loop></video>
+        <button class="sound">sound on</button>
+      </div>
+      <span class="t">Click sound</span>
+      <span class="d">A short soft click, tuned so a run of clicks doesn't nag.</span>
+    </figure>
+    <figure class="loop">
+      <div class="screen flat"><video data-locked="07-detail-stage-menu" data-enc="07-detail-stage-menu.mp4" data-enc-poster="poster/07-detail-stage-menu.jpg" muted loop playsinline preload="none" data-loop></video></div>
+      <span class="t">Stage menu on the card</span>
+      <span class="d">Move, schedule an interview, open the candidate — without leaving the board.</span>
+    </figure>
+    <figure class="loop">
+      <div class="screen flat"><video data-locked="07-detail-reject" data-enc="07-detail-reject.mp4" data-enc-poster="poster/07-detail-reject.jpg" muted loop playsinline preload="none" data-loop></video></div>
+      <span class="t">A rejection with a reason</span>
+      <span class="d">Who rejected — us, the client, the candidate — and why. Matching learns only from ours, and the interface says so.</span>
+    </figure>
+    <figure class="loop">
+      <div class="screen flat"><video data-locked="07-detail-approve" data-enc="07-detail-approve.mp4" data-enc-poster="poster/07-detail-approve.jpg" muted loop playsinline preload="none" data-loop></video></div>
+      <span class="t">Confetti on approval</span>
+      <span class="d">The one moment in the day worth celebrating.</span>
+    </figure>
+    <figure class="loop">
+      <div class="screen flat"><video data-locked="07-detail-filters" data-enc="07-detail-filters.mp4" data-enc-poster="poster/07-detail-filters.jpg" muted loop playsinline preload="none" data-loop></video></div>
+      <span class="t">Base filters</span>
+      <span class="d">Role, grade, domains — as sliders and chips, not a form.</span>
+    </figure>
+    <figure class="loop">
+      <div class="screen flat"><video data-locked="07-detail-weights" data-enc="07-detail-weights.mp4" data-enc-poster="poster/07-detail-weights.jpg" muted loop playsinline preload="none" data-loop></video></div>
+      <span class="t">Criteria weights</span>
+      <span class="d">What matters more in this vacancy — set on the vacancy itself.</span>
+    </figure>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== results ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Where it landed</h2>
+  </div>
+  <div class="stats r">
+    <div class="stat"><b>5,577</b><span>designers in the base — tagged by role, grade, skills, domains and portfolio scores</span></div>
+    <div class="stat"><b>30–60</b><span>people in the pool a design lead reads for one vacancy</span></div>
+    <div class="stat"><b>~2¢</b><span>per candidate parsed</span></div>
+    <div class="stat"><b>~$100</b><span>to parse the entire base</span></div>
+  </div>
+  <p class="r" style="margin-top: 28px">Of the base, <strong>5,450 people are parsed and tagged</strong> — 127 are still in the queue. The tool is still rolling out across the agency, so there are no numbers yet for time per vacancy or hires made through it.</p>
+  <p class="note r" style="margin-top: 36px">Everything on screen is demo data on a local copy of the product: all people, companies, vacancies and portfolios are invented, and no real candidate, client or third-party work appears on any frame.</p>
+</section>
+
+<footer class="wrap">
+  <div class="next r"><a href="/" style="color: var(--text)">← Back to the portfolio</a></div>
+</footer>
+
+<script>
+  // reveal on scroll
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -10% 0px" });
+  document.querySelectorAll(".r").forEach((el) => io.observe(el));
+
+  // looping clips play only while visible
+  const loops = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target;
+    if (e.isIntersecting) { if (v.preload === "none") v.preload = "auto"; v.play().catch(() => {}); } else v.pause();
+  }), { threshold: 0.25 });
+  document.querySelectorAll("video[data-loop]").forEach((v) => loops.observe(v));
+
+  // click-to-play players
+  document.querySelectorAll("[data-player]").forEach((box) => {
+    const v = box.querySelector("video"), btn = box.querySelector(".pbtn");
+    if (!btn) return;
+    const toggle = () => { if (v.paused) { v.preload = "auto"; v.muted = false; v.play(); } else v.pause(); };
+    btn.addEventListener("click", toggle);
+    v.addEventListener("click", toggle);
+    v.addEventListener("play", () => btn.classList.add("hidden"));
+    v.addEventListener("pause", () => btn.classList.remove("hidden"));
+    v.addEventListener("ended", () => { btn.classList.remove("hidden"); v.load(); });
+  });
+
+  // sound toggle on the click loop
+  document.querySelectorAll("[data-sound]").forEach((box) => {
+    const v = box.querySelector("video"), b = box.querySelector(".sound");
+    b.addEventListener("click", () => { v.muted = !v.muted; b.textContent = v.muted ? "sound on" : "sound off"; if (!v.muted) v.play().catch(() => {}); });
+  });
+
+  // ---------- password gate: кадры продукта лежат зашифрованными ----------
+  // Ключ выводится из кода (PBKDF2) прямо в браузере; без кода в файлах шум.
+  const GATE = (() => {
+    const AR = { "01-hero.mp4": "16/9", "03-principles-data-match.png": "16/10", "03-principles-human-in-loop.png": "16/11",
+      "04-candidate-overview.png": "16/11", "04-candidate-portfolio.png": "16/10", "04-client-shortlist.png": "16/10",
+      "04-recruiter-dashboard.png": "16/11", "04-pipeline-board.png": "16/7", "04-vacancy-from-text.mp4": "16/9", "04-match.mp4": "16/9" };
+    const BASE = "/assets/case/ai-match/";
+    const media = [...document.querySelectorAll("[data-enc]")];
+    const frames = [...new Set(media.map((m) => m.closest(".screen")))];
+    const bar = document.querySelector(".gate-bar");
+    const ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="4.5" y="10.5" width="15" height="10" rx="3"/><path d="M8 10.5V7.8a4 4 0 0 1 8 0v2.7"/></svg>';
+    let manifest = null, key = null;
+    const urls = new Map();
+
+    function plate(frame) {
+      const el = frame.querySelector("[data-enc]");
+      frame.style.setProperty("--ar", AR[el.dataset.enc] || "16/9");
+      frame.classList.add("is-locked");
+      const b = document.createElement("button");
+      b.className = "plate";
+      b.innerHTML = `<span class="ico">${ICON}</span><span class="t">Password required</span><span class="d">The product is an internal tool. Ask me for the code and the screens open.</span>`;
+      b.addEventListener("click", () => open(b));
+      frame.prepend(b);
+    }
+
+    const buf = (b64) => Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+
+    async function derive(code) {
+      const m = manifest ?? (manifest = await (await fetch(BASE + "manifest.json")).json());
+      const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(code), "PBKDF2", false, ["deriveKey"]);
+      const k = await crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: buf(m.kdf.salt), iterations: m.kdf.iterations, hash: m.kdf.hash },
+        base, { name: "AES-GCM", length: 256 }, false, ["decrypt"]);
+      try {
+        await crypto.subtle.decrypt({ name: "AES-GCM", iv: buf(m.check.iv) }, k, buf(m.check.data));
+        return k;
+      } catch { return null; }
+    }
+
+    async function reveal(el) {
+      const want = [["enc", "src"], ["encPoster", "poster"]].filter(([d]) => el.dataset[d]);
+      for (const [d, attr] of want) {
+        const name = el.dataset[d];
+        if (!urls.has(name)) {
+          const rec = manifest.files[name];
+          const raw = await (await fetch(BASE + rec.file)).arrayBuffer();
+          const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv: buf(rec.iv) }, key, raw);
+          urls.set(name, URL.createObjectURL(new Blob([plain], { type: rec.type })));
+        }
+        el[attr] = urls.get(name);
+      }
+      if (el.tagName === "VIDEO" && el.hasAttribute("data-loop")) {
+        el.preload = "auto";
+        const r = el.getBoundingClientRect();
+        if (r.top < innerHeight && r.bottom > 0) el.play().catch(() => {});
+      }
+    }
+
+    async function unlock() {
+      for (const f of frames) {
+        f.classList.remove("is-locked");
+        f.querySelector(".plate")?.remove();
+      }
+      bar.classList.remove("hide");
+      try { sessionStorage.setItem("ai-match-open", "1"); } catch {}
+      // Сначала постеры и первый экран, потом остальное — чтобы не ждать 12 МБ
+      for (const el of media) await reveal(el).catch(() => {});
+    }
+
+    function relock() {
+      for (const el of media) { el.pause?.(); el.removeAttribute("src"); el.removeAttribute("poster"); el.load?.(); }
+      for (const [, u] of urls) URL.revokeObjectURL(u);
+      urls.clear(); key = null;
+      frames.forEach(plate);
+      bar.classList.add("hide");
+      try { sessionStorage.removeItem("ai-match-open"); } catch {}
+    }
+
+    let pop, back;
+    function close() {
+      pop?.classList.remove("in"); back?.classList.remove("in");
+      const p = pop, b = back; pop = back = null;
+      setTimeout(() => { p?.remove(); b?.remove(); }, 220);
+    }
+    function open(anchor) {
+      if (pop) close();
+      back = document.createElement("div"); back.className = "pop-back"; back.addEventListener("click", close);
+      pop = document.createElement("div"); pop.className = "pop";
+      pop.innerHTML = `<h4>Enter the code</h4><p>The screens of an internal product. The text and the public part stay open.</p>
+        <div class="pins">${Array.from({ length: 4 }, () => '<input inputmode="numeric" maxlength="1" aria-label="digit">').join("")}</div>
+        <span class="err"></span>`;
+      document.body.append(back, pop);
+      const r = anchor.getBoundingClientRect(), w = 320, h = pop.offsetHeight;
+      pop.style.left = Math.max(16, Math.min(r.left + r.width / 2 - w / 2, innerWidth - w - 16)) + "px";
+      pop.style.top = Math.max(16, Math.min(r.top + r.height / 2 - h / 2, innerHeight - h - 16)) + "px";
+      requestAnimationFrame(() => { pop.classList.add("in"); back.classList.add("in"); });
+
+      const inputs = [...pop.querySelectorAll("input")], err = pop.querySelector(".err");
+      inputs[0].focus();
+      inputs.forEach((inp, i) => {
+        inp.addEventListener("input", () => {
+          inp.value = inp.value.replace(/\D/g, "").slice(0, 1);
+          if (inp.value && inputs[i + 1]) inputs[i + 1].focus();
+          const code = inputs.map((x) => x.value).join("");
+          if (code.length === 4) check(code, inputs, err);
+        });
+        inp.addEventListener("keydown", (e) => { if (e.key === "Backspace" && !inp.value && inputs[i - 1]) inputs[i - 1].focus(); });
+        inp.addEventListener("paste", (e) => {
+          const t = (e.clipboardData.getData("text") || "").replace(/\D/g, "").slice(0, 4);
+          if (!t) return;
+          e.preventDefault();
+          inputs.forEach((x, k) => (x.value = t[k] || ""));
+          if (t.length === 4) check(t, inputs, err);
+        });
+      });
+      addEventListener("keydown", onEsc);
+    }
+    const onEsc = (e) => { if (e.key === "Escape") { close(); removeEventListener("keydown", onEsc); } };
+
+    async function check(code, inputs, err) {
+      err.textContent = "";
+      pop.classList.add("busy");
+      const k = await derive(code);
+      pop?.classList.remove("busy");
+      if (!k) {
+        if (!pop) return;
+        err.textContent = "Wrong code";
+        pop.classList.add("bad");
+        setTimeout(() => { pop?.classList.remove("bad"); inputs.forEach((i) => (i.value = "")); inputs[0]?.focus(); }, 400);
+        return;
+      }
+      key = k;
+      close();
+      unlock();
+    }
+
+    frames.forEach(plate);
+    bar.querySelector("button").addEventListener("click", relock);
+    return { unlock, relock };
+  })();
+</script>
+</body>
+</html>
