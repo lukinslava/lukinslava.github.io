@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AUF Match — cover variants</title>
+<style>
+  @font-face { font-family: "Antonio"; src: url("../experience-type/antonio-latin.woff2") format("woff2"); font-display: block; }
+  :root { --ink: #1b1b1a; --label: #85847f; --orange: #f97029; --paper: #f1f1ee; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #f5f5f5; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--ink); }
+  .page { max-width: 1340px; margin: 0 auto; padding: 48px 24px 96px; }
+  h1 { font-family: "Antonio", sans-serif; font-weight: 400; font-size: 56px; letter-spacing: -0.04em; margin: 0 0 8px; }
+  .sub { color: var(--label); font-size: 18px; margin: 0 0 40px; }
+  .row { margin-bottom: 40px; }
+  .row h2 { font-family: "Antonio", sans-serif; font-weight: 400; font-size: 32px; letter-spacing: -0.02em; margin: 0 0 4px; }
+  .row p { margin: 0 0 14px; color: var(--label); font-size: 15px; }
+  .frame { width: 100%; aspect-ratio: 1291 / 700; border-radius: 32px; overflow: hidden; box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 20px 40px -24px rgba(0,0,0,.25); }
+
+  /* ---------- shared cover layout ---------- */
+  .cover { position: relative; width: 1291px; height: 700px; transform-origin: top left; overflow: hidden; background: var(--paper); }
+  .cover canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .cover .type { position: absolute; z-index: 2; }
+  .big { font-family: "Antonio", sans-serif; font-weight: 400; letter-spacing: -0.04em; line-height: .88; }
+  .lab { font-size: 19px; line-height: 1.35; color: var(--label); letter-spacing: 0.01em; }
+  .lab b { font-weight: 400; color: var(--ink); }
+
+  /* A — logotype left, dot field right */
+  .v-a .type { left: 72px; top: 50%; transform: translateY(-50%); }
+  .v-a .big { font-size: 150px; color: var(--ink); }
+  .v-a .lab { margin-top: 20px; max-width: 420px; }
+
+  /* B — orange ground */
+  .v-b { background: var(--orange); }
+  .v-b .type { left: 72px; bottom: 64px; }
+  .v-b .big { font-size: 164px; color: #fff; }
+  .v-b .lab { color: rgba(255,255,255,.82); margin-top: 14px; }
+  .v-b .lab b { color: #fff; }
+
+  /* C — the number is the hero */
+  .v-c .type { left: 72px; top: 64px; }
+  .v-c .big { font-size: 176px; color: var(--ink); }
+  .v-c .big em { font-style: normal; color: var(--orange); }
+  .v-c .foot { position: absolute; left: 72px; bottom: 56px; z-index: 2; }
+  .v-c .name { font-family: "Antonio", sans-serif; font-weight: 400; font-size: 44px; letter-spacing: -0.03em; }
+
+  /* D — dark */
+  .v-d { background: #161616; }
+  .v-d .type { left: 50%; top: 50%; transform: translate(-50%, -50%); text-align: center; }
+  .v-d .big { font-size: 200px; color: #fff; white-space: nowrap; }
+  .v-d .lab { color: rgba(255,255,255,.75); margin-top: 20px; font-size: 44px; line-height: 1.1; white-space: nowrap; letter-spacing: -0.01em; }
+  .v-d .lab b { color: #fff; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>AUF Match — covers</h1>
+  <p class="sub">Dots instead of a photo: the base is grey, the pool the design lead actually reads is orange. 1291×700, the card size on the homepage.</p>
+
+  <div class="row"><h2>A · Logotype and the field</h2><p>the whole base as a dot field, the pool picked out in orange on the right</p>
+    <div class="frame"><div class="cover v-a" data-dots="field">
+      <canvas></canvas>
+      <div class="type"><div class="big">AUF<br>Match</div><div class="lab"><b>5,577 designers</b> in the base — the model reads 30, the design lead gets a pool of 30–60</div></div>
+    </div></div>
+  </div>
+
+  <div class="row"><h2>B · Orange ground</h2><p>same idea inverted: the ground is the accent, the dots are quiet</p>
+    <div class="frame"><div class="cover v-b" data-dots="orange">
+      <canvas></canvas>
+      <div class="type"><div class="big">AUF Match</div><div class="lab"><b>5,577 → 30–60.</b> An internal AI tool for an agency that hires designers</div></div>
+    </div></div>
+  </div>
+
+  <div class="row"><h2>C · The number is the hero</h2><p>the funnel written out: a big 5,577 narrowing to 30–60, dots behind it</p>
+    <div class="frame"><div class="cover v-c" data-dots="funnel">
+      <canvas></canvas>
+      <div class="type"><div class="big">5 577<br><em>30–60</em></div></div>
+      <div class="foot"><div class="name">AUF Match</div><div class="lab">a working pool instead of a database</div></div>
+    </div></div>
+  </div>
+
+  <div class="row"><h2>D · Dark, centred</h2><p>dots as a starfield, the logotype in the middle</p>
+    <div class="frame"><div class="cover v-d" data-dots="dark">
+      <canvas></canvas>
+      <div class="type"><div class="big">AI Match</div><div class="lab"><b>5500+ designers</b> → a pool of <b>30–60</b></div></div>
+    </div></div>
+  </div>
+</div>
+
+<script>
+  // Детерминированный «случай»: одна и та же обложка при каждом рендере
+  function rng(seed) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 2 ** 32); }
+
+  function draw(cover) {
+    const kind = cover.dataset.dots;
+    const c = cover.querySelector("canvas");
+    const W = 1291, H = 700, S = 2;
+    c.width = W * S; c.height = H * S;
+    const g = c.getContext("2d");
+    g.scale(S, S);
+    const r = rng(20261004);
+    const grey = kind === "dark" ? "rgba(255,255,255,.22)" : kind === "orange" ? "rgba(255,255,255,.35)" : "#cbc9c2";
+    const accent = kind === "orange" ? "#161616" : "#f97029";
+    const step = kind === "dark" ? 31 : 26, pad = 20, rad = kind === "dark" ? 5 : 4.2;
+    const cols = Math.floor((W - pad * 2) / step) + 1;
+    const rows = Math.floor((H - pad * 2) / step) + 1;
+
+    // Прямоугольники, которые текст «расталкивает»: точки под ним не рисуем
+    const cb = cover.getBoundingClientRect();
+    const scale = cb.width / W;
+    const holes = [...cover.querySelectorAll(".type, .foot")].map((el) => {
+      const b = el.getBoundingClientRect();
+      return { x: (b.left - cb.left) / scale - 26, y: (b.top - cb.top) / scale - 22, w: b.width / scale + 52, h: b.height / scale + 44 };
+    });
+    const inHole = (x, y) => holes.some((o) => x > o.x && x < o.x + o.w && y > o.y && y < o.y + o.h);
+
+    const dots = [];
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) {
+        const x = pad + col * step;
+        const y = pad + row * step;
+        if (x > W - pad || y > H - pad) continue;
+        dots.push({ x, y, col, row });
+      }
+    }
+
+    const orange = new Set();
+    if (kind === "field") {
+      // ровный блок 6×5 справа: пул, который читает дизайн-лид
+      const c0 = cols - 10, r0 = Math.round(rows / 2) - 3;
+      for (const d of dots) if (d.col >= c0 && d.col < c0 + 6 && d.row >= r0 && d.row < r0 + 5) orange.add(d);
+    } else if (kind === "orange") {
+      const c0 = cols - 9, r0 = rows - 8;
+      for (const d of dots) if (d.col >= c0 && d.col < c0 + 6 && d.row >= r0 && d.row < r0 + 5) orange.add(d);
+    } else if (kind === "dark") {
+      // 30 оранжевых — ровно столько человек смотрит модель. Рассыпаны по всей
+      // базе, но равномерно: поле делится на 30 зон, в каждой — одна точка
+      const зонX = 6, зонY = 5;
+      for (let zy = 0; zy < зонY; zy++) {
+        for (let zx = 0; zx < зонX; zx++) {
+          const свои = dots.filter((d) => !inHole(d.x, d.y)
+            && d.col >= (cols * zx) / зонX && d.col < (cols * (zx + 1)) / зонX
+            && d.row >= (rows * zy) / зонY && d.row < (rows * (zy + 1)) / зонY);
+          if (свои.length) orange.add(свои[Math.floor(r() * свои.length)]);
+        }
+      }
+    }
+
+    for (const d of dots) {
+      if (inHole(d.x, d.y)) continue;
+      if (kind === "funnel") {
+        // Клин: слева вся база во всю высоту, справа — узкий хвост из 30 оранжевых
+        const t = (d.col + 0.5) / cols;
+        if (t < 0.30) continue;
+        const k = (t - 0.30) / 0.70;                       // 0 у начала клина, 1 у хвоста
+        const half = (1 - k * 0.92) * (H / 2 - pad);
+        if (Math.abs(d.y - H / 2) > half) continue;
+        g.beginPath(); g.arc(d.x, d.y, rad, 0, Math.PI * 2);
+        g.fillStyle = k > 0.86 ? "#f97029" : grey;
+        g.fill();
+        continue;
+      }
+      g.beginPath();
+      g.arc(d.x, d.y, rad, 0, Math.PI * 2);
+      g.fillStyle = orange.has(d) ? accent : grey;
+      g.fill();
+    }
+  }
+
+  function fit() {
+    if (new URLSearchParams(location.search).get("only")) return;
+    for (const cover of document.querySelectorAll(".cover")) {
+      const w = cover.parentElement.clientWidth;
+      cover.style.transform = `scale(${w / 1291})`;
+    }
+  }
+
+
+  // ?only=a|b|c|d — одна обложка во весь кадр 1291×700, для экспорта
+  const only = new URLSearchParams(location.search).get("only");
+  if (only) {
+    const row = document.querySelectorAll(".row")[{ a: 0, b: 1, c: 2, d: 3 }[only]];
+    document.body.innerHTML = "";
+    document.body.style.cssText = "margin:0;background:#fff";
+    const cover = row.querySelector(".cover");
+    document.body.append(cover);
+    cover.style.transform = "none";
+  }
+
+  document.fonts.ready.then(() => {
+    fit();
+    for (const cover of document.querySelectorAll(".cover")) draw(cover);
+  });
+  addEventListener("resize", fit);
+</script>
+</body>
+</html>

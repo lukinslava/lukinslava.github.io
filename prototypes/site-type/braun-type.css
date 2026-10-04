@@ -1,0 +1,82 @@
+/* Braun typography rule for the whole site (prototype).
+   One "logotype" per object, everything else is quiet:
+   - display: Antonio headings keep their size, one ink colour, orange headings go quiet;
+   - title:   Helvetica titles keep their size, ink, never bold;
+   - body:    case-page prose keeps Framer's size and line-height (the layout depends on them), soft grey;
+   - label:   short metadata in cards (descriptions, skills) — 16px, lowercase, grey;
+   - accent:  orange only for buttons and single inline data accents.
+   Geometry rule: sizes and line-heights change only inside cards whose layout is flexible,
+   so text columns, list indents, table rows and section offsets stay exactly where Framer put them. */
+:root {
+  --bt-ink: #1b1b1a;
+  --bt-text: #2f2f2d;
+  --bt-body: #55544f;
+  --bt-label: #85847f;
+}
+
+/* ---------- display ---------- */
+h1.framer-text, h2.framer-text, h2.framer-text span.framer-text {
+  --framer-text-color: var(--bt-ink) !important;
+}
+/* "Hey, I'm Slava" becomes the quiet line above the logotype (desktop h2, mobile h4) */
+.framer-1fqb2hq .framer-text { --framer-text-color: var(--bt-label) !important; }
+
+/* ---------- title ---------- */
+h3.framer-text { --framer-text-color: var(--bt-ink) !important; }
+/* case cards on the homepage: two-line titles set with inline spans */
+.framer-5pgzne .framer-text { --framer-text-color: var(--bt-ink) !important; }
+
+/* no bold anywhere: emphasis is ink colour, not weight (Helvetica keeps the metrics of the surrounding text) */
+strong.framer-text, b.framer-text {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  font-weight: 400 !important;
+  color: var(--bt-ink) !important;
+}
+em.framer-text { color: var(--bt-ink) !important; }
+
+/* ---------- body: colour only ---------- */
+:where(p.framer-text:not([style*="--framer-font-size"]):not([style*="Antonio"]), li.framer-text, .framer-styles-preset-sq4nxo) {
+  --framer-text-color: var(--bt-body) !important;
+}
+li.framer-text::marker { color: var(--bt-label); }
+/* results written as h3 inside bullet lists read as body */
+ul > li h3.framer-text { --framer-text-color: var(--bt-body) !important; }
+/* table heads ("Stage", "What to bring"): label colour and case, size untouched */
+h4.framer-text:not(.framer-1fqb2hq *) {
+  --framer-text-transform: lowercase !important;
+  --framer-text-color: var(--bt-label) !important;
+}
+
+/* ---------- homepage ---------- */
+/* header links: colour only ("CV" is an acronym, and lowercase would shift the right-aligned links) */
+.framer-lwyhxd .framer-text, .framer-1gfplxb .framer-text {
+  --framer-text-color: var(--bt-text) !important;
+  --framer-link-text-color: var(--bt-text) !important;
+}
+/* summary card: the claim a step darker, the about text lighter */
+.framer-69ywe6 .framer-text { --framer-text-color: var(--bt-text) !important; }
+.framer-12tbrhh p.framer-text { --framer-text-color: var(--bt-label) !important; }
+
+/* labels: card descriptions (cases, AI & side projects) */
+p.framer-styles-preset-1l2lp8z {
+  --framer-font-size: 16px !important;
+  --framer-line-height: 1.3em !important;
+  --framer-letter-spacing: 0.005em !important;
+  --framer-text-transform: lowercase !important;
+  --framer-text-color: var(--bt-label) !important;
+}
+/* labels: core skills lists; the indent is pinned to Framer's value so text keeps its column */
+ul.framer-styles-preset-vgl5c2 li.framer-text, ul.framer-styles-preset-vgl5c2 p.framer-text {
+  --framer-font-size: 16px !important;
+  --framer-line-height: 1.3em !important;
+  --framer-letter-spacing: 0.005em !important;
+  --framer-text-transform: lowercase !important;
+  --framer-text-color: var(--bt-text) !important;
+}
+ul.framer-styles-preset-vgl5c2 li.framer-text { padding-left: 22.24px !important; }
+ul.framer-styles-preset-vgl5c2 li.framer-text + li.framer-text { margin-top: 6px; }
+
+@media (max-width: 809.98px) {
+  p.framer-styles-preset-1l2lp8z,
+  ul.framer-styles-preset-vgl5c2 li.framer-text, ul.framer-styles-preset-vgl5c2 p.framer-text { --framer-font-size: 14px !important; }
+}

@@ -83,7 +83,7 @@ export const contentEdits = [
   {
     label: "search index card titles",
     find: '"82BOX","Hircost","Mindbox","Autodraw","OS Sunrice","Strana Development"]',
-    replace: '"AUF Match","Aleria","Phygital+","Autodraw"]',
+    replace: '"AI Match","Aleria","Phygital+","Autodraw"]',
   },
   {
     label: "search index card descriptions",
@@ -113,13 +113,38 @@ export const styleOverrides = [
   ".framer-1v4d6le span.framer-text { --framer-text-color: #f97029 !important; }",
   ".framer-7g0arg, .framer-1u1wxsm, .framer-1b1i3vk { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.08); }",
   // Experience cards: Braun-style labels (see prototypes/experience-type, variant "Braun soft").
-  // Company name is the only "logotype"; role, description, dates and the footer are small lowercase labels.
+  // Company name is the only "logotype"; role and description match the Core skills text (20/24), dates and the footer are small labels.
   ".framer-oil36m h3.framer-text, .framer-tzvewh h3.framer-text, .framer-1go430i h3.framer-text { --framer-font-size: 28px !important; --framer-line-height: 1.1em !important; --framer-letter-spacing: -0.03em !important; --framer-text-color: #1b1b1a !important; }",
   ".framer-13cru1x, .framer-1pcs9tt, .framer-1pf0meu { gap: 20px !important; }",
   ".framer-1gtkbji, .framer-18a0lfp, .framer-1n7e9z2 { gap: 2px !important; }",
   ".framer-7g0arg p.framer-text, .framer-1u1wxsm p.framer-text, .framer-1b1i3vk p.framer-text, .framer-1v4d6le p.framer-text { --framer-font-size: 16px !important; --framer-line-height: 1.3em !important; --framer-letter-spacing: 0.005em !important; --framer-text-transform: lowercase !important; --framer-text-color: #85847f !important; font-variant-numeric: tabular-nums; }",
   ".framer-37q9uu p.framer-text, .framer-7cop94 p.framer-text, .framer-1lk3lhv p.framer-text { --framer-text-color: #2f2f2d !important; }",
-  "@media (max-width: 809.98px) { .framer-oil36m h3.framer-text, .framer-tzvewh h3.framer-text, .framer-1go430i h3.framer-text { --framer-font-size: 24px !important; } .framer-13cru1x, .framer-1pcs9tt, .framer-1pf0meu { gap: 14px !important; } .framer-7g0arg p.framer-text, .framer-1u1wxsm p.framer-text, .framer-1b1i3vk p.framer-text, .framer-1v4d6le p.framer-text { --framer-font-size: 14px !important; } }",
+  ".framer-1gtkbji p.framer-text, .framer-18a0lfp p.framer-text, .framer-1n7e9z2 p.framer-text { --framer-font-size: 20px !important; --framer-line-height: 1.2em !important; --framer-letter-spacing: 0em !important; }",
+  "@media (max-width: 809.98px) { .framer-oil36m h3.framer-text, .framer-tzvewh h3.framer-text, .framer-1go430i h3.framer-text { --framer-font-size: 24px !important; } .framer-13cru1x, .framer-1pcs9tt, .framer-1pf0meu { gap: 14px !important; } .framer-7g0arg p.framer-text, .framer-1u1wxsm p.framer-text, .framer-1b1i3vk p.framer-text, .framer-1v4d6le p.framer-text { --framer-font-size: 14px !important; } .framer-1gtkbji p.framer-text, .framer-18a0lfp p.framer-text, .framer-1n7e9z2 p.framer-text { --framer-font-size: 20px !important; } }",
+  // Cases + AI & side projects: compact grid instead of full-width 1291×700 cards (prototypes/cases-layout, variant A).
+  // Pure CSS over Framer's cards, so links, appear animations and hydration stay untouched.
+  ".framer-pzIB3 .framer-ahfcuh { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px !important; align-items: stretch !important; overflow: visible !important; }",
+  ".framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh { grid-template-columns: repeat(4, minmax(0, 1fr)); }",
+  ".framer-pzIB3 .framer-ahfcuh + .framer-3evyfl { margin-top: 48px; }",
+  ".framer-pzIB3 .framer-bvvzdt { overflow: visible !important; }",
+  "@media (max-width: 1439.98px) { .framer-pzIB3 .framer-bvvzdt { box-sizing: border-box; padding: 0 24px !important; } }",
+  "@media (max-width: 809.98px) { .framer-pzIB3 .framer-bvvzdt { padding: 0 16px !important; } }",
+  ".framer-pzIB3 .framer-ahfcuh .framer-lux5qc [data-framer-component-type='RichTextContainer'] { white-space: pre-wrap !important; width: 100% !important; }",
+  ".framer-pzIB3 .framer-ahfcuh > .framer-lux5qc { width: auto !important; height: auto !important; gap: 0 !important; border-radius: 24px !important; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.08); transition: box-shadow 0.25s; }",
+  ".framer-pzIB3 .framer-ahfcuh > .framer-lux5qc:hover { box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 20px 40px -20px rgba(0, 0, 0, 0.25); }",
+  // covers: 16:10 inset in the card; the typographic covers scale their text with the cover width
+  ".framer-pzIB3 :is(.framer-ro0y0v, .framer-1n71hrq, .framer-b7lzp9, .framer-9yfe86, .framer-1c155ms, .framer-1pjo0tf, .framer-1fjwsg6) { width: calc(100% - 16px) !important; height: auto !important; aspect-ratio: 16 / 10 !important; margin: 8px 8px 0; border-radius: 18px !important; overflow: hidden !important; container-type: inline-size; }",
+  ".framer-pzIB3 :is(.framer-1n71hrq, .framer-9yfe86, .framer-1c155ms, .framer-1pjo0tf, .framer-1fjwsg6) img { transition: transform 0.5s; }",
+  ".framer-pzIB3 .framer-lux5qc:hover :is(.framer-1n71hrq, .framer-9yfe86, .framer-1c155ms, .framer-1pjo0tf, .framer-1fjwsg6) img { transform: scale(1.04); }",
+  ".framer-pzIB3 :is(.framer-k7ih7v, .framer-1g9s5zl) p.framer-text { --framer-font-size: 15.3cqw !important; }",
+  // text under the cover
+  ".framer-pzIB3 :is(.framer-c37md5, .framer-q7pdvj, .framer-1d04b23, .framer-102m7fe, .framer-1v9o0zl, .framer-1m7tcgr, .framer-p8dvz1) { width: 100% !important; padding: 16px 20px 20px !important; gap: 6px !important; }",
+  ".framer-pzIB3 .framer-ahfcuh .framer-lux5qc h3.framer-text { --framer-font-size: 20px !important; --framer-line-height: 1.2em !important; --framer-letter-spacing: -0.01em !important; }",
+  ".framer-pzIB3 .framer-ahfcuh .framer-lux5qc p.framer-styles-preset-1l2lp8z { --framer-font-size: 16px !important; --framer-line-height: 1.3em !important; --framer-letter-spacing: 0em !important; --framer-text-color: #85847f !important; }",
+  ".framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh .framer-lux5qc h3.framer-text { --framer-font-size: 18px !important; }",
+  ".framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh .framer-lux5qc p.framer-styles-preset-1l2lp8z { --framer-font-size: 14px !important; }",
+  "@media (max-width: 1099.98px) { .framer-pzIB3 .framer-ahfcuh, .framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px !important; } .framer-pzIB3 .framer-ahfcuh:not(.framer-ahfcuh ~ .framer-ahfcuh) > .framer-lux5qc:first-child { grid-column: span 2; } }",
+  "@media (max-width: 809.98px) { .framer-pzIB3 :is(.framer-c37md5, .framer-q7pdvj, .framer-1d04b23, .framer-102m7fe, .framer-1v9o0zl, .framer-1m7tcgr, .framer-p8dvz1) { padding: 12px 14px 16px !important; } .framer-pzIB3 .framer-ahfcuh .framer-lux5qc h3.framer-text, .framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh .framer-lux5qc h3.framer-text { --framer-font-size: 16px !important; } .framer-pzIB3 .framer-ahfcuh .framer-lux5qc p.framer-styles-preset-1l2lp8z, .framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh .framer-lux5qc p.framer-styles-preset-1l2lp8z { --framer-font-size: 13px !important; } }",
   // Keep the fixed header above the awards device when the Experience block scrolls under it
   ".framer-h3ifuw-container { z-index: 10 !important; }",
 ];
