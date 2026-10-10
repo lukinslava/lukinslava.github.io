@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Little Museum — Slava Lukin</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  @font-face { font-family: "Antonio"; src: url("/assets/fonts/antonio/v22/gNMEW3NwSYq_9WD3yHQiFQ.woff2") format("woff2"); font-display: swap; }
+  :root {
+    --bg: #f5f5f5; --panel: #fff; --ink: #1b1b1a; --text: #2f2f2d; --body: #55544f; --label: #85847f;
+    --line: rgba(0,0,0,.08); --orange: #f97029; --green: #417b5a;
+    --hairline: 0 0 0 1px rgba(0,0,0,.05), 0 2px 6px -2px rgba(0,0,0,.08);
+    --lift: 0 0 0 1px rgba(0,0,0,.05), 0 30px 60px -30px rgba(0,0,0,.25);
+    --wrap: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  img, video { display: block; max-width: 100%; }
+  a { color: inherit; }
+
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: 1291px; margin: 0 auto; padding: 0 24px; }
+
+  h1, h2, h3 { margin: 0; font-weight: 400; }
+  h1 { font-family: "Antonio", sans-serif; font-size: 96px; line-height: .95; letter-spacing: -0.04em; }
+  h2 { font-family: "Antonio", sans-serif; font-size: 64px; line-height: 1.1; letter-spacing: -0.04em; }
+  h3 { font-size: 28px; line-height: 1.15; letter-spacing: -0.03em; }
+  p { margin: 0; font-size: 20px; line-height: 1.5; color: var(--body); }
+  p + p { margin-top: 16px; }
+  .lead { font-size: 24px; line-height: 1.4; color: var(--text); }
+  .kicker { font-size: 16px; line-height: 1; letter-spacing: .14em; text-transform: uppercase; color: var(--label); }
+  strong { font-weight: 400; color: var(--ink); }
+  .green { color: var(--green); }
+
+  section { padding: 96px 0; }
+  section + section { padding-top: 0; }
+  .sec-head { display: grid; gap: 20px; margin-bottom: 44px; }
+  .sec-head p { max-width: 760px; }
+  .cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .cols-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 0 48px; }
+  .hero .title { display: grid; gap: 20px; justify-items: start; }
+  .hero .lead { max-width: 720px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 10px 40px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .hero-meta div { display: grid; gap: 6px; }
+  .hero-meta dt { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--label); }
+  .hero-meta dd { margin: 0; font-size: 18px; color: var(--text); }
+
+  /* ---------- media ---------- */
+  figure { margin: 0; display: grid; gap: 12px; }
+  figcaption { font-size: 15px; line-height: 1.4; color: var(--label); }
+  .screen { position: relative; background: var(--panel); border-radius: 24px; overflow: hidden; box-shadow: var(--lift); }
+  .screen.flat { box-shadow: var(--hairline); }
+  .screen img, .screen video { width: 100%; }
+  .slide { border-radius: 24px; overflow: hidden; box-shadow: var(--hairline); }
+
+  /* phones */
+  .phones { display: flex; gap: 16px; overflow-x: auto; padding: 4px 0 20px; scroll-snap-type: x mandatory; scrollbar-width: thin; }
+  .phone { flex: 0 0 240px; scroll-snap-align: center; border-radius: 26px; overflow: hidden; background: #fff; box-shadow: var(--lift); }
+  .phone img, .phone video { width: 100%; }
+  .phone-cap { font-size: 14px; color: var(--label); margin-top: 10px; }
+  .phone-wrap { display: grid; }
+
+  /* play button */
+  .player { position: relative; }
+  .pbtn { position: absolute; inset: auto 16px 16px auto; width: 52px; height: 52px; border: 0; border-radius: 50%; background: var(--green); color: #fff; cursor: pointer; display: grid; place-items: center;
+          box-shadow: inset 0 -3px 0 #2f5a41, 0 6px 16px -6px rgba(65,123,90,.7); transition: transform .08s, opacity .25s; }
+  .pbtn:active { transform: translateY(2px); }
+  .pbtn svg { width: 20px; height: 20px; }
+  .pbtn.center { inset: 50% auto auto 50%; transform: translate(-50%, -50%); width: 76px; height: 76px; }
+  .pbtn.center:active { transform: translate(-50%, -50%) translateY(2px); }
+  .pbtn.hidden { opacity: 0; pointer-events: none; }
+
+  /* до / после: кадры разной геометрии, поэтому не шторка, а переключение */
+  .swap { position: relative; aspect-ratio: 4 / 5; border-radius: 24px; overflow: hidden; cursor: pointer; box-shadow: var(--lift);
+          background: repeating-conic-gradient(#f1ece5 0% 25%, #e7e1d8 0% 50%) 0 0 / 30px 30px; }
+  .swap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; transition: opacity .45s ease; }
+  .swap .b { opacity: 0; }
+  .swap.on .a { opacity: 0; } .swap.on .b { opacity: 1; }
+  .swap .pill { position: absolute; left: 14px; top: 14px; z-index: 2; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(27,27,26,.72); backdrop-filter: blur(6px); }
+  .swap .pill span { font-size: 12.5px; letter-spacing: .02em; padding: 5px 11px; border-radius: 999px; color: rgba(255,255,255,.7); transition: background .25s, color .25s; }
+  .swap .pill span.on { background: #fff; color: var(--ink); }
+  .swap .hint { position: absolute; right: 14px; bottom: 14px; z-index: 2; font-size: 12.5px; color: #fff; background: rgba(27,27,26,.72); padding: 6px 11px; border-radius: 999px; backdrop-filter: blur(6px); transition: opacity .3s; }
+  .swap.on .hint { opacity: 0; }
+
+  /* cards */
+  .card { background: var(--panel); border-radius: 24px; box-shadow: var(--hairline); padding: 28px; display: grid; gap: 12px; align-content: start; }
+  .card h3 { font-size: 24px; }
+  .card p { font-size: 17px; line-height: 1.45; }
+  .card .num { font-family: "Antonio", sans-serif; font-size: 20px; color: var(--green); }
+
+  .steps { display: grid; gap: 2px; }
+  .step { display: grid; grid-template-columns: 56px 1fr; gap: 20px; padding: 22px 0; border-top: 1px solid var(--line); align-items: start; }
+  .step .n { font-family: "Antonio", sans-serif; font-size: 22px; color: var(--green); }
+  .step h3 { font-size: 22px; margin-bottom: 8px; }
+  .step p { font-size: 18px; }
+
+  .stack { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .stack div { background: var(--panel); border-radius: 20px; box-shadow: var(--hairline); padding: 22px 24px; }
+  .stack dt { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--label); margin-bottom: 8px; }
+  .stack dd { margin: 0; font-size: 18px; line-height: 1.45; color: var(--text); }
+
+  .note { font-size: 15px; line-height: 1.45; color: var(--label); }
+  .divider { height: 1px; background: var(--line); max-width: 1291px; margin: 0 auto; }
+
+  /* reveal */
+  .r { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); }
+  .r.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .r { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+  footer { padding: 72px 0 96px; }
+  .next { font-size: 20px; color: var(--label); }
+
+  @media (max-width: 1099.98px) { .cols { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 809.98px) {
+    .wrap, .wide { padding: 0 16px; }
+    h1 { font-size: 56px; } h2 { font-size: 40px; } h3 { font-size: 22px; }
+    p { font-size: 17px; } .lead { font-size: 19px; }
+    section { padding: 64px 0; }
+    .sec-head { margin-bottom: 28px; }
+    .cols, .cols-2, .stack { grid-template-columns: 1fr; }
+    .card { padding: 20px; border-radius: 20px; }
+    .step { grid-template-columns: 1fr; gap: 6px; }
+    .phone { flex-basis: 70%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======== hero ======== -->
+<header class="hero wrap">
+  <div class="title r">
+    <span class="kicker">Home project · PWA</span>
+    <h1>Little Museum</h1>
+    <p class="lead">A home app for the drawings and crafts of two brothers. A parent photographs a sheet on the table, the app lifts the artwork off the wood and hangs it in a museum — with its artist, its date and the sentence the artist said about it.</p>
+  </div>
+  <dl class="hero-meta r">
+    <div><dt>Role</dt><dd>Design and build, on my own</dd></div>
+    <div><dt>Year</dt><dd>2026</dd></div>
+    <div><dt>Shape</dt><dd>Installable web app on the home screen</dd></div>
+    <div><dt>Stack</dt><dd>React, TypeScript, Vite, Supabase</dd></div>
+  </dl>
+</header>
+
+<section class="wide" style="padding-top: 40px">
+  <figure class="r"><div class="slide"><img src="/assets/case/little-museum/01-cover.jpg" alt="Little Museum: three phone screens — museum, collections and an artwork card" loading="eager"></div></figure>
+</section>
+
+<!-- ======== problem ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>The problem</h2>
+    <p>Kids draw and make things every day. Paper gets lost, crafts break, and photos in the camera roll get buried among everything else. The family needed one place where every piece is kept neatly — with its artist and date — and is a pleasure to look back on.</p>
+  </div>
+  <figure class="r">
+    <div class="screen player" data-player>
+      <video src="/assets/case/little-museum/tour-screen.mp4" poster="/assets/case/little-museum/tour-screen-poster.jpg" muted loop playsinline preload="none" data-loop></video>
+      <button class="pbtn" aria-label="Play with sound"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+    </div>
+    <figcaption>A walk through the app: the museum wall, collections, an artwork card, the month-by-month story.</figcaption>
+  </figure>
+</section>
+
+<!-- ======== solution ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Three ways in</h2>
+    <p>Everything a child makes falls into one of three shapes, and each one is captured differently.</p>
+  </div>
+  <div class="cols r">
+    <article class="card">
+      <span class="num">01</span>
+      <h3>A drawing on a sheet</h3>
+      <p>A parent photographs the sheet on the table. The app finds the paper's edges, corrects the perspective and hangs the drawing in a frame.</p>
+    </article>
+    <article class="card">
+      <span class="num">02</span>
+      <h3>A figure cut with scissors</h3>
+      <p>The app separates the figure from the table along its outline and saves it as a PNG with a transparent background.</p>
+    </article>
+    <article class="card">
+      <span class="num">03</span>
+      <h3>A craft</h3>
+      <p>Photos from four sides. The app is ready to build a 3D model from them, so a paper rocket can be turned around on screen.</p>
+    </article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== cutout ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Cutout without neural networks</h2>
+    <p>The background is removed right on the phone — no servers, no ML models. The trick is that a wooden table has only a few colours, and a child's figure almost never shares them.</p>
+  </div>
+
+  <div class="cols-2 r">
+    <figure>
+      <div class="swap" data-swap>
+        <img class="a" src="/assets/case/little-museum/hero-photo.jpg" alt="A paper superhero lying on a wooden table">
+        <img class="b" src="/assets/case/little-museum/hero-cutout.png" alt="The same figure with the table removed">
+        <div class="pill"><span class="on">photo</span><span>cutout</span></div>
+        <span class="hint">tap to swap</span>
+      </div>
+      <figcaption>The table goes, the skin and the white cape stay — the hard part is everything close in tone to light wood.</figcaption>
+    </figure>
+    <figure>
+      <div class="swap" data-swap>
+        <img class="a" src="/assets/case/little-museum/rocket-photo.jpg" alt="A drawing of a rocket photographed at an angle">
+        <img class="b" src="/assets/case/little-museum/rocket-straight.jpg" alt="The same drawing, straightened">
+        <div class="pill"><span class="on">photo</span><span>sheet</span></div>
+        <span class="hint">tap to swap</span>
+      </div>
+      <figcaption>A sheet is found by its corners and straightened, so a drawing hangs square even when the photo was not.</figcaption>
+    </figure>
+  </div>
+
+  <div class="steps r" style="margin-top: 48px">
+    <div class="step"><span class="n">01</span><div><h3>Table colours</h3><p>k-means over the pixels along the frame edges picks out a few table colours — the light and dark grain of the wood. Objects that touch the edge, like a stack of paper, are ignored.</p></div></div>
+    <div class="step"><span class="n">02</span><div><h3>Background fill</h3><p>The background spreads inward from the edges through similar colours until it meets a sharp boundary — the edge of the paper. That is why skin, close in hue to light wood, survives.</p></div></div>
+    <div class="step"><span class="n">03</span><div><h3>Outline</h3><p>The largest region is kept; fuzz along the edge and splinters of table are dropped.</p></div></div>
+    <div class="step"><span class="n">04</span><div><h3>Result</h3><p>The mask is smoothed and applied to the full-size photo — a PNG with transparency, ready to hang.</p></div></div>
+  </div>
+
+  <div class="cols-2 r" style="margin-top: 48px">
+    <figure><div class="slide"><img src="/assets/case/little-museum/02-cutout.jpg" alt="Before and after: a figure lifted off the table" loading="lazy"></div><figcaption>What the app keeps and what it throws away.</figcaption></figure>
+    <figure><div class="slide"><img src="/assets/case/little-museum/04-algo.jpg" alt="The steps of the cutout algorithm" loading="lazy"></div><figcaption>The four steps, drawn for myself while building it.</figcaption></figure>
+  </div>
+
+  <div class="sec-head r" style="margin-top: 64px">
+    <h3>A sheet is a different problem</h3>
+    <p>If the photo holds a rectangular sheet rather than a figure, the app switches to “sheet” mode on its own: it checks how well the shape it found matches a quadrilateral through its corners, straightens the perspective and trims the edges. Both modes can be switched by hand, and the cutout has a “gentler / bolder” slider.</p>
+  </div>
+  <figure class="r"><div class="slide"><img src="/assets/case/little-museum/03-sheet.jpg" alt="Sheet mode: corners found, perspective corrected" loading="lazy"></div></figure>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== scanning ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Hanging a piece</h2>
+    <p>Scanning had to survive a parent with one free hand: pick what kind of piece it is, take the photo, check the corners, nudge the cutout if needed, name the artist. Everything else the app does itself.</p>
+  </div>
+  <div class="cols-2 r">
+    <figure>
+      <div class="screen player" data-player>
+        <video src="/assets/case/little-museum/scan-screen.mp4" poster="/assets/case/little-museum/scan-screen-poster.jpg" muted loop playsinline preload="none" data-loop></video>
+        <button class="pbtn" aria-label="Play with sound"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+      </div>
+      <figcaption>From the camera to a framed piece on the wall.</figcaption>
+    </figure>
+    <figure>
+      <div class="slide"><img src="/assets/case/little-museum/05-flow.jpg" alt="The scanning flow, step by step" loading="lazy"></div>
+      <figcaption>The same flow as a map.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======== screens ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Screens</h2>
+    <p>Five places: the museum wall, collections, scanning, the story and settings. Frames — wood, tape, pin, mat — are picked from the artwork's id, so a piece always comes back in the frame you remember it in.</p>
+  </div>
+  <div class="phones r">
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/01-museum.jpg" alt="Museum" loading="lazy"></div><span class="phone-cap">Museum: the wall</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/02-museum-filter-mark.jpg" alt="Museum filtered by artist" loading="lazy"></div><span class="phone-cap">Filtered by artist</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/03-collections.jpg" alt="Collections" loading="lazy"></div><span class="phone-cap">Collections as pockets</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/04-collection-nature.jpg" alt="A collection" loading="lazy"></div><span class="phone-cap">Inside a collection</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/05-story.jpg" alt="Story timeline" loading="lazy"></div><span class="phone-cap">Story, month by month</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/07-art-drawing.jpg" alt="An artwork card" loading="lazy"></div><span class="phone-cap">A drawing, with its note</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/08-art-cutout.jpg" alt="A cut-out figure" loading="lazy"></div><span class="phone-cap">A cut-out figure</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/09-art-craft.jpg" alt="A craft" loading="lazy"></div><span class="phone-cap">A craft in 3D</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/10-scan-choose.jpg" alt="Choosing what to scan" loading="lazy"></div><span class="phone-cap">Scan: what is it?</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/11-scan-sheet-corners.jpg" alt="Corners of the sheet" loading="lazy"></div><span class="phone-cap">Checking the corners</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/13-scan-cutout.jpg" alt="Cutout preview" loading="lazy"></div><span class="phone-cap">Gentler or bolder</span></div>
+    <div class="phone-wrap"><div class="phone"><img src="/assets/case/little-museum/15-settings.jpg" alt="Settings: artists" loading="lazy"></div><span class="phone-cap">Artists and their colours</span></div>
+  </div>
+  <figure class="r" style="margin-top: 32px"><div class="slide"><img src="/assets/case/little-museum/06-screens.jpg" alt="All screens of the app" loading="lazy"></div></figure>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== design ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Design</h2>
+    <p>The app should feel like a small gallery, not a photo folder. A bookish serif for the taglines and the titles of works, a quiet geometric sans for the interface, one green accent and six pastel tints for collections and children.</p>
+  </div>
+  <figure class="r"><div class="slide"><img src="/assets/case/little-museum/07-design.jpg" alt="Type, colour and frames" loading="lazy"></div></figure>
+  <div class="cols r" style="margin-top: 16px">
+    <article class="card"><h3>Type</h3><p>Literata for taglines and artwork titles — a bookish, gallery feel. Unbounded at light weights for the interface.</p></article>
+    <article class="card"><h3>Colour</h3><p>One green accent, <span class="green">#417B5A</span>, and six pastel tints that mark collections and tell the two artists apart.</p></article>
+    <article class="card"><h3>Frames</h3><p>Wood, tape, pin and mat. The frame comes from the artwork's id, so the wall looks hung by hand rather than generated.</p></article>
+  </div>
+</section>
+
+<!-- ======== phone videos ======== -->
+<section class="wrap">
+  <div class="sec-head r"><h3>In the hand</h3></div>
+  <div class="cols-2 r">
+    <figure>
+      <div class="screen player" data-player>
+        <video src="/assets/case/little-museum/tour-phone.mp4" poster="/assets/case/little-museum/tour-phone-poster.jpg" muted loop playsinline preload="none" data-loop></video>
+        <button class="pbtn" aria-label="Play with sound"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+      </div>
+      <figcaption>The museum on a phone.</figcaption>
+    </figure>
+    <figure>
+      <div class="screen player" data-player>
+        <video src="/assets/case/little-museum/scan-phone.mp4" poster="/assets/case/little-museum/scan-phone-poster.jpg" muted loop playsinline preload="none" data-loop></video>
+        <button class="pbtn" aria-label="Play with sound"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></button>
+      </div>
+      <figcaption>Scanning a drawing, in one hand.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ======== stack ======== -->
+<section class="wrap">
+  <div class="sec-head r"><h2>How it is built</h2></div>
+  <dl class="stack r">
+    <div><dt>App</dt><dd>React, TypeScript, Vite. A progressive web app: it installs on the home screen and opens without a browser bar.</dd></div>
+    <div><dt>Data</dt><dd>Supabase — database and private file storage, with access limited to the family's emails through row-level security.</dd></div>
+    <div><dt>3D</dt><dd>An Edge Function talks to Meshy; model-viewer shows the result and puts a paper rocket on the floor in AR.</dd></div>
+    <div><dt>Hosting</dt><dd>GitHub Pages. No backend of my own to keep alive.</dd></div>
+  </dl>
+  <p class="note r" style="margin-top: 36px">A family project: the works on every screen are drawings and crafts by my sons, shown with their permission.</p>
+</section>
+
+<footer class="wrap">
+  <div class="next r"><a href="/" style="color: var(--text)">← Back to the portfolio</a></div>
+</footer>
+
+<script>
+  // появление блоков при скролле
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -10% 0px" });
+  document.querySelectorAll(".r").forEach((el) => io.observe(el));
+
+  // петли играют только пока видны
+  const loops = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target;
+    if (e.isIntersecting) { if (v.preload === "none") v.preload = "auto"; v.play().catch(() => {}); } else v.pause();
+  }), { threshold: 0.25 });
+  document.querySelectorAll("video[data-loop]").forEach((v) => loops.observe(v));
+
+  // кнопка звука: по клику ролик играет со звуком с начала
+  document.querySelectorAll("[data-player]").forEach((box) => {
+    const v = box.querySelector("video"), btn = box.querySelector(".pbtn");
+    const toggle = () => { if (v.muted) { v.muted = false; v.currentTime = 0; v.play(); btn.classList.add("hidden"); } else { v.muted = true; btn.classList.remove("hidden"); } };
+    btn.addEventListener("click", toggle);
+    v.addEventListener("click", toggle);
+  });
+
+  // «до / после»: кадры сняты по-разному, поэтому не шторка, а переключение
+  document.querySelectorAll("[data-swap]").forEach((el) => {
+    const pills = el.querySelectorAll(".pill span");
+    const flip = () => {
+      el.classList.toggle("on");
+      pills[0].classList.toggle("on", !el.classList.contains("on"));
+      pills[1].classList.toggle("on", el.classList.contains("on"));
+    };
+    el.addEventListener("click", flip);
+    el.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse" && !el.classList.contains("on")) flip(); });
+    el.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse" && el.classList.contains("on")) flip(); });
+  });
+</script>
+</body>
+</html>
