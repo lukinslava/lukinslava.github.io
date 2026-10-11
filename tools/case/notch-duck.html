@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notch Duck — Slava Lukin</title>
+<style>
+  @font-face { font-family: "Antonio"; src: url("/assets/fonts/antonio/v22/gNMEW3NwSYq_9WD3yHQiFQ.woff2") format("woff2"); font-display: swap; }
+  :root {
+    --bg: #f5f5f5; --panel: #fff; --ink: #1b1b1a; --text: #2f2f2d; --body: #55544f; --label: #85847f;
+    --line: rgba(0,0,0,.08); --notch: #0b0b0b; --duck: #f7d548; --duck-ink: #8a6a00;
+    --hairline: 0 0 0 1px rgba(0,0,0,.05), 0 2px 6px -2px rgba(0,0,0,.08);
+    --lift: 0 0 0 1px rgba(0,0,0,.05), 0 30px 60px -30px rgba(0,0,0,.25);
+    --wrap: 1120px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  img, video { display: block; max-width: 100%; }
+  a { color: inherit; }
+
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 24px; }
+  .wide { max-width: 1291px; margin: 0 auto; padding: 0 24px; }
+
+  h1, h2, h3 { margin: 0; font-weight: 400; }
+  h1 { font-family: "Antonio", sans-serif; font-size: 96px; line-height: .95; letter-spacing: -0.04em; }
+  h2 { font-family: "Antonio", sans-serif; font-size: 64px; line-height: 1.1; letter-spacing: -0.04em; }
+  h3 { font-size: 28px; line-height: 1.15; letter-spacing: -0.03em; }
+  p { margin: 0; font-size: 20px; line-height: 1.5; color: var(--body); }
+  p + p { margin-top: 16px; }
+  .lead { font-size: 24px; line-height: 1.4; color: var(--text); }
+  .kicker { font-size: 16px; line-height: 1; letter-spacing: .14em; text-transform: uppercase; color: var(--label); }
+  strong { font-weight: 400; color: var(--ink); }
+
+  section { padding: 96px 0; }
+  section + section { padding-top: 0; }
+  .sec-head { display: grid; gap: 20px; margin-bottom: 44px; }
+  .sec-head p { max-width: 760px; }
+  .cols-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .cols-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  /* hero */
+  .hero { padding: 72px 0 48px; }
+  .hero .title { display: grid; gap: 20px; justify-items: start; }
+  .hero .lead { max-width: 760px; }
+  .hero-meta { display: flex; flex-wrap: wrap; gap: 10px 40px; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .hero-meta div { display: grid; gap: 6px; }
+  .hero-meta dt { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--label); }
+  .hero-meta dd { margin: 0; font-size: 18px; color: var(--text); }
+
+  /* media */
+  figure { margin: 0; display: grid; gap: 12px; }
+  figcaption { font-size: 15px; line-height: 1.4; color: var(--label); }
+  .shot { border-radius: 24px; overflow: hidden; background: var(--notch); box-shadow: var(--lift); }
+  .shot img, .shot video { width: 100%; }
+  .shot.flat { box-shadow: var(--hairline); }
+
+  /* the duck's states */
+  .states { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .state { display: grid; gap: 10px; align-content: start; }
+  .state .shot { border-radius: 18px; aspect-ratio: 1; }
+  .state .shot img { height: 100%; object-fit: cover; }
+  .state b { font-weight: 400; font-size: 16px; color: var(--ink); }
+  .state span { font-size: 14px; line-height: 1.4; color: var(--label); }
+
+  /* before / after: click or hover swaps the frames */
+  .swap { position: relative; aspect-ratio: 16 / 9; border-radius: 24px; overflow: hidden; cursor: pointer; box-shadow: var(--lift); background: #e9b98f; }
+  .swap img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .45s ease; }
+  .swap .b { opacity: 0; }
+  .swap.on .a { opacity: 0; } .swap.on .b { opacity: 1; }
+  .swap .pill { position: absolute; left: 14px; bottom: 14px; z-index: 2; display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(11,11,11,.72); backdrop-filter: blur(6px); }
+  .swap .pill span { font-size: 12.5px; letter-spacing: .02em; padding: 5px 11px; border-radius: 999px; color: rgba(255,255,255,.7); transition: background .25s, color .25s; }
+  .swap .pill span.on { background: #fff; color: var(--ink); }
+
+  /* cards */
+  .card { background: var(--panel); border-radius: 24px; box-shadow: var(--hairline); padding: 28px; display: grid; gap: 12px; align-content: start; }
+  .card h3 { font-size: 24px; }
+  .card p { font-size: 17px; line-height: 1.45; }
+  .card .num { font-family: "Antonio", sans-serif; font-size: 20px; color: var(--duck-ink); }
+
+  .stack { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .stack div { background: var(--panel); border-radius: 20px; box-shadow: var(--hairline); padding: 22px 24px; }
+  .stack dt { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--label); margin-bottom: 8px; }
+  .stack dd { margin: 0; font-size: 18px; line-height: 1.45; color: var(--text); }
+
+  /* gaps still to fill, same chips as the AI Match case */
+  .todo { display: inline-flex; align-items: center; gap: 8px; font-size: 15px; color: #9a6a1c; background: #fff5e6; border: 1px dashed #e0ae5e; border-radius: 999px; padding: 7px 14px; }
+  .todo::before { content: "to add"; white-space: nowrap; align-self: flex-start; padding-top: 3px; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #b98433; }
+  .todos { display: grid; gap: 10px; justify-items: start; margin-top: 20px; }
+
+  .note { font-size: 15px; line-height: 1.45; color: var(--label); }
+  .divider { height: 1px; background: var(--line); max-width: 1291px; margin: 0 auto; }
+
+  /* reveal */
+  .r { opacity: 0; transform: translateY(24px); transition: opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); }
+  .r.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .r { opacity: 1; transform: none; transition: none; } html { scroll-behavior: auto; } }
+
+  footer { padding: 72px 0 96px; }
+  .next { font-size: 20px; color: var(--label); }
+
+  @media (max-width: 1099.98px) { .states { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 809.98px) {
+    .wrap, .wide { padding: 0 16px; }
+    h1 { font-size: 56px; } h2 { font-size: 40px; } h3 { font-size: 22px; }
+    p { font-size: 17px; } .lead { font-size: 19px; }
+    section { padding: 64px 0; }
+    .sec-head { margin-bottom: 28px; }
+    .cols-2, .cols-3, .stack { grid-template-columns: 1fr; }
+    .states { grid-template-columns: repeat(2, 1fr); }
+    .card { padding: 20px; border-radius: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======== hero ======== -->
+<header class="hero wrap">
+  <div class="title r">
+    <span class="kicker">Side project · macOS app</span>
+    <h1>Notch Duck</h1>
+    <p class="lead">A duck lives in the MacBook notch. It says hi when the app starts, keeps the clipboard, screenshots and links one hover away, tidies the desktop in one click and lights the notch up when Claude is waiting for an answer.</p>
+  </div>
+  <dl class="hero-meta r">
+    <div><dt>Role</dt><dd>Design and build, on my own</dd></div>
+    <div><dt>Platform</dt><dd>macOS, in the notch</dd></div>
+    <div><dt>Stack</dt><dd>Swift, built with Claude Code</dd></div>
+    <div><dt>Name</dt><dd>Working title</dd></div>
+  </dl>
+</header>
+
+<section class="wide" style="padding-top: 40px">
+  <figure class="r">
+    <div class="shot"><video src="/assets/case/notch-duck/reel.mp4" poster="/assets/case/notch-duck/reel-poster.jpg" muted loop playsinline preload="none" controls data-loop></video></div>
+    <figcaption>The whole app in 28 seconds. The interface copy is in Russian for now.</figcaption>
+  </figure>
+</section>
+
+<!-- ======== idea ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>A home for the notch</h2>
+    <p>The notch is the one part of the screen that is always there and never used. Here it becomes a small home: closed, it is the ordinary black notch; on hover it grows into a panel; when something happens, a character steps out and says what is going on.</p>
+    <div class="todos"><span class="todo">why I built it — the moment that made me start</span></div>
+  </div>
+  <div class="cols-3 r">
+    <article class="card"><span class="num">01</span><h3>Hover the notch</h3><p>Clipboard history, recent screenshots and saved links, without opening a window.</p></article>
+    <article class="card"><span class="num">02</span><h3>Tidy the desktop</h3><p>Everything on the desktop goes into a folder named with today's date, in one click.</p></article>
+    <article class="card"><span class="num">03</span><h3>Claude is waiting</h3><p>The notch lights up when Claude Code needs an answer, so a long task does not stall unnoticed.</p></article>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== the duck ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>One character, every state</h2>
+    <p>Instead of spinners and toasts, the app talks through one duck. Each state has its own drawing and one short line, and the result names exactly what happened — how many files moved and where.</p>
+  </div>
+  <div class="states r">
+    <div class="state"><div class="shot"><img src="/assets/case/notch-duck/state-hello.jpg" alt="The duck in the notch: Quack! I'm here" loading="lazy"></div><b>Hello</b><span>“Quack! I'm here” — on launch.</span></div>
+    <div class="state"><div class="shot"><img src="/assets/case/notch-duck/state-mess.jpg" alt="The duck sees a messy desktop" loading="lazy"></div><b>Noticing</b><span>“Whoa, what a mess… let's tidy up.”</span></div>
+    <div class="state"><div class="shot"><img src="/assets/case/notch-duck/state-working.jpg" alt="The duck at work" loading="lazy"></div><b>Working</b><span>“Working…” — while files move.</span></div>
+    <div class="state"><div class="shot"><img src="/assets/case/notch-duck/state-done.jpg" alt="The duck reports the result" loading="lazy"></div><b>Done</b><span>“Done! Moved 9 files to the 2026-10-11 folder.”</span></div>
+    <div class="state"><div class="shot"><img src="/assets/case/notch-duck/state-bye.jpg" alt="The duck in the shower says goodbye" loading="lazy"></div><b>Goodbye</b><span>“Bye-bye, amigo!” — on quit.</span></div>
+  </div>
+  <p class="note r" style="margin-top: 24px">The duck is my own drawing.</p>
+</section>
+
+<!-- ======== panel ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Hover the notch</h2>
+    <p>The panel drops out of the notch itself, black like the notch, so it reads as the notch growing rather than a window opening. Three tabs: what was just copied, what was just captured and the links that get opened every day.</p>
+  </div>
+  <div class="cols-3 r">
+    <figure><div class="shot flat"><img src="/assets/case/notch-duck/panel-clipboard.jpg" alt="Clipboard tab: a link, a note, an image and a file" loading="lazy"></div><figcaption>Clipboard: text, images and files, with how long ago each was copied.</figcaption></figure>
+    <figure><div class="shot flat"><img src="/assets/case/notch-duck/panel-screenshots.jpg" alt="Screenshots tab: a grid of recent screenshots" loading="lazy"></div><figcaption>Screenshots: the latest captures as a grid.</figcaption></figure>
+    <figure><div class="shot flat"><img src="/assets/case/notch-duck/panel-links.jpg" alt="Links tab: Zoom, Google Meet and Notion links" loading="lazy"></div><figcaption>Links: standing calls and pages, one click to copy.</figcaption></figure>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ======== tidy ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Tidy the desktop</h2>
+    <p>Screenshots, downloads and drafts pile up on the desktop. One click sweeps them all into a folder named with today's date, so nothing is deleted and everything is easy to find by day.</p>
+  </div>
+  <figure class="r">
+    <div class="swap" data-swap>
+      <img class="a" src="/assets/case/notch-duck/desktop-mess.jpg" alt="A desktop covered with files">
+      <img class="b" src="/assets/case/notch-duck/desktop-done.jpg" alt="The same desktop with one dated folder">
+      <div class="pill"><span class="on">before</span><span>after</span></div>
+    </div>
+    <figcaption>Nine files become one folder, 2026-10-11.</figcaption>
+  </figure>
+</section>
+
+<!-- ======== claude ======== -->
+<section class="wrap">
+  <div class="sec-head r">
+    <h2>Claude is waiting</h2>
+    <p>A long Claude Code task runs in the background while you do something else. When Claude stops to ask a question, the notch lights up — a spot at the top of the screen that is always in view.</p>
+  </div>
+  <div class="cols-2 r">
+    <figure><div class="shot flat"><img src="/assets/case/notch-duck/claude-waiting.jpg" alt="The notch with an orange dot" loading="lazy"></div><figcaption>An orange dot: Claude needs an answer.</figcaption></figure>
+    <figure><div class="shot flat"><img src="/assets/case/notch-duck/claude-ok.jpg" alt="The notch with a green dot" loading="lazy"></div><figcaption>Then the dot turns green.</figcaption></figure>
+  </div>
+  <div class="todos r"><span class="todo">what the green dot means exactly, and how the app learns that Claude is waiting</span></div>
+</section>
+
+<!-- ======== stack ======== -->
+<section class="wrap">
+  <div class="sec-head r"><h2>How it is built</h2></div>
+  <dl class="stack r">
+    <div><dt>App</dt><dd>Native macOS app in Swift, drawn over the notch.</dd></div>
+    <div><dt>Process</dt><dd>Designed and written on my own, with Claude Code as the pair programmer.</dd></div>
+    <div><dt>Character</dt><dd>My own drawings: one per state, each with its own short line.</dd></div>
+    <div><dt>Status</dt><dd>A personal tool, still without a name.</dd></div>
+  </dl>
+  <div class="todos r">
+    <span class="todo">how long it took and what was hardest to get right</span>
+    <span class="todo">what's next: a name, English copy, a public build?</span>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div class="next r"><a href="/" style="color: var(--text)">← Back to the portfolio</a></div>
+</footer>
+
+<script>
+  // появление блоков при скролле
+  const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -10% 0px" });
+  document.querySelectorAll(".r").forEach((el) => io.observe(el));
+
+  // ролик играет только пока виден
+  const loops = new IntersectionObserver((es) => es.forEach((e) => {
+    const v = e.target;
+    if (e.isIntersecting) { if (v.preload === "none") v.preload = "auto"; v.play().catch(() => {}); } else v.pause();
+  }), { threshold: 0.25 });
+  document.querySelectorAll("video[data-loop]").forEach((v) => loops.observe(v));
+
+  // «до / после»: клик или наведение мышью
+  document.querySelectorAll("[data-swap]").forEach((el) => {
+    const pills = el.querySelectorAll(".pill span");
+    const flip = () => {
+      el.classList.toggle("on");
+      pills[0].classList.toggle("on", !el.classList.contains("on"));
+      pills[1].classList.toggle("on", el.classList.contains("on"));
+    };
+    el.addEventListener("click", flip);
+    el.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse" && !el.classList.contains("on")) flip(); });
+    el.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse" && el.classList.contains("on")) flip(); });
+  });
+</script>
+</body>
+</html>
