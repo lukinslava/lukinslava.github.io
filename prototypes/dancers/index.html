@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dancers</title>
+<style>
+  :root {
+    --page: #000;
+    --ink: #f2f2f2;
+    --muted: #7d7d7d;
+    --line: #2a2a2a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    background: var(--page);
+    color: var(--ink);
+    font: 13px/1.4 ui-monospace, "SF Mono", Menlo, monospace;
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .wrap { display: grid; gap: 14px; justify-items: center; }
+  .stage {
+    position: relative;
+    width: min(calc(100vw - 32px), calc((100vh - 120px) * 400 / 520));
+    aspect-ratio: 400 / 520;
+    overflow: hidden;
+    touch-action: pan-y;
+  }
+  .track {
+    display: flex;
+    height: 100%;
+    transition: transform .5s cubic-bezier(.7, 0, .25, 1);
+  }
+  .track svg { flex: 0 0 100%; height: 100%; display: block; }
+  .bar { display: flex; align-items: center; gap: 16px; width: 100%; justify-content: space-between; }
+  .dots { display: flex; gap: 6px; }
+  .dots button {
+    width: 22px; height: 22px; border: 0; padding: 0; background: none; cursor: pointer;
+    display: grid; place-items: center;
+  }
+  .dots button::after {
+    content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--muted);
+    transition: background .2s, transform .2s;
+  }
+  .dots button[aria-current="true"]::after { background: var(--ink); transform: scale(1.35); }
+  .name { color: var(--muted); min-width: 9ch; }
+  .ctrl { display: flex; gap: 6px; }
+  .ctrl button {
+    font: inherit; color: var(--ink); background: none; border: 1px solid var(--line);
+    border-radius: 999px; padding: 4px 10px; cursor: pointer;
+  }
+  .ctrl button[aria-pressed="false"] { color: var(--muted); }
+  .ctrl button:hover { border-color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="stage" id="stage"><div class="track" id="track"></div></div>
+  <div class="bar">
+    <span class="name" id="name"></span>
+    <div class="dots" id="dots"></div>
+    <div class="ctrl">
+      <button id="twos" aria-pressed="true" title="Animate at 12 fps like hand-drawn cels">on twos</button>
+      <button id="play" aria-pressed="true">pause</button>
+    </div>
+  </div>
+</div>
+
+<!-- Shared defs: fills and the "boil" filter that makes lines jitter like redrawn frames -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <filter id="boil" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence id="boil-noise" type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="1"/>
+      <feDisplacementMap in="SourceGraphic" scale="3.2" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <linearGradient id="sunset" gradientUnits="userSpaceOnUse" x1="0" y1="200" x2="0" y2="456">
+      <stop offset="0" stop-color="#ffc23d"/>
+      <stop offset=".22" stop-color="#ff7a2a"/>
+      <stop offset=".38" stop-color="#ff4040"/>
+      <stop offset=".52" stop-color="#f04fa6"/>
+      <stop offset=".7" stop-color="#a95cf2"/>
+      <stop offset="1" stop-color="#3d7ff7"/>
+    </linearGradient>
+    <!-- same gradient for the moving torso: its transform is undone every frame,
+         so colour stays tied to height on screen, not to the body -->
+    <linearGradient id="sunset-local" href="#sunset"/>
+    <radialGradient id="pup" gradientUnits="userSpaceOnUse" cx="0" cy="-95" r="135">
+      <stop offset="0" stop-color="#ffd84a"/>
+      <stop offset=".6" stop-color="#ffc118"/>
+      <stop offset="1" stop-color="#f29d00"/>
+    </radialGradient>
+    <pattern id="notes" width="84" height="84" patternUnits="userSpaceOnUse" patternTransform="scale(1.45)">
+      <g fill="#8ea5ee" stroke="#8ea5ee" stroke-width="1.6" stroke-linecap="round">
+        <g transform="translate(14 26) rotate(-8)">
+          <ellipse cx="-3" cy="0" rx="4" ry="2.8" transform="rotate(-22 -3 0)" stroke="none"/>
+          <path d="M.6 0V-15q4 2 6.5 6.5" fill="none"/>
+        </g>
+        <g transform="translate(56 18) rotate(10)">
+          <ellipse cx="-3" cy="0" rx="4" ry="2.8" transform="rotate(-22 -3 0)" stroke="none"/>
+          <ellipse cx="9" cy="-2" rx="4" ry="2.8" transform="rotate(-22 9 -2)" stroke="none"/>
+          <path d="M.6 0V-14L12.6-16V-2" fill="none"/>
+        </g>
+        <g transform="translate(40 64) rotate(4)">
+          <ellipse cx="-3" cy="0" rx="4" ry="2.8" transform="rotate(-22 -3 0)" stroke="none"/>
+          <path d="M.6 0V-15q4 2 6.5 6.5" fill="none"/>
+        </g>
+        <g transform="translate(76 58) rotate(-14)">
+          <ellipse cx="-3" cy="0" rx="4" ry="2.8" transform="rotate(-22 -3 0)" stroke="none"/>
+          <ellipse cx="9" cy="-2" rx="4" ry="2.8" transform="rotate(-22 9 -2)" stroke="none"/>
+          <path d="M.6 0V-14L12.6-16V-2" fill="none"/>
+        </g>
+      </g>
+    </pattern>
+  </defs>
+</svg>
+
+<script>
+/* ───────────── helpers ───────────── */
+const NS = 'http://www.w3.org/2000/svg';
+const D = Math.PI / 180;
+
+function el(tag, attrs, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+const set = (e, attrs) => { for (const k in attrs) e.setAttribute(k, attrs[k]); };
+const pt = p => p[0].toFixed(1) + ',' + p[1].toFixed(1);
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const mix = (a, b, k) => a + (b - a) * k;
+
+// Angles: 0 points down, 90 points right, -90 left, 180 up.
+const dir = a => [Math.sin(a * D), Math.cos(a * D)];
+
+// A limb as a chain of segments with absolute angles.
+function chain(p, segs) {
+  const pts = [p];
+  let [x, y] = p;
+  for (const [a, len] of segs) {
+    const [dx, dy] = dir(a);
+    x += dx * len; y += dy * len;
+    pts.push([x, y]);
+  }
+  return pts;
+}
+
+// Rubber-hose limb: a quadratic curve that passes through the middle joint.
+function hose(p0, p1, p2) {
+  const c = [2 * p1[0] - (p0[0] + p2[0]) / 2, 2 * p1[1] - (p0[1] + p2[1]) / 2];
+  return `M${pt(p0)}Q${pt(c)} ${pt(p2)}`;
+}
+
+// Two-bone IK: where the knee goes so the foot stays planted. bend ±1 picks the side.
+function ik(hip, foot, l1, l2, bend) {
+  let dx = foot[0] - hip[0], dy = foot[1] - hip[1];
+  let d = Math.hypot(dx, dy);
+  const max = l1 + l2 - .01;
+  if (d > max) { dx *= max / d; dy *= max / d; d = max; }
+  const a = (l1 * l1 - l2 * l2 + d * d) / (2 * d);
+  const h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+  const ux = dx / d, uy = dy / d;
+  const knee = [hip[0] + ux * a - uy * h * bend, hip[1] + uy * a + ux * h * bend];
+  return [knee, [hip[0] + dx, hip[1] + dy]];
+}
+
+// Local point → world, matching SVG `translate(o) rotate(r)`.
+function tf(x, y, o, r) {
+  const c = Math.cos(r * D), s = Math.sin(r * D);
+  return [o[0] + x * c - y * s, o[1] + x * s + y * c];
+}
+
+function lerpPose(a, b, k) {
+  if (typeof a === 'number') return mix(a, b, k);
+  if (Array.isArray(a)) return a.map((v, i) => lerpPose(v, b[i], k));
+  const o = {};
+  for (const key in a) o[key] = lerpPose(a[key], b[key], k);
+  return o;
+}
+
+const easeInOut = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+const easeBack = k => { const c = 1.9; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
+
+// Keyframe player: hold each pose a beat, then snap to the next — reads as hand-drawn keys.
+function keys(poses, dur, ease = easeInOut, hold = .22) {
+  return t => {
+    const x = t / dur, i = Math.floor(x), f = x - i, n = poses.length;
+    const k = ease(clamp((f - hold) / (1 - hold)));
+    const j = (i % n + n) % n;
+    return lerpPose(poses[j], poses[(j + 1) % n], k);
+  };
+}
+
+// Scale a character about its ground point so it fills the frame like the original.
+const camera = k => `translate(200 452) scale(${k}) translate(-200 -452)`;
+
+function scene(bg) {
+  const svg = el('svg', { viewBox: '0 0 400 520', role: 'img' });
+  if (bg) el('rect', { width: 400, height: 520, fill: bg }, svg);
+  return svg;
+}
+
+/* ───────────── 1 · Headphones ───────────── */
+function headphones() {
+  const svg = scene('#a3f7f5');
+  const notes = el('rect', { width: 400, height: 520, fill: 'url(#notes)', opacity: .85 }, svg);
+  const pink = '#f27bd3';
+  const g = el('g', { transform: camera(1.12), filter: 'url(#boil)', fill: 'none', stroke: pink, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg);
+  const limb = { 'stroke-width': 8.5 };
+  const legL = el('path', limb, g), legR = el('path', limb, g);
+  const footL = el('path', limb, g), footR = el('path', limb, g);
+  const body = el('g', {}, g);
+  const armL = el('path', limb, body), armR = el('path', limb, body);
+  el('path', {
+    d: 'M-44-116Q-46-142-22-142H22Q46-142 44-116L48-8Q48 4 37 4H-37Q-48 4-48-8Z',
+    fill: pink, stroke: 'none'
+  }, body);
+  const face = el('g', { stroke: '#fff', 'stroke-width': 3 }, body);
+  el('path', { d: 'M-27-117q7 6 14 0M11-117q7 6 14 0' }, face);
+  el('path', { d: 'M-4-103q4 9 8 0', 'stroke-width': 2.6 }, face);
+  const phones = el('g', {}, body);
+  el('path', { d: 'M-47-112C-50-166 50-166 47-112', stroke: '#1c4bb3', 'stroke-width': 8 }, phones);
+  el('rect', { x: -55, y: -128, width: 15, height: 28, rx: 7, fill: '#2a64d8', stroke: 'none' }, phones);
+  el('rect', { x: 40, y: -128, width: 15, height: 28, rx: 7, fill: '#2a64d8', stroke: 'none' }, phones);
+
+  return {
+    svg, name: 'headphones',
+    update(t) {
+      const p = t * 112 / 60 * Math.PI * 2;                 // one cycle per beat
+      const sw = Math.sin(p / 2), bounce = (1 - Math.cos(p)) / 2;
+      const hip = [200 + 18 * sw, 316 + 11 * bounce];
+      const tilt = 8 * Math.sin(p / 2 + .7);
+      set(body, { transform: `translate(${pt(hip)}) rotate(${tilt.toFixed(2)})` });
+      set(phones, { transform: `translate(0 ${(-2.5 * bounce).toFixed(2)})` });
+
+      const liftL = Math.pow(Math.max(0, sw), 4), liftR = Math.pow(Math.max(0, -sw), 4);
+      const legs = [
+        [legL, footL, tf(-30, -4, hip, tilt), [130 - 8 * liftL, 452 - 34 * liftL], 1, -1],
+        [legR, footR, tf(30, -4, hip, tilt), [270 + 8 * liftR, 452 - 34 * liftR], -1, 1],
+      ];
+      for (const [leg, foot, h, f, bend, out] of legs) {
+        const [knee, ft] = ik(h, f, 74, 74, bend);
+        set(leg, { d: `M${pt(h)}L${pt(knee)}L${pt(ft)}` });
+        set(foot, { d: `M${pt(ft)}l${24 * out * -1},1` });
+      }
+
+      const uL = -66 + 26 * Math.sin(p / 2 + 1.4) + 6 * Math.sin(p);
+      const uR = 64 + 22 * Math.sin(p / 2 + .2) - 6 * Math.sin(p);
+      set(armL, { d: hose(...chain([-42, -94], [[uL, 54], [uL + 30 + 26 * Math.sin(p / 2 + 2.4), 50]])) });
+      set(armR, { d: hose(...chain([42, -94], [[uR, 54], [uR - 28 + 24 * Math.sin(p / 2 + 1.1), 50]])) });
+
+      set(notes, { transform: `translate(0 ${(-(t * 10) % 121.8).toFixed(1)})`, height: 660 });
+    }
+  };
+}
+
+/* ───────────── 2 · Sunset ───────────── */
+function sunset() {
+  const svg = scene();
+  const g = el('g', {
+    transform: camera(1.2), filter: 'url(#boil)', fill: 'none', stroke: 'url(#sunset)',
+    'stroke-linecap': 'round', 'stroke-linejoin': 'round'
+  }, svg);
+  const legL = el('path', { 'stroke-width': 15 }, g), legR = el('path', { 'stroke-width': 15 }, g);
+  const footL = el('path', { 'stroke-width': 12 }, g), footR = el('path', { 'stroke-width': 12 }, g);
+  const body = el('g', { stroke: 'url(#sunset-local)' }, g);
+  const local = document.getElementById('sunset-local');
+  el('path', {
+    d: 'M-30 4C-34-40-54-78-50-110C-46-150 46-150 50-110C54-78 34-40 30 4Z',
+    fill: 'url(#sunset-local)', stroke: 'none'
+  }, body);
+  const face = el('g', { stroke: '#8a2a12', 'stroke-width': 2.4 }, body);
+  el('path', { d: 'M-15-124v5M9-125v5M-17-110q12 10 26 0' }, face);
+  const armL = el('path', { 'stroke-width': 14 }, body), armR = el('path', { 'stroke-width': 14 }, body);
+  const handL = el('circle', { r: 8, fill: 'url(#sunset-local)', stroke: 'none' }, body);
+  const handR = el('circle', { r: 8, fill: 'url(#sunset-local)', stroke: 'none' }, body);
+
+  // x, y — hips; r — lean; aL/aR — [upper, fore] arm angles; fL/fR — planted feet
+  const pose = keys([
+    { x: 200, y: 340, r: -6, aL: [-150, 95], aR: [62, 28], fL: [138, 452], fR: [262, 452] },
+    { x: 206, y: 350, r: 9, aL: [-72, -40], aR: [132, 138], fL: [132, 452], fR: [270, 452] },
+    { x: 196, y: 354, r: -2, aL: [-122, 172], aR: [118, 186], fL: [128, 452], fR: [266, 446] },
+    { x: 202, y: 364, r: 5, aL: [-30, 12], aR: [36, -8], fL: [128, 452], fR: [272, 452] },
+    { x: 190, y: 344, r: -11, aL: [-100, -78], aR: [150, 250], fL: [140, 452], fR: [272, 420] },
+    { x: 210, y: 352, r: 7, aL: [-140, -62], aR: [86, 40], fL: [128, 436], fR: [262, 452] },
+  ], .34);
+
+  return {
+    svg, name: 'sunset',
+    update(t) {
+      const s = pose(t);
+      const hip = [s.x, s.y + 5 * Math.abs(Math.sin(t * Math.PI * 3))];
+      set(body, { transform: `translate(${pt(hip)}) rotate(${s.r.toFixed(2)})` });
+      set(local, { gradientTransform: `rotate(${(-s.r).toFixed(2)}) translate(${pt(hip.map(v => -v))})` });
+      for (const [leg, foot, hx, f, bend, out] of [
+        [legL, footL, -22, s.fL, 1, -1], [legR, footR, 22, s.fR, -1, 1]
+      ]) {
+        const h = tf(hx, -2, hip, s.r);
+        const [knee, ft] = ik(h, f, 58, 60, bend);
+        set(leg, { d: hose(h, knee, ft) });
+        set(foot, { d: `M${pt(ft)}l${22 * out},2` });
+      }
+      for (const [arm, hand, sx, a] of [[armL, handL, -44, s.aL], [armR, handR, 44, s.aR]]) {
+        const c = chain([sx, -92], [[a[0], 64], [a[1], 60]]);
+        set(arm, { d: hose(...c) });
+        set(hand, { cx: c[2][0].toFixed(1), cy: c[2][1].toFixed(1) });
+      }
+    }
+  };
+}
+
+/* ───────────── 3 · Blob ───────────── */
+function blob() {
+  const svg = scene();
+  const blue = '#0ba5ff';
+  const g = el('g', { transform: camera(1.4), filter: 'url(#boil)', fill: 'none', stroke: blue, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg);
+  const body = el('g', {}, g);
+  const legL = el('path', { 'stroke-width': 13 }, body), legR = el('path', { 'stroke-width': 13 }, body);
+  const footL = el('path', { 'stroke-width': 12 }, body), footR = el('path', { 'stroke-width': 12 }, body);
+  el('ellipse', { rx: 62, ry: 57, fill: blue, stroke: 'none' }, body);
+  const back = el('path', { d: 'M-34-30q30-26 64-4', stroke: '#0786d6', 'stroke-width': 3 }, body);
+  const face = el('g', { stroke: 'none' }, body);
+  el('path', { d: 'M-10 14q12 20 26 0z', fill: '#1a0f2e' }, face);
+  el('ellipse', { cx: 5, cy: 20, rx: 6, ry: 3.5, fill: '#ff4f9a' }, face);
+  const eyes = [[-14, -8, 13], [13, -10, 12]].map(([x, y, r]) => {
+    el('circle', { cx: x, cy: y, r, fill: '#fff' }, face);
+    return el('circle', { cx: x, cy: y, r: 6.5, fill: '#111' }, face);
+  });
+  const armL = el('path', { 'stroke-width': 12 }, body), armR = el('path', { 'stroke-width': 12 }, body);
+  const handL = el('circle', { r: 8, fill: blue, stroke: 'none' }, body);
+  const handR = el('circle', { r: 8, fill: blue, stroke: 'none' }, body);
+
+  // face: -1 profile left … 1 profile right; back: 0 front … 1 seen from behind
+  const pose = keys([
+    { x: 200, y: 334, r: -6, face: -.7, back: 0, aL: [-52, -28], aR: [160, 230], lL: [-28, 12], lR: [34, -14] },
+    { x: 206, y: 316, r: 12, face: .4, back: .45, aL: [-160, -186], aR: [148, 176], lL: [-10, 6], lR: [96, 88] },
+    { x: 200, y: 322, r: -4, face: 0, back: 1, aL: [-166, -190], aR: [150, 118], lL: [-16, -4], lR: [20, 8] },
+    { x: 197, y: 334, r: 8, face: .75, back: 0, aL: [-156, -100], aR: [52, 30], lL: [-36, -10], lR: [26, 10] },
+    { x: 194, y: 314, r: -12, face: -.3, back: .2, aL: [-96, -130], aR: [164, 192], lL: [-96, -88], lR: [6, -6] },
+  ], .3, easeBack, .3);
+
+  return {
+    svg, name: 'blob',
+    update(t) {
+      const s = pose(t);
+      set(body, { transform: `translate(${s.x.toFixed(1)} ${s.y.toFixed(1)}) rotate(${s.r.toFixed(2)})` });
+      set(face, { transform: `translate(${(s.face * 30).toFixed(1)} 0)`, opacity: (1 - s.back).toFixed(2) });
+      set(back, { opacity: s.back.toFixed(2) });
+      eyes.forEach((e, i) => set(e, {
+        cx: ([-14, 13][i] + s.face * 4).toFixed(1), cy: ([-8, -10][i] + 1.5).toFixed(1)
+      }));
+      for (const [leg, foot, hx, a, out] of [[legL, footL, -24, s.lL, -1], [legR, footR, 24, s.lR, 1]]) {
+        const c = chain([hx, 44], [[a[0], 42], [a[1], 40]]);
+        set(leg, { d: hose(...c) });
+        set(foot, { d: `M${pt(c[2])}l${13 * out},1` });
+      }
+      for (const [arm, hand, sx, a] of [[armL, handL, -44, s.aL], [armR, handR, 44, s.aR]]) {
+        const c = chain([sx, -6], [[a[0], 44], [a[1], 40]]);
+        set(arm, { d: hose(...c) });
+        set(hand, { cx: c[2][0].toFixed(1), cy: c[2][1].toFixed(1) });
+      }
+    }
+  };
+}
+
+/* ───────────── 4 · Cat ───────────── */
+function cat() {
+  const svg = scene('#e9e14f');
+  const red = '#ff5c58', line = '#c83a3a';
+  const wide = el('g', { filter: 'url(#boil)', 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, svg);
+  const bust = el('g', {}, wide);
+  el('path', {
+    d: 'M118 530C116 430 136 368 152 334C140 300 140 250 150 214L160 148L196 182C214 178 236 178 248 182L272 144L282 214C292 260 290 302 276 334C300 372 320 430 324 530Z',
+    fill: red, stroke: line, 'stroke-width': 2
+  }, bust);
+  el('path', { d: 'M168 172l10 12M258 168l-8 14', stroke: line, 'stroke-width': 1.6, fill: 'none' }, bust);
+  // whiskers + mouth
+  el('path', {
+    d: 'M262 280l24-4M262 288l22 3M160 284l-14-2M226 286q6 4 12 0',
+    stroke: line, 'stroke-width': 1.5, fill: 'none'
+  }, bust);
+  // deadpan eyes with a heavy upper lid
+  const lids = [[194, 248], [246, 246]].map(([x, y]) => {
+    const e = el('g', { transform: `translate(${x} ${y})` }, bust);
+    el('ellipse', { rx: 13, ry: 6, fill: '#fff', stroke: line, 'stroke-width': 1.4 }, e);
+    el('circle', { cx: 5, cy: 1, r: 3.6, fill: '#111' }, e);
+    return el('path', { fill: red, stroke: line, 'stroke-width': 1.6 }, e);
+  });
+  // arm and the V sign over the eye
+  el('path', { d: 'M110 520C58 450 66 366 126 316C146 300 162 288 176 276', fill: 'none', stroke: line, 'stroke-width': 42 }, bust);
+  el('path', { d: 'M110 520C58 450 66 366 126 316C146 300 162 288 176 276', fill: 'none', stroke: red, 'stroke-width': 38 }, bust);
+  const hand = el('g', { transform: 'translate(178 270)' }, bust);
+  const fingers = [0, 1].map(() => el('path', {
+    fill: 'none', stroke: '#ffa5a2', 'stroke-width': 11, opacity: .9
+  }, hand));
+  el('ellipse', { rx: 17, ry: 13, transform: 'rotate(-30)', fill: '#ff8f8c', stroke: line, 'stroke-width': 1.4, opacity: .92 }, hand);
+  el('path', { d: 'M-6-4q8 4 14 1M-4 4q8 3 13 0', fill: 'none', stroke: line, 'stroke-width': 1.2 }, hand);
+
+  // close-up: sparkling anime eyes, hard cut like the original
+  const close = el('g', { filter: 'url(#boil)', 'stroke-linecap': 'round' }, svg);
+  el('rect', { x: -20, y: -20, width: 440, height: 560, fill: red }, close);
+  const zoom = el('g', {}, close);
+  el('path', {
+    d: 'M40 160q50-26 92-6M262 154q50-14 96 8M60 350q30 18 60 6M280 356q32 14 62-4M170 380q30 14 60 0M300 300l40 6M300 312l36 14M50 300l40 4',
+    fill: 'none', stroke: line, 'stroke-width': 2
+  }, zoom);
+  const sparkles = [];
+  for (const cx of [134, 284]) {
+    const e = el('g', { transform: `translate(${cx} 250)` }, zoom);
+    el('ellipse', { rx: 50, ry: 54, fill: '#efe8d8', stroke: line, 'stroke-width': 2 }, e);
+    el('circle', { r: 38, fill: '#1f4a3c' }, e);
+    el('circle', { r: 26, fill: 'none', stroke: '#3f7f66', 'stroke-width': 5 }, e);
+    el('circle', { r: 15, fill: '#0f241d' }, e);
+    sparkles.push(el('g', { fill: '#fff' }, e));
+    el('circle', { cx: -11, cy: -13, r: 10 }, sparkles.at(-1));
+    el('circle', { cx: 13, cy: 9, r: 5 }, sparkles.at(-1));
+    el('circle', { cx: -2, cy: 16, r: 2.6 }, sparkles.at(-1));
+    el('path', { d: 'M-46-30q-6-10-2-20M-30-46q-2-12 4-18M-10-52q2-10 8-14', fill: 'none', stroke: line, 'stroke-width': 2 }, e);
+  }
+  el('path', { d: 'M-40 230q110-40 150-38q16 4 2 18q-60 16-150 40zM-40 290q100-10 140 6q12 12-4 18q-70-2-136-4z', fill: '#ff9b98', opacity: .75 }, zoom);
+
+  return {
+    svg, name: 'cat',
+    update(t) {
+      const cyc = t % 3.6;
+      const isClose = cyc > 1.1 && cyc < 1.95;
+      close.style.display = isClose ? '' : 'none';
+      wide.style.display = isClose ? 'none' : '';
+      if (isClose) {
+        const punch = 1 + .14 * Math.pow(1 - clamp((cyc - 1.1) / .18), 2);
+        set(zoom, { transform: `translate(200 260) scale(${punch.toFixed(3)}) translate(-200 -260)` });
+        sparkles.forEach((s, i) => set(s, {
+          transform: `translate(${(1.6 * Math.sin(t * 40 + i)).toFixed(1)} ${(1.6 * Math.cos(t * 33 + i)).toFixed(1)})`
+        }));
+        return;
+      }
+      const bob = Math.sin(t * Math.PI * 2 * 1.1);
+      set(bust, { transform: `rotate(${(1.6 * bob).toFixed(2)} 220 520) translate(0 ${(2 * bob).toFixed(1)})` });
+      const v = 22 + 9 * Math.sin(t * 9);                     // V opens and closes
+      set(fingers[0], { d: `M0 0l${pt(dir(180 - 38 - v / 2).map(x => x * 40))}` });
+      set(fingers[1], { d: `M0 0l${pt(dir(180 - 38 + v / 2).map(x => x * 34))}` });
+      const blink = (t % 2.7) < .12 ? 1 : 0;
+      const lid = mix(-3, 13, blink);                          // control point of the lid edge
+      lids.forEach(l => set(l, { d: `M-14 0Q0-13 14 0Q0 ${lid} -14 0Z` }));
+    }
+  };
+}
+
+/* ───────────── 5 · Pup ───────────── */
+function pup() {
+  const svg = scene();
+  const ink = '#3d2a00', fill = 'url(#pup)';
+  const g = el('g', { transform: camera(1.55), filter: 'url(#boil)', 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none' }, svg);
+  const legL = el('path', { stroke: '#f2a400', 'stroke-width': 20 }, g);
+  const legR = el('path', { stroke: '#f2a400', 'stroke-width': 20 }, g);
+  const footL = el('ellipse', { rx: 15, ry: 7.5, fill: '#f2a400' }, g);
+  const footR = el('ellipse', { rx: 15, ry: 7.5, fill: '#f2a400' }, g);
+  const body = el('g', {}, g);
+  el('ellipse', { cx: 0, cy: -52, rx: 54, ry: 62, fill }, body);
+  const head = el('g', {}, body);
+  el('circle', { cx: 4, cy: -140, r: 52, fill }, head);
+  const face = el('g', { stroke: ink, 'stroke-width': 2.6 }, head);
+  el('circle', { cx: -12, cy: -146, r: 3.4, fill: ink, stroke: 'none' }, face);
+  el('circle', { cx: 18, cy: -148, r: 3.4, fill: ink, stroke: 'none' }, face);
+  el('circle', { cx: 4, cy: -136, r: 2.2, fill: ink, stroke: 'none' }, face);
+  el('path', { d: 'M-6-126q10 8 20 0' }, face);
+  const ear = 'M0 0C-22 2-32 36-27 58C-23 71-8 69-5 54C-2 38 4 16 0 0Z';
+  const earL = el('path', { d: ear, fill, stroke: ink, 'stroke-width': 2.4 }, head);
+  const earR = el('path', { d: ear, fill, stroke: ink, 'stroke-width': 2.4 }, head);
+  const arms = [0, 1].map(() => [
+    el('path', { stroke: ink, 'stroke-width': 15 }, body),
+    el('path', { stroke: '#ffc31c', 'stroke-width': 10.5 }, body),
+  ]);
+
+  return {
+    svg, name: 'pup',
+    update(t) {
+      const p = t * 118 / 60 * Math.PI * 2;
+      const sw = Math.sin(p / 2), bounce = (1 - Math.cos(p)) / 2;
+      const hip = [200 + 14 * sw, 404 + 9 * bounce];
+      const tilt = 6 * Math.sin(p / 2 + .5);
+      const sx = 1 + .045 * bounce, sy = 1 - .055 * bounce;
+      set(body, { transform: `translate(${pt(hip)}) rotate(${tilt.toFixed(2)}) scale(${sx.toFixed(3)} ${sy.toFixed(3)})` });
+      const turn = Math.sin(p / 2 + 1.1);
+      set(head, { transform: `rotate(${(-9 * turn).toFixed(2)} 0 -100)` });
+      set(face, { transform: `translate(${(7 * turn).toFixed(1)} 0)` });
+      const flop = 14 * Math.sin(p / 2 + .4) + 10 * bounce;       // ears lag behind the head
+      set(earL, { transform: `translate(${(-36 + 5 * turn).toFixed(1)} -180) rotate(${(16 + flop).toFixed(1)})` });
+      set(earR, { transform: `translate(${(44 + 5 * turn).toFixed(1)} -178) scale(-1 1) rotate(${(16 - flop).toFixed(1)})` });
+
+      // shuffle: one arm swings out while the other tucks across the belly
+      const k = (sw + 1) / 2;
+      const aL = [mix(-72, 34, k), mix(-36, 96, k)];
+      const aR = [mix(-30, 72, k), mix(-96, 40, k)];
+      for (const [[under, over], sxh, a] of [[arms[0], -40, aL], [arms[1], 42, aR]]) {
+        const d = hose(...chain([sxh, -74], [[a[0], 28], [a[1], 24]]));
+        set(under, { d }); set(over, { d });
+      }
+
+      for (const [leg, foot, hx, fx, bend, lift] of [
+        [legL, footL, -22, 168, 1, Math.max(0, sw)], [legR, footR, 22, 232, -1, Math.max(0, -sw)]
+      ]) {
+        const h = tf(hx * sx, -4, hip, tilt);
+        const [knee, ft] = ik(h, [fx, 452 - 10 * lift * lift], 30, 30, bend);
+        set(leg, { d: `M${pt(h)}L${pt(knee)}L${pt(ft)}` });
+        set(foot, { cx: (ft[0] + (hx < 0 ? -6 : 6)).toFixed(1), cy: (ft[1] + 3).toFixed(1) });
+      }
+    }
+  };
+}
+
+/* ───────────── carousel + clock ───────────── */
+const scenes = [headphones(), sunset(), blob(), cat(), pup()];
+const track = document.getElementById('track');
+const dots = document.getElementById('dots');
+const nameEl = document.getElementById('name');
+const playBtn = document.getElementById('play');
+const twosBtn = document.getElementById('twos');
+const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+scenes.forEach((s, i) => {
+  s.svg.setAttribute('aria-label', s.name);
+  track.appendChild(s.svg);
+  const btn = document.createElement('button');
+  btn.setAttribute('aria-label', s.name);
+  btn.onclick = () => go(i);
+  dots.appendChild(btn);
+});
+
+let cur = 0, playing = !reduced, twos = true, clock = 0, last = performance.now(), sinceSlide = 0, lastStep = -1;
+const SLIDE = 4.2;
+
+function go(i) {
+  cur = (i + scenes.length) % scenes.length;
+  sinceSlide = 0;
+  track.style.transform = `translateX(${-cur * 100}%)`;
+  [...dots.children].forEach((d, j) => d.setAttribute('aria-current', j === cur));
+  nameEl.textContent = `0${cur + 1} ${scenes[cur].name}`;
+}
+
+function setPlaying(v) {
+  playing = v;
+  playBtn.textContent = v ? 'pause' : 'play';
+  playBtn.setAttribute('aria-pressed', v);
+}
+
+playBtn.onclick = () => setPlaying(!playing);
+twosBtn.onclick = () => { twos = !twos; twosBtn.setAttribute('aria-pressed', twos); };
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') go(cur + 1);
+  else if (e.key === 'ArrowLeft') go(cur - 1);
+  else if (e.key === ' ') { e.preventDefault(); setPlaying(!playing); }
+});
+
+// swipe
+const stage = document.getElementById('stage');
+let downX = null;
+stage.addEventListener('pointerdown', e => { downX = e.clientX; });
+stage.addEventListener('pointerup', e => {
+  if (downX === null) return;
+  const dx = e.clientX - downX; downX = null;
+  if (Math.abs(dx) > 40) go(cur + (dx < 0 ? 1 : -1));
+  else go(cur + 1);
+});
+
+const noise = document.getElementById('boil-noise');
+
+function frame(now) {
+  const dt = clamp((now - last) / 1000, 0, .1);   // rAF time can precede the first `last`
+  last = now;
+  if (playing) {
+    clock += dt;
+    sinceSlide += dt;
+    if (sinceSlide > SLIDE) go(cur + 1);
+  }
+  const step = Math.floor(clock * 12);
+  if (step !== lastStep) { noise.setAttribute('seed', step % 7 + 1); lastStep = step; }
+  const t = twos ? step / 12 : clock;
+  scenes.forEach((s, i) => {
+    const near = Math.abs(i - cur) <= 1 || Math.abs(i - cur) === scenes.length - 1;
+    if (near) s.update(t);
+  });
+  requestAnimationFrame(frame);
+}
+
+// handy for tweaking poses from the console: dancers.seek(1.2)
+window.dancers = { go, setPlaying, seek: t => { clock = t; } };
+
+go(0);
+setPlaying(playing);
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>
