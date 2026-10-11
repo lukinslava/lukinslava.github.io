@@ -1,16 +1,21 @@
 ---
 format: 1600x1000
-duration: 8s
+duration: 7.5s
 message: "What the notch can do: clipboard, screenshots, links, a tidy desktop, a ping from Claude"
 arc: Notch → Clipboard → Screenshots → Links → Tidy desktop → Claude is waiting
 audience: visitors of lukinslava.github.io scanning the AI & side projects row
 mode: collaborative
 ---
 
-# Notch Duck — cover loop, v2
+# Notch Duck — cover loop, v3 (built)
 
 Обложка кейса на главной, ряд AI & side projects: ролик 16:10, на карточке
 ~300 px шириной, без звука, по кругу.
+
+## Changes from v2
+
+- «Просто покажи функцию за функцией»: вступление (кадр 01) убрано, ролик сразу открывает нотч на Clipboard; пять функций подряд, 7,5 с.
+- Подписи чёрные, в цвет нотча: белые на светлых обоях давали контраст ~2:1.
 
 ## Changes from v1
 
@@ -34,7 +39,7 @@ mode: collaborative
 - scene: Обои с файлами, закрытый нотч; из-за его края выскакивает круглый аватар утки и машет
 - duration: 0.8s
 - transition_in: cut
-- status: built
+- status: animated
 
 0,0–0,8 с. Аватар выезжает из-под нотча вправо (back.out, 0,35 с).
 
@@ -43,7 +48,7 @@ mode: collaborative
 - scene: Нотч раскрывается в широкую панель с историей буфера; слева внизу «Clipboard»
 - duration: 1.6s
 - transition_in: morph
-- status: built
+- status: animated
 
 0,8–2,4 с. Панель растёт вниз и в стороны (expo.out, 0,5 с), подпись поднимается снизу. Аватар подпрыгивает.
 
@@ -52,7 +57,7 @@ mode: collaborative
 - scene: Содержимое панели сдвигается на вкладку скриншотов; подпись меняется на «Screenshots»
 - duration: 1.2s
 - transition_in: slide left
-- status: built
+- status: animated
 
 2,4–3,6 с. Сдвиг содержимого влево (power3.inOut, 0,35 с), подпись сменяется так же — старое слово уезжает вверх, новое въезжает снизу.
 
@@ -61,7 +66,7 @@ mode: collaborative
 - scene: Вкладка ссылок; подпись «Links»
 - duration: 1.2s
 - transition_in: slide left
-- status: built
+- status: animated
 
 3,6–4,8 с. Тот же ход, третий раз — ритм вкладок.
 
@@ -70,7 +75,7 @@ mode: collaborative
 - scene: Панель схлопывается в нотч; файлы со стола слетаются в папку 2026-10-11; аватар на секунду становится довольной уткой; подпись «Tidy desktop»
 - duration: 1.6s
 - transition_in: morph
-- status: built
+- status: animated
 
 4,8–6,4 с. Файлы летят по дуге в папку (stagger 0,05 с, power2.in), папка подпрыгивает на каждом. Аватар: смена на довольную утку с подскоком.
 
@@ -79,6 +84,6 @@ mode: collaborative
 - scene: Нотч чуть шире, на нём пульсирует оранжевая точка, потом становится зелёной; подпись «Claude is waiting»
 - duration: 1.6s
 - transition_in: morph
-- status: built
+- status: animated
 
 6,4–8,0 с. Точка: два пульса оранжевым, затем зелёная. Последняя секунда — удержание, затем склейка на кадр 01.
