@@ -13,8 +13,6 @@
         --paper: #fbfaf8;
         --folder: #58b7ec;
         --folder-hi: #74c6f2;
-        --wait: #e06f4f;
-        --ok: #3fe269;
         --label: #0b0b0b;
       }
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -24,21 +22,16 @@
       #stage { position: absolute; inset: 0; overflow: hidden;
                background: linear-gradient(125deg, #f9d9a0 0%, #f4b77c 35%, #ee9f6c 52%, #b07a92 75%, #7d62a0 100%); }
 
-      /* the notch: one black shape that opens into the panel and closes again */
+      /* the notch: one black shape — pill, duck panel, clipboard panel */
       #notch { position: absolute; left: 50%; top: 0; translate: -50% 0; width: 384px; height: 58px; border-radius: 0 0 29px 29px; background: var(--notch); overflow: hidden; }
-      #strip { position: absolute; left: 0; top: 0; width: 3456px; height: 576px; display: flex; opacity: 0; }
-      #strip img { width: 1152px; height: 576px; display: block; flex: none; clip-path: inset(0 round 0 0 56px 56px); }
-      #dot { position: absolute; left: 991px; top: 20px; width: 18px; height: 18px; border-radius: 50%; background: var(--wait); opacity: 0; }
-
-      /* the duck: a small avatar riding the notch's right edge */
-      #avatar { position: absolute; left: 1006px; top: 6px; width: 92px; height: 92px; }
-      #avatarFace { position: relative; width: 100%; height: 100%; border-radius: 50%; overflow: hidden; background: #fff; box-shadow: 0 0 0 6px var(--notch), 0 10px 22px rgba(0, 0, 0, 0.25); }
-      #avatarFace img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-      #proud { opacity: 0; }
+      /* panel content stays centred, so the growing shape reveals it from the middle out */
+      .shot { position: absolute; left: 50%; top: 0; translate: -50% 0; display: block; opacity: 0; }
+      .duck { width: 544px; height: 560px; }
+      #clipboard { width: 1152px; height: 576px; }
 
       /* desktop files and the dated folder they end up in */
       .file { position: absolute; width: 66px; height: 82px; background: var(--paper); border-radius: 6px; box-shadow: 0 5px 12px rgba(0, 0, 0, 0.15); clip-path: polygon(0 0, 72% 0, 100% 22%, 100% 100%, 0 100%); }
-      #folderWrap { position: absolute; left: 1376px; top: 800px; width: 112px; height: 86px; opacity: 0; }
+      #folderWrap { position: absolute; left: 1380px; top: 790px; width: 112px; height: 86px; opacity: 0; }
       #folder { position: relative; width: 100%; height: 100%; background: var(--folder); border-radius: 10px; box-shadow: inset 0 18px 0 var(--folder-hi), 0 6px 16px rgba(0, 0, 0, 0.18); }
       #folderTab { position: absolute; left: 0; top: -12px; width: 48px; height: 18px; background: var(--folder); border-radius: 8px 8px 0 0; }
 
@@ -50,108 +43,69 @@
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="7.5" data-fps="30" data-width="1600" data-height="1000">
       <section id="stage" class="clip" data-start="0" data-duration="7.5" data-track-index="0" data-layout-allow-overflow="true">
-        <div class="file" id="f1" style="left: 72px; top: 150px"></div>
-        <div class="file" id="f2" style="left: 112px; top: 300px"></div>
-        <div class="file" id="f3" style="left: 60px; top: 450px"></div>
-        <div class="file" id="f4" style="left: 1430px; top: 170px"></div>
-        <div class="file" id="f5" style="left: 1470px; top: 330px"></div>
-        <div class="file" id="f6" style="left: 1260px; top: 640px"></div>
-        <div class="file" id="f7" style="left: 1420px; top: 560px"></div>
-        <div class="file" id="f8" style="left: 1130px; top: 790px"></div>
-        <div class="file" id="f9" style="left: 960px; top: 680px"></div>
+        <div class="file" id="f1" style="left: 80px; top: 160px"></div>
+        <div class="file" id="f2" style="left: 200px; top: 300px"></div>
+        <div class="file" id="f3" style="left: 70px; top: 440px"></div>
+        <div class="file" id="f4" style="left: 250px; top: 560px"></div>
+        <div class="file" id="f5" style="left: 1440px; top: 150px"></div>
+        <div class="file" id="f6" style="left: 1260px; top: 260px"></div>
+        <div class="file" id="f7" style="left: 1460px; top: 380px"></div>
+        <div class="file" id="f8" style="left: 1200px; top: 480px"></div>
+        <div class="file" id="f9" style="left: 1380px; top: 590px"></div>
 
         <div id="folderWrap"><div id="folder"><div id="folderTab"></div></div></div>
 
         <div id="notch">
-          <div id="strip">
-            <img src="assets/panel-clipboard.jpg" alt="" />
-            <img src="assets/panel-screenshots.jpg" alt="" />
-            <img src="assets/panel-links.jpg" alt="" />
-          </div>
-        </div>
-        <div id="dot"></div>
-
-        <div id="avatar">
-          <div id="avatarFace">
-            <img id="calm" src="assets/duck-avatar.jpg" alt="" />
-            <img id="proud" src="assets/duck-proud.jpg" alt="" />
-          </div>
+          <img class="shot duck" id="mess" src="assets/panel-mess.jpg" alt="" />
+          <img class="shot duck" id="working" src="assets/panel-working.jpg" alt="" />
+          <img class="shot duck" id="done" src="assets/panel-done.jpg" alt="" />
+          <img class="shot" id="clipboard" src="assets/panel-clipboard.jpg" alt="" />
         </div>
 
         <div id="labels" data-layout-allow-overlap="true">
-          <div class="label" data-layout-allow-overlap="true" id="l1">Clipboard</div>
-          <div class="label" data-layout-allow-overlap="true" id="l2">Screenshots</div>
-          <div class="label" data-layout-allow-overlap="true" id="l3">Links</div>
-          <div class="label" data-layout-allow-overlap="true" id="l4">Tidy desktop</div>
-          <div class="label" data-layout-allow-overlap="true" id="l5">Claude is waiting</div>
+          <div class="label" data-layout-allow-overlap="true" id="lTidy">Tidy desktop</div>
+          <div class="label" data-layout-allow-overlap="true" id="lClip">Clipboard</div>
         </div>
       </section>
     </div>
 
     <script>
       const tl = gsap.timeline({ paused: true });
+      const FOLDER = { x: 1436, y: 833 };
 
-      // geometry (canvas px): the avatar sits 14px right of the notch's right edge
-      const PILL_W = 384, PANEL_W = 1152, PANEL_H = 576, CLAUDE_W = 480;
-      const AVATAR_AT = (w) => w / 2 - PILL_W / 2; // x offset from the pill position
-      const FOLDER = { x: 1432, y: 843 };
+      // 1. the notch opens: the duck notices the mess
+      tl.fromTo("#notch", { width: 384, height: 58, borderRadius: "0px 0px 29px 29px" },
+        { width: 544, height: 560, borderRadius: "0px 0px 48px 48px", duration: 0.55, ease: "expo.out" }, 0.3);
+      tl.fromTo("#mess", { opacity: 0 }, { opacity: 1, duration: 0.2, ease: "power1.out" }, 0.38);
+      tl.fromTo("#lTidy", { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, 0.55);
 
-      // a label leaves upward while the next one rises in
-      const swapLabel = (from, to, at) => {
-        if (from) tl.to(from, { yPercent: -110, opacity: 0, duration: 0.2, ease: "power2.in" }, at);
-        tl.fromTo(to, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, at + (from ? 0.17 : 0));
-      };
-      // the duck hops whenever something changes
-      const hop = (at, height = 16) => {
-        tl.to("#avatarFace", { y: -height, duration: 0.14, ease: "power2.out" }, at);
-        tl.to("#avatarFace", { y: 0, duration: 0.32, ease: "bounce.out" }, at + 0.14);
-      };
-
-      // Clipboard — the notch opens into the panel
-      tl.fromTo("#notch", { width: PILL_W, height: 58, borderRadius: "0px 0px 29px 29px" },
-        { width: PANEL_W, height: PANEL_H, borderRadius: "0px 0px 56px 56px", duration: 0.55, ease: "expo.out" }, 0.15);
-      tl.fromTo("#strip", { opacity: 0 }, { opacity: 1, duration: 0.25, ease: "power1.out" }, 0.25);
-      tl.fromTo("#avatar", { x: 0 }, { x: AVATAR_AT(PANEL_W), duration: 0.55, ease: "expo.out" }, 0.15);
-      swapLabel(null, "#l1", 0.3);
-      hop(0.62);
-
-      // Screenshots and Links — the content slides like switching tabs
-      tl.fromTo("#strip", { x: 0 }, { x: -PANEL_W, duration: 0.42, ease: "power3.inOut", immediateRender: false }, 1.65);
-      swapLabel("#l1", "#l2", 1.65);
-      hop(1.95, 12);
-      tl.to("#strip", { x: -2 * PANEL_W, duration: 0.42, ease: "power3.inOut" }, 3.0);
-      swapLabel("#l2", "#l3", 3.0);
-      hop(3.3, 12);
-
-      // Tidy desktop — the panel folds back, files fly into a dated folder
-      tl.to("#strip", { opacity: 0, duration: 0.18, ease: "power1.in" }, 4.3);
-      tl.to("#notch", { width: PILL_W, height: 58, borderRadius: "0px 0px 29px 29px", duration: 0.45, ease: "power3.inOut" }, 4.32);
-      tl.to("#avatar", { x: 0, duration: 0.45, ease: "power3.inOut" }, 4.32);
-      swapLabel("#l3", "#l4", 4.35);
-      tl.fromTo("#folderWrap", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.2)" }, 4.45);
-      const files = ["#f1", "#f2", "#f3", "#f4", "#f5", "#f6", "#f7", "#f8", "#f9"];
-      files.forEach((id, i) => {
+      // 2. tidy-up: the duck gets to work, files fly into a dated folder
+      tl.to("#working", { opacity: 1, duration: 0.1, ease: "none" }, 1.45);
+      tl.set("#mess", { opacity: 0 }, 1.55);
+      tl.fromTo("#folderWrap", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.2)" }, 1.45);
+      ["#f1", "#f2", "#f3", "#f4", "#f5", "#f6", "#f7", "#f8", "#f9"].forEach((id, i) => {
         const el = document.querySelector(id);
         const dx = FOLDER.x - (el.offsetLeft + 33), dy = FOLDER.y - (el.offsetTop + 41);
-        const at = 4.6 + i * 0.06;
+        const at = 1.65 + i * 0.08;
         // an arc: x eases out, y eases in
-        tl.fromTo(el, { x: 0 }, { x: dx, duration: 0.5, ease: "power1.out" }, at);
-        tl.fromTo(el, { y: 0 }, { y: dy, duration: 0.5, ease: "power2.in" }, at);
-        tl.fromTo(el, { scale: 1, rotation: 0, opacity: 1 }, { scale: 0.35, rotation: i % 2 ? 18 : -18, opacity: 0, duration: 0.5, ease: "power1.in" }, at);
+        tl.fromTo(el, { x: 0 }, { x: dx, duration: 0.55, ease: "power1.out" }, at);
+        tl.fromTo(el, { y: 0 }, { y: dy, duration: 0.55, ease: "power2.in" }, at);
+        tl.fromTo(el, { scale: 1, rotation: 0, opacity: 1 }, { scale: 0.35, rotation: i % 2 ? 18 : -18, opacity: 0, duration: 0.55, ease: "power1.in" }, at);
       });
-      tl.to("#folder", { scaleY: 0.88, scaleX: 1.06, duration: 0.08, ease: "power2.out", yoyo: true, repeat: 5, transformOrigin: "50% 100%" }, 5.1);
-      tl.to("#proud", { opacity: 1, duration: 0.15, ease: "none" }, 5.4);
-      hop(5.4, 22);
-      tl.to("#proud", { opacity: 0, duration: 0.2, ease: "none" }, 6.0);
+      tl.to("#folder", { scaleY: 0.88, scaleX: 1.06, duration: 0.08, ease: "power2.out", yoyo: true, repeat: 7, transformOrigin: "50% 100%" }, 2.15);
 
-      // Claude is waiting — a dot on the notch, orange twice, then green
-      tl.to("#notch", { width: CLAUDE_W, duration: 0.3, ease: "power2.out" }, 5.95);
-      tl.to("#avatar", { x: AVATAR_AT(CLAUDE_W), duration: 0.3, ease: "power2.out" }, 5.95);
-      swapLabel("#l4", "#l5", 5.95);
-      tl.fromTo("#dot", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(3)" }, 6.15);
-      tl.to("#dot", { scale: 1.35, duration: 0.15, ease: "sine.out", yoyo: true, repeat: 3 }, 6.45);
-      tl.to("#dot", { backgroundColor: "#3fe269", duration: 0.12, ease: "none" }, 7.0);
-      hop(7.0, 10);
+      // 3. done: the proud duck
+      tl.to("#done", { opacity: 1, duration: 0.15, ease: "none" }, 2.95);
+      tl.set("#working", { opacity: 0 }, 3.1);
+      tl.fromTo("#done", { scale: 0.92 }, { scale: 1, duration: 0.5, ease: "back.out(3)" }, 2.95);
+
+      // 4. clipboard: the panel widens into the clipboard history
+      tl.to("#done", { opacity: 0, duration: 0.18, ease: "power1.in" }, 4.15);
+      tl.to("#notch", { width: 1152, height: 576, borderRadius: "0px 0px 56px 56px", duration: 0.6, ease: "power3.inOut" }, 4.15);
+      tl.fromTo("#clipboard", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, 4.35);
+      tl.to("#lTidy", { yPercent: -110, opacity: 0, duration: 0.2, ease: "power2.in" }, 4.15);
+      tl.fromTo("#lClip", { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, 4.32);
+      tl.to("#folderWrap", { opacity: 0, scale: 0.8, duration: 0.3, ease: "power2.in" }, 4.15);
 
       window.__timelines["main"] = tl;
       tl.seek(0);

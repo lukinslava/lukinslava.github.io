@@ -1,16 +1,22 @@
 ---
 format: 1600x1000
 duration: 7.5s
-message: "What the notch can do: clipboard, screenshots, links, a tidy desktop, a ping from Claude"
-arc: Notch → Clipboard → Screenshots → Links → Tidy desktop → Claude is waiting
+message: "The notch tidies your desktop and keeps your clipboard"
+arc: Notch opens → Tidy desktop → Proud duck → Clipboard
 audience: visitors of lukinslava.github.io scanning the AI & side projects row
 mode: collaborative
 ---
 
-# Notch Duck — cover loop, v3 (built)
+# Notch Duck — cover loop, v4 (built)
 
 Обложка кейса на главной, ряд AI & side projects: ролик 16:10, на карточке
 ~300 px шириной, без звука, по кругу.
+
+## Changes from v3
+
+- Только две функции, сценарий автора: 1) открытие нотча, 2) чистка экрана, 3) утка после завершения, 4) буфер обмена.
+- Нотч раскрывается в панель утки: «бардак» → «работаю» (файлы летят в папку) → довольная утка; затем панель расширяется в историю буфера.
+- Аватар у нотча и вкладки Screenshots / Links / Claude убраны; подписи — Tidy desktop и Clipboard.
 
 ## Changes from v2
 
