@@ -43,8 +43,8 @@ export const newCards = [
     // A full URL: Framer's Link sends "./…" and "/…" through its router, which knows only the Framer pages and turns
     // the rest into "./" once the card renders on the client, and it reads a bare "notch-duck" as a domain. AI Match
     // keeps "./ai-match" only because hydration leaves the server attribute alone; a copied card does not get that luck.
-    href: ["./ai-match", "https://lukinslava.github.io/notch-duck"],
-    title: ["AI Match", "Notch Duck"],
+    href: ["./ai-match", "https://lukinslava.github.io/quack"],
+    title: ["AI Match", "Quack"],
     description: ["Internal AI tool at Pragmatica: screens 2,000+ designer portfolios and shortlists 30–60 per role", "Side project · macOS notch app, designed and built with Claude Code"],
     image: [/cover-auf-match((?:\.sd\d+)?)\.png/g, "cover-notch-duck$1.jpg"],
   },
