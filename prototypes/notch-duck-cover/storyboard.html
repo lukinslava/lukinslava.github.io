@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notch Duck cover — storyboard v2</title>
+<style>
+  @font-face { font-family: "Antonio"; src: url("assets/fonts/antonio.woff2") format("woff2"); }
+  :root { --notch: #0b0b0b; --duck: #f7d548; --sheet: #f5f5f5; --ink: #1b1b1a; --label: #85847f; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--sheet); color: var(--ink); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; padding: 40px 40px 64px; }
+  header { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 28px; }
+  header h1 { margin: 0; font-family: Antonio, sans-serif; font-weight: 400; font-size: 44px; letter-spacing: -0.03em; }
+  header p { margin: 8px 0 0; color: var(--label); font-size: 16px; max-width: 760px; line-height: 1.45; }
+  .tag { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--label); white-space: nowrap; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 20px; }
+  .cell { display: grid; gap: 10px; align-content: start; }
+  .frame { position: relative; aspect-ratio: 16 / 10; container-type: inline-size; border-radius: 14px; overflow: hidden;
+           background: linear-gradient(125deg, #f9d9a0 0%, #f4b77c 35%, #ee9f6c 52%, #b07a92 75%, #7d62a0 100%);
+           box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 18px 40px -24px rgba(0,0,0,.35); }
+  .meta { display: flex; justify-content: space-between; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--label); }
+  .meta b { color: var(--ink); font-weight: 600; }
+  .note { margin: 0; font-size: 14px; line-height: 1.45; color: #55544f; }
+  .note b { color: var(--ink); font-weight: 600; }
+  .chip { justify-self: start; font-size: 12px; padding: 4px 10px; border-radius: 999px; background: #fff; box-shadow: 0 0 0 1px rgba(0,0,0,.08); color: var(--label); }
+
+  /* pieces, 1cqw = 16px of the 1600px canvas */
+  .notch { position: absolute; left: 50%; top: 0; background: var(--notch); overflow: hidden; }
+  .pill { width: 24cqw; height: 3.6cqw; margin-left: -12cqw; border-radius: 0 0 1.8cqw 1.8cqw; }
+  .panel { width: 72cqw; height: 36cqw; margin-left: -36cqw; border-radius: 0 0 3cqw 3cqw; }
+  .panel img { position: absolute; left: 0; top: 0; width: 72cqw; }
+  .avatar { position: absolute; width: 5.6cqw; height: 5.6cqw; border-radius: 50%; overflow: hidden; background: #fff; box-shadow: 0 0 0 .35cqw var(--notch), 0 .6cqw 1.4cqw rgba(0,0,0,.25); }
+  .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .file { position: absolute; width: 4.2cqw; height: 5.2cqw; background: #fbfaf8; border-radius: .4cqw; box-shadow: 0 .3cqw .8cqw rgba(0,0,0,.15); clip-path: polygon(0 0, 72% 0, 100% 22%, 100% 100%, 0 100%); }
+  .folder { position: absolute; width: 7cqw; height: 5.4cqw; background: #58b7ec; border-radius: .6cqw; box-shadow: inset 0 1.2cqw 0 #74c6f2, 0 .4cqw 1cqw rgba(0,0,0,.18); }
+  .folder::before { content: ""; position: absolute; left: 0; top: -.8cqw; width: 3cqw; height: 1.2cqw; background: #58b7ec; border-radius: .5cqw .5cqw 0 0; }
+  .flabel { position: absolute; font-size: 1.5cqw; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.4); }
+  .dot { position: absolute; width: 1.8cqw; height: 1.8cqw; border-radius: 50%; }
+  .label { position: absolute; left: 5cqw; bottom: 4.5cqw; font-family: Antonio, sans-serif; font-size: 9cqw; line-height: .95; letter-spacing: -0.02em; color: #fff; text-shadow: 0 .3cqw 2cqw rgba(60,30,60,.18); }
+
+  .seams { position: absolute; inset: 0; background: #fff; padding: 4cqw; display: grid; align-content: center; gap: 2.4cqw; }
+  .seams .row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1cqw; }
+  .seams .b { height: 9cqw; border-radius: 1.4cqw; background: var(--notch); color: var(--duck); font-size: 1.7cqw; display: grid; place-items: center; text-align: center; padding: 0 .4cqw; }
+  .seams .s { font-size: 1.7cqw; color: var(--label); text-align: center; }
+  .seams h3 { margin: 0; font-family: Antonio, sans-serif; font-weight: 400; font-size: 4cqw; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Notch Duck — cover loop <span style="color:var(--label)">v2</span></h1>
+    <p>What the notch can do, one function per beat: Clipboard, Screenshots, Links, Tidy desktop, Claude is waiting. The duck is a small avatar beside the notch that hops on every change.</p>
+  </div>
+  <span class="tag">1600×1000 · 16:10 · 8 s · 6 beats · silent loop</span>
+</header>
+
+<div class="grid">
+
+  <!-- 01 -->
+  <div class="cell">
+    <div class="frame" id="frame-01">
+      <div class="notch pill"></div>
+      <div class="avatar" style="left:62.6cqw; top:.6cqw"><img src="assets/duck-avatar.jpg" alt=""></div>
+      <div class="file" style="left:6cqw; top:12cqw"></div>
+      <div class="file" style="left:14cqw; top:22cqw"></div>
+      <div class="file" style="left:8cqw; top:34cqw"></div>
+      <div class="file" style="left:22cqw; top:36cqw"></div>
+      <div class="file" style="left:86cqw; top:9cqw"></div>
+      <div class="file" style="left:78cqw; top:22cqw"></div>
+      <div class="file" style="left:88cqw; top:34cqw"></div>
+      <div class="file" style="left:62cqw; top:46cqw"></div>
+      <div class="file" style="left:76cqw; top:48cqw"></div>
+    </div>
+    <div class="meta"><span><b>01 · Notch</b></span><span>0.0–0.8 s</span></div>
+    <p class="note"><b>The avatar pops out</b> from under the notch and waves. Nine files on the desktop set up the tidy-up later.</p>
+    <span class="chip">seam out: morph</span>
+  </div>
+
+  <!-- 02 -->
+  <div class="cell">
+    <div class="frame" id="frame-02">
+      <div class="notch panel"><img src="assets/panel-clipboard.jpg" alt=""></div>
+      <div class="avatar" style="left:87cqw; top:1.2cqw"><img src="assets/duck-avatar.jpg" alt=""></div>
+      <div class="file" style="left:6cqw; top:40cqw"></div>
+      <div class="file" style="left:90cqw; top:42cqw"></div>
+      <div class="label">Clipboard</div>
+    </div>
+    <div class="meta"><span><b>02 · Clipboard</b></span><span>0.8–2.4 s</span></div>
+    <p class="note"><b>The notch opens</b> into a wide panel with the clipboard history; the label rises bottom-left; the avatar rides the panel's corner and hops.</p>
+    <span class="chip">seam out: slide left</span>
+  </div>
+
+  <!-- 03 -->
+  <div class="cell">
+    <div class="frame" id="frame-03">
+      <div class="notch panel"><img src="assets/panel-screenshots.jpg" alt=""></div>
+      <div class="avatar" style="left:87cqw; top:1.2cqw"><img src="assets/duck-avatar.jpg" alt=""></div>
+      <div class="file" style="left:6cqw; top:40cqw"></div>
+      <div class="file" style="left:90cqw; top:42cqw"></div>
+      <div class="label">Screenshots</div>
+    </div>
+    <div class="meta"><span><b>03 · Screenshots</b></span><span>2.4–3.6 s</span></div>
+    <p class="note"><b>Content slides left</b> to the next tab, in place; the old word leaves upward as the new one comes in from below.</p>
+    <span class="chip">seam out: slide left</span>
+  </div>
+
+  <!-- 04 -->
+  <div class="cell">
+    <div class="frame" id="frame-04">
+      <div class="notch panel"><img src="assets/panel-links.jpg" alt=""></div>
+      <div class="avatar" style="left:87cqw; top:1.2cqw"><img src="assets/duck-avatar.jpg" alt=""></div>
+      <div class="file" style="left:6cqw; top:40cqw"></div>
+      <div class="file" style="left:90cqw; top:42cqw"></div>
+      <div class="label">Links</div>
+    </div>
+    <div class="meta"><span><b>04 · Links</b></span><span>3.6–4.8 s</span></div>
+    <p class="note"><b>Third tab, same move</b> — the rhythm of switching tabs: Zoom, Meet and Notion links.</p>
+    <span class="chip">seam out: morph</span>
+  </div>
+
+  <!-- 05 -->
+  <div class="cell">
+    <div class="frame" id="frame-05">
+      <div class="notch pill"></div>
+      <div class="avatar" style="left:62.6cqw; top:.6cqw; width:8cqw; height:8cqw; background:#000"><img src="assets/duck-proud.jpg" alt=""></div>
+      <div class="file" style="left:70cqw; top:38cqw; transform: rotate(-12deg) scale(.8); opacity:.9"></div>
+      <div class="file" style="left:80cqw; top:44cqw; transform: rotate(10deg) scale(.6); opacity:.8"></div>
+      <div class="folder" style="left:86cqw; top:50cqw"></div>
+      <div class="flabel" style="left:84.6cqw; top:57cqw">2026-10-11</div>
+      <div class="label">Tidy desktop</div>
+    </div>
+    <div class="meta"><span><b>05 · Tidy desktop</b></span><span>4.8–6.4 s</span></div>
+    <p class="note"><b>The panel folds back</b> and the files fly in arcs into the dated folder, which bumps on each landing. The avatar turns into the proud duck for a moment.</p>
+    <span class="chip">seam out: morph</span>
+  </div>
+
+  <!-- 06 -->
+  <div class="cell">
+    <div class="frame" id="frame-06">
+      <div class="notch pill" style="width:30cqw; margin-left:-15cqw"></div>
+      <div class="dot" style="left:60.6cqw; top:.9cqw; background:#3fe269; box-shadow: 0 0 1.4cqw rgba(63,226,105,.7)"></div>
+      <div class="avatar" style="left:66cqw; top:.6cqw"><img src="assets/duck-avatar.jpg" alt=""></div>
+      <div class="folder" style="left:86cqw; top:50cqw"></div>
+      <div class="flabel" style="left:84.6cqw; top:57cqw">2026-10-11</div>
+      <div class="label">Claude is waiting</div>
+    </div>
+    <div class="meta"><span><b>06 · Claude is waiting</b></span><span>6.4–8.0 s</span></div>
+    <p class="note"><b>A dot on the notch</b> pulses orange twice, then turns green. Held ~1 s, then a cut back to 01.</p>
+    <span class="chip">seam out: cut → 01 (loop)</span>
+  </div>
+
+  <!-- seam map -->
+  <div class="cell">
+    <div class="frame">
+      <div class="seams">
+        <h3>Seam map</h3>
+        <div class="row"><div class="b">01 Notch</div><div class="b">02 Clipboard</div><div class="b">03 Screen­shots</div><div class="b">04 Links</div><div class="b">05 Tidy</div><div class="b">06 Claude</div></div>
+        <div class="row"><div class="s">0.8 s</div><div class="s">1.6 s</div><div class="s">1.2 s</div><div class="s">1.2 s</div><div class="s">1.6 s</div><div class="s">1.6 s</div></div>
+        <div class="row"><div class="s">morph</div><div class="s">slide</div><div class="s">slide</div><div class="s">morph</div><div class="s">morph</div><div class="s">cut → 01</div></div>
+      </div>
+    </div>
+    <div class="meta"><span><b>Seams</b></span><span>total 8.0 s</span></div>
+    <p class="note">One black shape carries the film; the avatar never leaves its side.</p>
+  </div>
+
+</div>
+</body>
+</html>

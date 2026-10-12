@@ -33,6 +33,22 @@ export const cardEdits = [
   },
 ];
 export const removedCards = ["framer-lgdwa8" /* OS Sunrice */, "framer-1xhjtx5" /* Strana Development */];
+// New cards: a copy of an existing card (`from`, already edited above) placed right after it, with its own content.
+// Added last, so every lookup above still finds exactly one card per class. A video cover, if any, is laid over the
+// image by tools/inject/card-video.js; the image here is its poster.
+export const newCards = [
+  {
+    from: "framer-1fzv8qv", // AI Match
+    nodeId: "nDuckCardX",
+    // A full URL: Framer's Link sends "./…" and "/…" through its router, which knows only the Framer pages and turns
+    // the rest into "./" once the card renders on the client, and it reads a bare "notch-duck" as a domain. AI Match
+    // keeps "./ai-match" only because hydration leaves the server attribute alone; a copied card does not get that luck.
+    href: ["./ai-match", "https://lukinslava.github.io/notch-duck"],
+    title: ["AI Match", "Notch Duck"],
+    description: ["Internal AI tool at Pragmatica: screens 2,000+ designer portfolios and shortlists 30–60 per role", "Side project · macOS notch app, designed and built with Claude Code"],
+    image: [/cover-auf-match((?:\.sd\d+)?)\.png/g, "cover-notch-duck$1.jpg"],
+  },
+];
 // The new section starts right before this card.
 const SECTION_START_CARD = "framer-1fzv8qv";
 
@@ -132,7 +148,21 @@ export function applyHtmlStructure(html) {
   const headingStart = html.lastIndexOf('<div class="framer-3evyfl"', headingEnd);
   const heading = html.slice(headingStart, headingEnd).replace(">Cases</h2>", `>${escapeHtml(SECTION_HEADING)}</h2>`);
   const [sectionStart] = htmlCardRange(html, SECTION_START_CARD);
-  return html.slice(0, sectionStart) + `</div>${heading}<div class="framer-ahfcuh">` + html.slice(sectionStart);
+  html = html.slice(0, sectionStart) + `</div>${heading}<div class="framer-ahfcuh">` + html.slice(sectionStart);
+  return addHtmlCards(html);
+}
+
+export function addHtmlCards(html) {
+  for (const card of newCards) {
+    const [s, e] = htmlCardRange(html, card.from);
+    let copy = html.slice(s, e);
+    copy = mustReplace(copy, `href="${card.href[0]}"`, `href="${card.href[1]}"`, `${card.nodeId} href`);
+    copy = mustReplace(copy, `>${escapeHtml(card.title[0])}</h3>`, `>${escapeHtml(card.title[1])}</h3>`, `${card.nodeId} title`);
+    copy = mustReplace(copy, `>${escapeHtml(card.description[0])}</p>`, `>${escapeHtml(card.description[1])}</p>`, `${card.nodeId} description`);
+    copy = mustReplace(copy, card.image[0], card.image[1], `${card.nodeId} image`);
+    html = html.slice(0, e) + copy + html.slice(e);
+  }
+  return html;
 }
 
 // ---------- JS page module ----------
@@ -187,5 +217,20 @@ export function applyJsStructure(js) {
   const gridOpen = js.slice(headingEnd).match(/^,(\w+\(`div`,\{className:`framer-ahfcuh`,children:\[)/);
   if (!gridOpen) throw new Error("structure: cases grid not found after heading");
   const [sectionStart] = jsCardRange(js, SECTION_START_CARD);
-  return js.slice(0, sectionStart) + `]}),${heading},${gridOpen[1]}` + js.slice(sectionStart);
+  js = js.slice(0, sectionStart) + `]}),${heading},${gridOpen[1]}` + js.slice(sectionStart);
+  return addJsCards(js);
+}
+
+export function addJsCards(js) {
+  for (const card of newCards) {
+    const [s, e] = jsCardRange(js, card.from);
+    let copy = js.slice(s, e);
+    copy = mustReplace(copy, /nodeId:`[^`]*`/, `nodeId:\`${card.nodeId}\``, `${card.nodeId} nodeId`);
+    copy = mustReplace(copy, `href:\`${card.href[0]}\``, `href:\`${card.href[1]}\``, `${card.nodeId} href`);
+    copy = mustReplace(copy, `children:\`${card.title[0]}\``, `children:\`${card.title[1]}\``, `${card.nodeId} title`);
+    copy = mustReplace(copy, `children:\`${card.description[0]}\``, `children:\`${card.description[1]}\``, `${card.nodeId} description`);
+    copy = mustReplace(copy, card.image[0], card.image[1], `${card.nodeId} image`);
+    js = js.slice(0, e) + "," + copy + js.slice(e);
+  }
+  return js;
 }

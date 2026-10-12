@@ -1,0 +1,14 @@
+/* Video covers on homepage cards (tools/inject/card-video.js): same box and hover zoom as the image under them. */
+[data-card-video] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  pointer-events: none;
+  transition: transform 0.5s;
+}
+.framer-lux5qc:hover [data-card-video] {
+  transform: scale(1.04);
+}

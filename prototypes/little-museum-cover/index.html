@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1600, height=1000" />
+    <title>Little Museum — cover loop</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Literata"; src: url("assets/fonts/literata.woff2") format("woff2"); font-weight: 200 900; }
+      @font-face { font-family: "Unbounded"; src: url("assets/fonts/unbounded.woff2") format("woff2"); font-weight: 200 900; }
+
+      :root {
+        --green: #417b5a;
+        --green-hi: #4c8a66;
+        --deep: #2f5a41;
+        --paper: #f4efe6;
+        --wood: #c9955f;
+        --wood-dark: #9c6b3e;
+        --nail: #23231f;
+        --bezel: #121211;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1600px; height: 1000px; overflow: hidden; background: var(--green); }
+
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: radial-gradient(ellipse 70% 60% at 50% 32%, var(--green-hi) 0%, var(--green) 70%); }
+
+      /* oversized ghost word bleeding off the bottom edge */
+      #ghost { position: absolute; left: -32px; top: 686px; width: 1700px; height: 432px; overflow: visible; opacity: 0.55; }
+      #ghost text { font-family: "Literata", serif; font-weight: 400; font-size: 432px; letter-spacing: -0.04em; fill: var(--deep); }
+
+      /* phones: a slot carries the entrance, the phone inside carries the drift */
+      .slot { position: absolute; width: 376px; height: 815px; }
+      .phone { position: relative; width: 100%; height: 100%; border-radius: 54px; background: var(--bezel); padding: 11px; box-shadow: 0 40px 70px -28px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06) inset; }
+      .scr { position: relative; width: 100%; height: 100%; border-radius: 44px; overflow: hidden; background: #fff; }
+      .scr img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+
+      #slotA { left: 612px; top: 48px; }
+      #slotL { left: 240px; top: 144px; }
+      #slotM { left: 612px; top: 64px; }
+      #slotR { left: 984px; top: 144px; }
+      #deck { position: absolute; inset: 0; }
+
+      #checker { position: absolute; inset: 0; background: repeating-conic-gradient(#ece6dc 0% 25%, #ddd5c8 0% 50%) 0 0 / 32px 32px; clip-path: inset(0% 0% 100% 0%); }
+      #scanWrap { position: absolute; left: 623px; top: 59px; width: 354px; height: 793px; border-radius: 44px; overflow: hidden; pointer-events: none; }
+      #scanline { position: absolute; left: 0; right: 0; top: 0; height: 6px; margin-top: -3px; background: var(--paper); box-shadow: 0 0 22px 6px rgba(244, 239, 230, 0.8), 0 0 60px 14px rgba(65, 123, 90, 0.35); opacity: 0; }
+      .bracket { position: absolute; width: 44px; height: 44px; border: 7px solid #fff; opacity: 0; }
+      #brTL { left: 14px; top: 82px; border-right: 0; border-bottom: 0; border-top-left-radius: 10px; }
+      #brTR { right: 14px; top: 82px; border-left: 0; border-bottom: 0; border-top-right-radius: 10px; }
+      #brBL { left: 14px; bottom: 92px; border-right: 0; border-top: 0; border-bottom-left-radius: 10px; }
+      #brBR { right: 14px; bottom: 92px; border-left: 0; border-top: 0; border-bottom-right-radius: 10px; }
+
+      /* the framed piece: a full-canvas layer so the hero can live in canvas coordinates */
+      #piece { position: absolute; inset: 0; pointer-events: none; }
+      #mat { position: absolute; left: 602px; top: 130px; width: 396px; height: 684px; background: var(--paper); box-shadow: inset 0 6px 16px rgba(0, 0, 0, 0.18); opacity: 0; }
+      .bar { position: absolute; background: var(--wood); box-shadow: inset 0 0 0 3px var(--wood-dark); }
+      #barT { left: 576px; top: 104px; width: 448px; height: 26px; }
+      #barB { left: 576px; top: 814px; width: 448px; height: 26px; }
+      #barL { left: 576px; top: 104px; width: 26px; height: 736px; }
+      #barR { left: 998px; top: 104px; width: 26px; height: 736px; }
+      #frameShadow { position: absolute; left: 576px; top: 104px; width: 448px; height: 736px; box-shadow: 0 40px 60px -24px rgba(0, 0, 0, 0.45); opacity: 0; }
+      #string { position: absolute; left: 0; top: 0; width: 1600px; height: 1000px; overflow: visible; }
+      #nail { position: absolute; left: 791px; top: 55px; width: 18px; height: 18px; border-radius: 50%; background: var(--nail); opacity: 0; }
+
+      /* hero cutout: base geometry = its exact spot on the photo inside phone A */
+      #hero { position: absolute; left: 612.53px; top: 145.81px; width: 350.94px; height: 609.52px; opacity: 0; }
+      #heroImg { display: block; width: 100%; height: 100%; }
+
+      #plaque { position: absolute; left: 600px; top: 862px; width: 400px; text-align: center; font-family: "Literata", serif; font-size: 46px; line-height: 1.2; color: var(--paper); opacity: 0; }
+
+      /* title */
+      #title { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; gap: 40px; padding: 0 760px 40px 112px; }
+      .line { display: block; overflow: hidden; padding-bottom: 6px; font-family: "Literata", serif; font-weight: 400; font-size: 184px; line-height: 0.98; letter-spacing: -0.03em; color: var(--paper); white-space: nowrap; }
+      .ch { display: inline-block; opacity: 0; }
+      #tagline { font-family: "Unbounded", sans-serif; font-weight: 300; font-size: 40px; line-height: 1.3; letter-spacing: -0.01em; color: var(--paper); opacity: 0; white-space: nowrap; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="7.5" data-fps="30" data-width="1600" data-height="1000">
+      <section id="stage" class="clip" data-start="0" data-duration="7.5" data-track-index="0" data-layout-allow-overflow="true">
+        <!-- decorative ghost word: drawn as SVG so the text audits skip it -->
+        <svg id="ghost" viewBox="0 0 1700 432" data-layout-allow-occlusion="true" data-layout-allow-overlap="true"><text x="0" y="340" data-layout-allow-occlusion="true" data-layout-allow-overlap="true">Museum</text></svg>
+
+        <!-- 04–05: the museum deck -->
+        <div id="deck">
+          <div class="slot" id="slotL"><div class="phone" id="phoneL"><div class="scr"><img src="assets/03-collections.jpg" alt="" /></div></div></div>
+          <div class="slot" id="slotR"><div class="phone" id="phoneR"><div class="scr"><img src="assets/07-art-drawing.jpg" alt="" /></div></div></div>
+          <div class="slot" id="slotM"><div class="phone" id="phoneM"><div class="scr"><img src="assets/01-museum.jpg" alt="" /></div></div></div>
+        </div>
+
+        <!-- 01–02: the capture phone -->
+        <div class="slot" id="slotA">
+          <div class="phone" id="phoneA">
+            <div class="scr">
+              <img src="assets/hero-photo.jpg" alt="" />
+              <div id="checker"></div>
+              <div class="bracket" id="brTL"></div>
+              <div class="bracket" id="brTR"></div>
+              <div class="bracket" id="brBL"></div>
+              <div class="bracket" id="brBR"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 02–04: the piece that travels -->
+        <div id="piece">
+          <svg id="string" viewBox="0 0 1600 1000"><polyline id="stringLine" points="598,112 800,64 1002,112" fill="none" stroke="#23231f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          <div id="nail"></div>
+          <div id="frameShadow"></div>
+          <div id="mat"></div>
+          <div class="bar" id="barT"></div>
+          <div class="bar" id="barB"></div>
+          <div class="bar" id="barL"></div>
+          <div class="bar" id="barR"></div>
+          <div id="hero"><img id="heroImg" src="assets/hero-cutout.png" alt="" /></div>
+        </div>
+
+        <!-- scan line rides above the figure, clipped to phone A's screen -->
+        <div id="scanWrap"><div id="scanline"></div></div>
+
+        <div id="plaque">Super Dad</div>
+
+        <!-- 05: title -->
+        <div id="title">
+          <div>
+            <span class="line"><span class="ch">L</span><span class="ch">i</span><span class="ch">t</span><span class="ch">t</span><span class="ch">l</span><span class="ch">e</span></span>
+            <span class="line"><span class="ch">M</span><span class="ch">u</span><span class="ch">s</span><span class="ch">e</span><span class="ch">u</span><span class="ch">m</span></span>
+          </div>
+          <div id="tagline">Small artist. Grand opening.</div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      // Geometry the cuts rely on (canvas px).
+      // Hero base centre = its spot on the photo in phone A (cutout is a 1:1 crop of the photo at 116,282).
+      const HERO_CX = 612.53 + 350.94 / 2;
+      const HERO_CY = 145.81 + 609.52 / 2;
+      // 03: hero centred in the mat.
+      const HANG = { x: 800 - HERO_CX, y: 168 + 609.52 / 2 - HERO_CY };
+      // 04: the superhero on the Museum screen of phone M (cutout at 0.32 scale, 120,358 in screen px).
+      const NAIL = { x: 800, y: 64 };
+      const SCR_K = 793 / 2556;
+      const SCR_X0 = 623 + (354 - 1179 * SCR_K) / 2;
+      const TARGET = { x: SCR_X0 + SCR_K * (120 + (1140 * 0.32) / 2), y: 75 + SCR_K * (358 + (1980 * 0.32) / 2) };
+      const MUSEUM_S = (1980 * 0.32 * SCR_K) / 609.52;
+      const HUNG_CY = 168 + 609.52 / 2;
+      const MUSEUM = { x: TARGET.x - NAIL.x, y: TARGET.y - NAIL.y - (HUNG_CY - NAIL.y) * MUSEUM_S };
+
+      const tl = gsap.timeline({ paused: true });
+      const len = 2 * Math.hypot(202, 48);
+      gsap.set("#stringLine", { strokeDasharray: len, strokeDashoffset: len });
+
+      // ambient: ghost word drifts left until the title takes over
+      tl.fromTo("#ghost", { x: 0 }, { x: -70, duration: 5.9, ease: "none" }, 0);
+      tl.to("#ghost", { opacity: 0, duration: 0.4, ease: "power1.in" }, 5.6);
+
+      // 01 Capture — phone rises, scan corners lock on
+      tl.fromTo("#slotA", { y: 760 }, { y: 0, duration: 0.75, ease: "expo.out" }, 0.15);
+      tl.fromTo(
+        ".bracket",
+        { opacity: 0, scale: 1.7 },
+        { opacity: 1, scale: 1, duration: 0.42, ease: "back.out(2.4)", stagger: 0.05 },
+        0.62,
+      );
+      tl.to(".bracket", { scale: 0.9, duration: 0.09, ease: "power2.in", yoyo: true, repeat: 1 }, 1.12);
+
+      // 02 Lift-off — scan line eats the table, the figure jumps out of the screen
+      tl.set("#hero", { opacity: 1 }, 1.3);
+      tl.fromTo("#scanline", { opacity: 0 }, { opacity: 1, duration: 0.08, ease: "none" }, 1.3);
+      tl.fromTo("#scanline", { y: 0 }, { y: 793, duration: 0.55, ease: "power2.inOut", immediateRender: false }, 1.32);
+      tl.fromTo("#checker", { clipPath: "inset(0% 0% 100% 0%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 0.55, ease: "power2.inOut" }, 1.32);
+      tl.to("#scanline", { opacity: 0, duration: 0.12, ease: "power1.in" }, 1.86);
+      tl.to(".bracket", { opacity: 0, scale: 1.25, duration: 0.2, ease: "power2.in" }, 1.84);
+      tl.fromTo(
+        "#hero",
+        { x: 0, y: 0, scale: 1, rotation: 0 },
+        { x: 222, y: 18, scale: 1.45, rotation: 4, duration: 0.7, ease: "back.out(1.5)" },
+        1.95,
+      );
+      tl.fromTo(
+        "#heroImg",
+        { filter: "drop-shadow(0px 0px 0px rgba(0,0,0,0))" },
+        { filter: "drop-shadow(0px 34px 30px rgba(0,0,0,0.38))", duration: 0.5, ease: "power2.out" },
+        1.95,
+      );
+      tl.to("#slotA", { y: 300, scale: 0.88, opacity: 0, duration: 0.5, ease: "power3.in" }, 2.0);
+
+      // 03 Hang — the figure settles, the frame builds around it and swings on its nail
+      tl.to("#hero", { x: HANG.x, y: HANG.y, scale: 1, rotation: 0, duration: 0.58, ease: "power3.inOut" }, 2.66);
+      tl.to("#heroImg", { filter: "drop-shadow(0px 8px 10px rgba(0,0,0,0.25))", duration: 0.5, ease: "sine.out" }, 2.7);
+      tl.fromTo("#mat", { opacity: 0, scale: 0.94 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" }, 2.86);
+      tl.fromTo("#frameShadow", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "sine.out" }, 2.9);
+      tl.fromTo("#barT", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, 2.9);
+      tl.fromTo("#barR", { scaleY: 0 }, { scaleY: 1, duration: 0.3, ease: "power3.out" }, 2.96);
+      tl.fromTo("#barB", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, 3.02);
+      tl.fromTo("#barL", { scaleY: 0 }, { scaleY: 1, duration: 0.3, ease: "power3.out" }, 3.08);
+      tl.fromTo("#nail", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(3)" }, 3.0);
+      tl.to("#stringLine", { strokeDashoffset: 0, duration: 0.3, ease: "power2.out" }, 3.05);
+      tl.set("#piece", { transformOrigin: `${NAIL.x}px ${NAIL.y}px` }, 0);
+      tl.to("#piece", { rotation: -5, duration: 0.24, ease: "sine.out" }, 3.18);
+      tl.to("#piece", { rotation: 3, duration: 0.34, ease: "sine.inOut" }, 3.42);
+      tl.to("#piece", { rotation: 0, duration: 0.3, ease: "sine.inOut" }, 3.76);
+      tl.fromTo("#plaque", { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, 3.28);
+
+      // 04 Museum — the piece lands on its own spot on the Museum screen, the deck fans in
+      tl.to("#plaque", { opacity: 0, duration: 0.18, ease: "power2.in" }, 3.92);
+      tl.to("#piece", { x: MUSEUM.x, y: MUSEUM.y, scale: MUSEUM_S, duration: 0.72, ease: "power3.inOut" }, 3.95);
+      tl.to(["#mat", ".bar", "#frameShadow", "#nail", "#string"], { opacity: 0, duration: 0.22, ease: "power1.in" }, 4.42);
+      tl.fromTo(
+        "#slotM",
+        { opacity: 0, scale: 1.12, transformOrigin: "26.3% 27%" },
+        { opacity: 1, scale: 1, duration: 0.42, ease: "power2.out" },
+        4.25,
+      );
+      tl.to("#hero", { opacity: 0, duration: 0.14, ease: "none" }, 4.64);
+      tl.fromTo("#slotL", { x: -560, rotation: -18, opacity: 0 }, { x: 0, rotation: -7, opacity: 1, duration: 0.8, ease: "expo.out" }, 4.5);
+      tl.fromTo("#slotR", { x: 560, rotation: 18, opacity: 0 }, { x: 0, rotation: 7, opacity: 1, duration: 0.8, ease: "power4.out" }, 4.62);
+      tl.fromTo("#phoneM", { y: 0 }, { y: -16, duration: 2.6, ease: "sine.inOut" }, 4.9);
+      tl.fromTo("#phoneL", { y: 0 }, { y: 14, duration: 2.6, ease: "sine.inOut" }, 4.9);
+      tl.fromTo("#phoneR", { y: 0 }, { y: 12, duration: 2.6, ease: "sine.inOut" }, 4.9);
+
+      // 05 Title — deck pushes right, the name rises letter by letter, then a held frame
+      tl.fromTo("#deck", { x: 0, scale: 1, transformOrigin: "800px 500px" }, { x: 330, scale: 0.9, duration: 0.62, ease: "power3.inOut" }, 5.8);
+      tl.to("#slotL", { x: -180, opacity: 0, duration: 0.34, ease: "power2.in" }, 5.8);
+      tl.fromTo(".ch", { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, ease: "expo.out", stagger: 0.035 }, 6.02);
+      tl.fromTo("#tagline", { opacity: 0, y: 18 }, { opacity: 0.85, y: 0, duration: 0.5, ease: "sine.out" }, 6.55);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
