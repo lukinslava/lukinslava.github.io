@@ -10,6 +10,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { contentEdits, applyContentEdits, styleOverrides } from "./content.mjs";
 import { applyHtmlStructure, applyJsStructure } from "./structure.mjs";
+import { bustCache } from "./cache-bust.mjs";
 
 const RAW = path.resolve("raw");
 const OUT = path.resolve("docs");
@@ -248,6 +249,9 @@ for (const page of PAGES) {
   await write(page, html);
 }
 
+// Modules edited after mirroring; renamed in 5d so no cache serves them under their old names.
+const editedModules = [];
+
 // 5a. Content edits (tools/content.mjs) across pages, page modules and search indexes.
 {
   const counts = {};
@@ -257,6 +261,7 @@ for (const page of PAGES) {
     const before = await fs.readFile(file, "utf8");
     const after = applyContentEdits(before, counts);
     if (after !== before) await fs.writeFile(file, after);
+    if (after !== before && file.endsWith(".mjs")) editedModules.push(file);
   }
   if (styleOverrides.length) {
     const css = `<style data-content-overrides>${styleOverrides.join("\n")}</style>`;
@@ -286,7 +291,11 @@ for (const page of PAGES) {
   }
   if (homeModules.length !== 1) throw new Error(`Expected one homepage module, found ${homeModules.length}`);
   await fs.writeFile(path.join(jsDir, homeModules[0][0]), applyJsStructure(homeModules[0][1]));
+  editedModules.push(path.join(jsDir, homeModules[0][0]));
 }
+
+// 5d. New names for the edited modules (tools/cache-bust.mjs).
+console.log("renamed modules:", await bustCache(OUT, [...new Set(editedModules)]));
 
 // 5c. Standalone interactive elements (tools/inject): plain CSS/JS living outside the React tree.
 {
