@@ -2,9 +2,10 @@
 // Lives outside React, so it re-attaches if Framer re-renders a card. Plays only while the card is on screen;
 // with reduced motion the image stays and no video loads.
 (() => {
-  // card link path -> video
+  // card link path -> video; `poster` when the card's own image differs from the video's first frame
   const COVERS = {
-    "/quack": "/assets/images/cover-notch-duck.mp4",
+    "/quack": { src: "/assets/images/cover-notch-duck.mp4" },
+    "/ai-match": { src: "/assets/images/cover-auf-match.mp4", poster: "/assets/images/cover-auf-match-poster.jpg" },
   };
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -17,14 +18,15 @@
 
   const attach = () => {
     for (const card of document.querySelectorAll("a.framer-lux5qc")) {
-      const src = COVERS[new URL(card.href, location.href).pathname];
-      const wrapper = src && card.querySelector("[data-framer-background-image-wrapper]");
+      const cover = COVERS[new URL(card.href, location.href).pathname];
+      const wrapper = cover && card.querySelector("[data-framer-background-image-wrapper]");
       if (!wrapper || wrapper.querySelector("video[data-card-video]")) continue;
       const poster = wrapper.querySelector("img");
-      const video = Object.assign(document.createElement("video"), { src, muted: true, loop: true, playsInline: true, preload: "metadata" });
+      const video = Object.assign(document.createElement("video"), { src: cover.src, muted: true, loop: true, playsInline: true, preload: "metadata" });
       video.setAttribute("data-card-video", "");
       video.setAttribute("aria-hidden", "true");
-      if (poster?.currentSrc || poster?.src) video.poster = poster.currentSrc || poster.src;
+      const posterSrc = cover.poster || poster?.currentSrc || poster?.src;
+      if (posterSrc) video.poster = posterSrc;
       wrapper.append(video);
       visible.observe(video);
     }
