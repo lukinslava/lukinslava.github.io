@@ -4,7 +4,7 @@
 (() => {
   // card link path -> video
   const COVERS = {
-    "/notch-duck": "/assets/images/cover-notch-duck.mp4",
+    "/quack": "/assets/images/cover-notch-duck.mp4",
   };
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
