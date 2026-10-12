@@ -124,7 +124,7 @@ export const styleOverrides = [
   // Cases + AI & side projects: compact grid instead of full-width 1291×700 cards (prototypes/cases-layout, variant A).
   // Pure CSS over Framer's cards, so links, appear animations and hydration stay untouched.
   ".framer-pzIB3 .framer-ahfcuh { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px !important; align-items: stretch !important; overflow: visible !important; }",
-  ".framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh { grid-template-columns: repeat(4, minmax(0, 1fr)); }",
+  ".framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh { grid-template-columns: repeat(5, minmax(0, 1fr)); }",
   ".framer-pzIB3 .framer-ahfcuh + .framer-3evyfl { margin-top: 48px; }",
   ".framer-pzIB3 .framer-bvvzdt { overflow: visible !important; }",
   "@media (max-width: 1439.98px) { .framer-pzIB3 .framer-bvvzdt { box-sizing: border-box; padding: 0 24px !important; } }",
@@ -143,7 +143,7 @@ export const styleOverrides = [
   ".framer-pzIB3 .framer-ahfcuh .framer-lux5qc p.framer-styles-preset-1l2lp8z { --framer-font-size: 16px !important; --framer-line-height: 1.3em !important; --framer-letter-spacing: 0em !important; --framer-text-color: #85847f !important; }",
   ".framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh .framer-lux5qc h3.framer-text { --framer-font-size: 18px !important; }",
   ".framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh .framer-lux5qc p.framer-styles-preset-1l2lp8z { --framer-font-size: 14px !important; }",
-  "@media (max-width: 1099.98px) { .framer-pzIB3 .framer-ahfcuh, .framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px !important; } .framer-pzIB3 .framer-ahfcuh:not(.framer-ahfcuh ~ .framer-ahfcuh) > .framer-lux5qc:first-child { grid-column: span 2; } }",
+  "@media (max-width: 1099.98px) { .framer-pzIB3 .framer-ahfcuh, .framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px !important; } .framer-pzIB3 .framer-ahfcuh > .framer-lux5qc:first-child { grid-column: span 2; } }",
   "@media (max-width: 809.98px) { .framer-pzIB3 :is(.framer-c37md5, .framer-q7pdvj, .framer-1d04b23, .framer-102m7fe, .framer-1v9o0zl, .framer-1m7tcgr, .framer-p8dvz1) { padding: 12px 14px 16px !important; } .framer-pzIB3 .framer-ahfcuh .framer-lux5qc h3.framer-text, .framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh .framer-lux5qc h3.framer-text { --framer-font-size: 16px !important; } .framer-pzIB3 .framer-ahfcuh .framer-lux5qc p.framer-styles-preset-1l2lp8z, .framer-pzIB3 .framer-ahfcuh ~ .framer-ahfcuh .framer-lux5qc p.framer-styles-preset-1l2lp8z { --framer-font-size: 13px !important; } }",
   // Keep the fixed header above the awards device when the Experience block scrolls under it
   ".framer-h3ifuw-container { z-index: 10 !important; }",
