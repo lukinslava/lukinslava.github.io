@@ -8,7 +8,7 @@ const SECTION_HEADING = "AI & side projects";
 export const cardEdits = [
   {
     cls: "framer-1fzv8qv", // was 82BOX
-    href: ["https://82box.ru/", "./ai-match"],
+    href: ["https://82box.ru/", "https://lukinslava.github.io/ai-match"], // full URL: see newCards below
     title: ["82BOX", "AI Match"],
     description: ["Retail Health and Personal Care Products", "Internal AI tool at Pragmatica: screens 2,000+ designer portfolios and shortlists 30–60 per role"],
     image: [/Z05mJp17Eq5RNItbzKiMZrmMDzo((?:\.sd\d+)?)\.png/g, "cover-auf-match$1.png"],
@@ -42,8 +42,8 @@ export const newCards = [
     nodeId: "nDuckCardX",
     // A full URL: Framer's Link sends "./…" and "/…" through its router, which knows only the Framer pages and turns
     // the rest into "./" once the card renders on the client, and it reads a bare "notch-duck" as a domain. AI Match
-    // keeps "./ai-match" only because hydration leaves the server attribute alone; a copied card does not get that luck.
-    href: ["./ai-match", "https://lukinslava.github.io/quack"],
+    // kept "./ai-match" for a while only because hydration left the server attribute alone, then lost it too.
+    href: ["https://lukinslava.github.io/ai-match", "https://lukinslava.github.io/quack"],
     title: ["AI Match", "Quack"],
     description: ["Internal AI tool at Pragmatica: screens 2,000+ designer portfolios and shortlists 30–60 per role", "Side project · macOS notch app, designed and built with Claude Code"],
     image: [/cover-auf-match((?:\.sd\d+)?)\.png/g, "cover-notch-duck$1.jpg"],
