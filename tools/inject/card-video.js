@@ -5,7 +5,7 @@
   // card link path -> video; `poster` when the card's own image differs from the video's first frame
   const COVERS = {
     "/quack": { src: "/assets/images/cover-notch-duck.mp4" },
-    "/ai-match": { src: "/assets/images/cover-auf-match.mp4", poster: "/assets/images/cover-auf-match-poster.jpg" },
+    "/ai-match": { src: "/assets/images/cover-ai-match-ui.mp4", poster: "/assets/images/cover-ai-match-ui-poster.jpg" },
   };
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
