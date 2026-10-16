@@ -11,6 +11,7 @@ import path from "node:path";
 import { contentEdits, applyContentEdits, styleOverrides } from "./content.mjs";
 import { applyHtmlStructure, applyJsStructure } from "./structure.mjs";
 import { bustCache } from "./cache-bust.mjs";
+import { buildDraft } from "./draft.mjs";
 
 const RAW = path.resolve("raw");
 const OUT = path.resolve("docs");
@@ -317,6 +318,9 @@ console.log("renamed modules:", await bustCache(OUT, [...new Set(editedModules)]
     await fs.writeFile(file, html);
   }
 }
+
+// 5e. Draft homepage (tools/draft.mjs): a private copy with its own modules, built from the finished homepage.
+console.log("draft:", await buildDraft(OUT));
 
 // 6. Sitemap / robots / 404 / GitHub Pages marker.
 if (SITE_URL) {
