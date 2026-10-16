@@ -8,59 +8,31 @@
     <style>
       @font-face { font-family: "Antonio"; src: url("assets/fonts/antonio.woff2") format("woff2"); font-weight: 400; }
 
-      /* a whiteboard; recognised shapes in the two-tone style of the case's icon library */
-      :root { --board: #f7f6f2; --dots: #d9d6cc; --ink: #1b2a4a; --fill: #ffd84d; --ai: #f97029; --muted: #6b6a64; }
+      /* the board colour of the case's own interaction recording, so the clip sits on it without an edge */
+      :root { --board: #fbfbfb; --ink: #111110; --muted: #5f5e59; }
       * { margin: 0; padding: 0; box-sizing: border-box; }
       html, body { width: 1600px; height: 900px; overflow: hidden; background: var(--board); }
 
-      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
-      #stage { position: absolute; inset: 0; overflow: hidden; color: var(--ink); font-family: "Antonio", sans-serif;
-               background: var(--board) radial-gradient(circle, var(--dots) 2px, transparent 2.5px) 0 0 / 40px 40px; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--board); }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: transparent; color: var(--ink); font-family: "Antonio", sans-serif; }
+
+      /* the real prototype from the case: a sketched eye, the Keep / Off menu, the clean two-tone icon */
+      #demo { position: absolute; left: -110px; top: 30px; width: 1700px; height: 955px; object-fit: cover; }
 
       #title { position: absolute; left: 80px; top: 64px; font-size: 96px; line-height: 1; letter-spacing: -0.02em; }
       #sub { position: absolute; left: 80px; top: 176px; font-size: 40px; line-height: 1; color: var(--muted); }
-      #money { position: absolute; right: 80px; top: 64px; text-align: right; font-size: 96px; line-height: 1; letter-spacing: -0.02em; opacity: 0; }
-      #moneySub { position: absolute; right: 80px; top: 176px; font-size: 40px; line-height: 1; color: var(--muted); opacity: 0; }
-
-      svg { position: absolute; left: 0; top: 0; width: 1600px; height: 900px; overflow: visible; }
-      .sketch { opacity: 0; fill: none; stroke: var(--ink); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
-      .clean { fill: var(--fill); stroke: var(--ink); stroke-width: 10; stroke-linejoin: round; opacity: 0; }
-      .scan { fill: none; stroke: var(--ai); stroke-width: 6; opacity: 0; }
-      .opt { fill: #ffffff; stroke: var(--ink); stroke-width: 4; opacity: 0; }
-      .optIcon { fill: none; stroke: var(--ink); stroke-width: 4; opacity: 0; }
+      #money { position: absolute; left: 80px; top: 704px; font-size: 96px; line-height: 1; letter-spacing: -0.02em; opacity: 0; }
+      #moneySub { position: absolute; left: 80px; top: 816px; font-size: 40px; line-height: 1; color: var(--muted); opacity: 0; }
     </style>
   </head>
   <body>
     <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-fps="30" data-width="1600" data-height="900">
+      <video id="demo" class="clip" data-start="0" data-duration="8" data-track-index="1" src="assets/autodraw-demo.mp4" muted playsinline></video>
       <section id="stage" class="clip" data-start="0" data-duration="8" data-track-index="0" data-layout-allow-overflow="true">
         <div id="title">Autodraw</div>
         <div id="sub">AI shape recognition</div>
         <div id="money">~$700K</div>
         <div id="moneySub">projected revenue</div>
-
-        <svg viewBox="0 0 1600 900" data-layout-allow-overlap="true">
-          <!-- hand-drawn sketches, generated below -->
-          <path class="sketch" id="sk0" />
-          <path class="sketch" id="sk1" />
-          <path class="sketch" id="sk2" />
-          <!-- the recognised, clean shapes -->
-          <circle class="clean" id="cl0" cx="400" cy="560" r="120" />
-          <polygon class="clean" id="cl1" points="800,430 935,680 665,680" />
-          <path class="clean" id="cl2" d="M1090 530 H1250 V475 L1350 560 L1250 645 V590 H1090 Z" />
-          <!-- the AI notices each sketch -->
-          <circle class="scan" id="sc0" cx="400" cy="560" r="150" />
-          <circle class="scan" id="sc1" cx="800" cy="575" r="160" />
-          <circle class="scan" id="sc2" cx="1220" cy="560" r="160" />
-          <!-- a quick radial menu, the game-design idea from the case -->
-          <g id="menu">
-            <circle class="opt" id="o0" cx="1220" cy="390" r="44" />
-            <circle class="opt" id="o1" cx="1060" cy="470" r="44" />
-            <circle class="opt" id="o2" cx="1380" cy="470" r="44" />
-            <rect class="optIcon" id="i0" x="1200" y="372" width="40" height="36" rx="4" />
-            <circle class="optIcon" id="i1" cx="1060" cy="470" r="20" />
-            <path class="optIcon" id="i2" d="M1360 470 H1398 M1386 458 L1400 470 L1386 482" />
-          </g>
-        </svg>
       </section>
     </div>
 
@@ -68,66 +40,11 @@
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
 
-      // deterministic "hand" wobble: a sum of sines instead of random noise
-      const wob = (t, k) => 7 * Math.sin(t * 5.3 + k) + 4 * Math.sin(t * 11.7 + 2 * k);
-      const pathFrom = (pts) => "M" + pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join(" L");
-
-      // a lopsided circle that overshoots its start, like a quick stroke with a marker
-      const circle = [];
-      for (let i = 0; i <= 90; i++) {
-        const a = -0.4 + (i / 90) * (Math.PI * 2 + 0.6);
-        const r = 118 + wob(a, 1);
-        circle.push([400 + r * Math.cos(a) * 1.06, 560 + r * Math.sin(a) * 0.94]);
-      }
-      // a triangle with soft, uneven sides
-      const tri = [], corners = [[798, 438], [930, 676], [668, 682], [804, 444]];
-      for (let s = 0; s < 3; s++) {
-        const [x0, y0] = corners[s], [x1, y1] = corners[s + 1];
-        for (let i = 0; i <= 24; i++) {
-          const t = i / 24, n = wob(t * 3 + s, s) * Math.sin(Math.PI * t);
-          tri.push([x0 + (x1 - x0) * t + n * 0.6, y0 + (y1 - y0) * t + n * 0.6]);
-        }
-      }
-      // an arrow: a wavy shaft, then the head in one go
-      const arrow = [];
-      for (let i = 0; i <= 40; i++) { const t = i / 40; arrow.push([1095 + 250 * t, 562 + 9 * Math.sin(t * 5) + wob(t * 4, 3) * 0.4]); }
-      arrow.push([1290, 505], [1345, 562], [1288, 620]);
-
-      [circle, tri, arrow].forEach((pts, i) => {
-        const el = document.getElementById(`sk${i}`);
-        el.setAttribute("d", pathFrom(pts));
-        const len = el.getTotalLength();
-        el.style.strokeDasharray = len;
-        el.style.strokeDashoffset = len;
-        el.dataset.len = len;
-      });
-
-      const draw = (i, at, dur) => tl.fromTo(`#sk${i}`, { strokeDashoffset: +document.getElementById(`sk${i}`).dataset.len, opacity: 1 },
-        { strokeDashoffset: 0, duration: dur, ease: "power1.inOut", immediateRender: false }, at);
-      const recognise = (i, at) => {
-        tl.fromTo(`#sc${i}`, { opacity: 0.9, scale: 0.85, transformOrigin: "50% 50%" }, { opacity: 0, scale: 1.15, duration: 0.5, ease: "power2.out", immediateRender: false }, at);
-        tl.to(`#sk${i}`, { opacity: 0, duration: 0.2, ease: "power1.in" }, at + 0.15);
-        tl.fromTo(`#cl${i}`, { opacity: 0, scale: 0.7, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2.2)" }, at + 0.2);
-      };
-
-      // 1. circle, 2. triangle: sketch → recognised
-      draw(0, 0.3, 0.8); recognise(0, 1.2);
-      draw(1, 1.8, 0.8); recognise(1, 2.7);
-
-      // 3. arrow: sketch → quick radial menu → pick → recognised
-      draw(2, 3.3, 0.7);
-      tl.to([".opt", ".optIcon"], { opacity: 1, duration: 0.25, ease: "power2.out", stagger: 0.03 }, 4.05);
-      tl.to("#o2", { fill: "#ffd84d", duration: 0.15 }, 4.55);
-      tl.to("#o2", { scale: 1.15, transformOrigin: "50% 50%", duration: 0.12, yoyo: true, repeat: 1 }, 4.55);
-      tl.to([".opt", ".optIcon"], { opacity: 0, duration: 0.2, ease: "power1.in" }, 4.85);
-      recognise(2, 4.85);
-
-      // 4. the business result
-      tl.fromTo(["#money", "#moneySub"], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: "expo.out", stagger: 0.08 }, 5.5);
-
-      // 5. hold, then clear the board for a seamless loop
-      tl.to([".clean", "#money", "#moneySub"], { opacity: 0, duration: 0.45, ease: "power2.in" }, 7.4);
-      tl.set("#o2", { fill: "#ffffff" }, 7.9);
+      // the recording fades in and out on the board, so the loop has no jump cut
+      tl.fromTo("#demo", { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power1.out" }, 0);
+      // the result lands as the sketch turns into the clean icon (≈5 s into the recording)
+      tl.fromTo(["#money", "#moneySub"], { opacity: 0, y: 24 }, { opacity: 1, y: 0, duration: 0.55, ease: "expo.out", stagger: 0.08 }, 5.1);
+      tl.to(["#demo", "#money", "#moneySub"], { opacity: 0, duration: 0.4, ease: "power1.in" }, 7.6);
 
       window.__timelines["main"] = tl;
       tl.seek(0);
