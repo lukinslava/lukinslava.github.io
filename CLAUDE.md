@@ -76,7 +76,7 @@ design engineer — как отдельная колонка «AI Experiments & 
   отклонил: «визуальное месиво, много текстовых стилей». В плитках — только
   заголовок и одна серая строка. Заголовки разделов (AI products, Cases, Experience) — по
   центру, как шапка. AI products — друг под другом
-  (одна колонка до 880px по центру), Cases — плитки по две в ряд. Разделы: AI products (AI Match — один ролик
+  (одна колонка до 720px по центру), Cases — плитки по две в ряд. Разделы: AI products (AI Match — один ролик
   `cover-ai-match-ui.mp4`, делить на части автор не хочет; Quack — карусель
   из четырёх роликов по функциям), Cases (lead-case, process, mind-case,
   autodraw), затем Experience одним списком, Aleria и Phygital+ — как side
