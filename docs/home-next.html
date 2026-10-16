@@ -43,10 +43,10 @@
   .hero .hi { font-family: "Antonio", sans-serif; font-size: 32px; color: var(--accent); letter-spacing: -0.02em; }
   .hero h1 { font-family: "Antonio", sans-serif; font-size: clamp(64px, 11vw, 144px); line-height: .92; letter-spacing: -0.045em; margin-top: 6px; }
   .hero .lead { margin-top: 24px; max-width: 640px; font-size: 22px; line-height: 1.4; color: var(--text); }
-  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 40px; }
-  .fact { background: var(--panel); border-radius: 20px; box-shadow: var(--hairline); padding: 22px 24px; display: grid; gap: 8px; align-content: start; }
-  .fact b { font-weight: 400; font-size: 20px; line-height: 1.25; color: var(--ink); }
-  .fact span { font-size: 15px; line-height: 1.45; color: var(--label); }
+  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; margin-top: 48px; max-width: 920px; }
+  .fact { display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 1px solid var(--ink); }
+  .fact b { font-family: "Antonio", sans-serif; font-weight: 400; font-size: 56px; line-height: 1; letter-spacing: -0.04em; color: var(--ink); }
+  .fact span { font-size: 18px; line-height: 1.4; color: var(--body); }
 
   /* feed */
   .feed-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
@@ -115,6 +115,7 @@
     .hero { padding-top: 32px; padding-bottom: 56px; }
     .hero .hi { font-size: 24px; }
     .hero .lead { font-size: 19px; }
+    .fact b { font-size: 44px; }
     .feed-head h2, footer h2 { font-size: 44px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -142,9 +143,8 @@
   <h1>Hey, I'm Slava</h1>
   <p class="lead">I build and grow design teams. I make AI products.</p>
   <div class="facts">
-    <div class="fact"><b>Teams of up to 40 designers</b><span>Hiring, mentorship and career growth</span></div>
-    <div class="fact"><b>Software designer focused on AI-native products</b><span>From idea to production with Claude Code — no dev team</span></div>
-    <div class="fact"><b>Design processes that work</b><span>Rituals and quality that make designers stronger and tie design to business results</span></div>
+    <div class="fact"><b>Up to 40</b><span>designers in the teams I've built and led</span></div>
+    <div class="fact"><b>AI-native</b><span>Software designer focused on AI-native products, built end-to-end with Claude Code</span></div>
   </div>
 </header>
 
