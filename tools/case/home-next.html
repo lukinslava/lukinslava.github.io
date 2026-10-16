@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Lukin Slava — draft</title>
+<link rel="icon" href="/assets/icons/default-favicon-light.v1.png">
+<!-- Draft of the homepage redesign: a feed of work, minimum text. Not linked anywhere. -->
+<style>
+  @font-face { font-family: "Antonio"; src: url("/assets/fonts/antonio/v22/gNMEW3NwSYq_9WD3yHQiFQ.woff2") format("woff2"); font-display: swap; }
+  @font-face { font-family: "Inter"; src: url("/assets/files/GrgcKwrN6d3Uz8EwcLHZxwEfC4.woff2") format("woff2"); font-weight: 400; font-display: swap; unicode-range: U+0000-00FF, U+2013-2014, U+2192; }
+  :root {
+    --bg: #f5f5f5; --panel: #fff; --ink: #111110; --text: #2f2f2d; --body: #55544f; --label: #8a8984;
+    --line: rgba(0,0,0,.08); --accent: rgb(249, 112, 41);
+    --hairline: 0 0 0 1px rgba(0,0,0,.05), 0 2px 6px -2px rgba(0,0,0,.08);
+    --wrap: 1240px; --gutter: 24px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  img, video { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, p { margin: 0; font-weight: 400; }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
+  .antonio { font-family: "Antonio", sans-serif; letter-spacing: -0.03em; }
+  .quiet { color: var(--label); }
+
+  /* nav */
+  nav { position: sticky; top: 0; z-index: 10; background: rgba(245,245,245,.86); backdrop-filter: blur(10px); }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  nav .me { display: flex; align-items: center; gap: 10px; font-size: 15px; }
+  nav .me img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+  nav .links { display: flex; align-items: center; gap: 22px; font-size: 15px; }
+  nav .links a:not(.btn):hover { color: var(--accent); }
+  .btn { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 10px; background: var(--accent); color: #fff; font-size: 15px; transition: transform .15s ease, filter .15s ease; }
+  .btn:hover { filter: brightness(1.06); }
+  .btn:active { transform: scale(.97); }
+
+  /* hero */
+  .hero { padding-top: 56px; padding-bottom: 72px; }
+  .hero .avatar { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; background: #e6e6e3; }
+  .hero .hi { font-family: "Antonio", sans-serif; font-size: 32px; color: var(--accent); letter-spacing: -0.02em; }
+  .hero h1 { font-family: "Antonio", sans-serif; font-size: clamp(64px, 11vw, 144px); line-height: .92; letter-spacing: -0.045em; margin-top: 6px; }
+  .hero .lead { margin-top: 24px; max-width: 640px; font-size: 22px; line-height: 1.4; color: var(--text); }
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 40px; }
+  .fact { background: var(--panel); border-radius: 20px; box-shadow: var(--hairline); padding: 22px 24px; display: grid; gap: 8px; align-content: start; }
+  .fact b { font-weight: 400; font-size: 20px; line-height: 1.25; color: var(--ink); }
+  .fact span { font-size: 15px; line-height: 1.45; color: var(--label); }
+
+  /* feed */
+  .feed-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+  .feed-head h2 { font-family: "Antonio", sans-serif; font-size: 56px; line-height: 1; letter-spacing: -0.04em; }
+  section { padding-bottom: 96px; }
+
+  .project { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 28px 0 40px; border-top: 1px solid var(--line); }
+  .project:first-of-type { border-top: 0; padding-top: 0; }
+  .p-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; align-items: end; }
+  .p-head h3 { font-size: 32px; line-height: 1.1; letter-spacing: -0.03em; }
+  .p-head p { grid-column: 1; font-size: 18px; line-height: 1.45; color: var(--body); max-width: 680px; }
+  .p-head .tags { grid-column: 2; grid-row: 1 / span 2; align-self: end; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 420px; }
+  .tag { font-size: 13px; line-height: 1; padding: 7px 10px; border-radius: 999px; background: var(--panel); box-shadow: var(--hairline); color: var(--text); white-space: nowrap; }
+  .p-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 40px; }
+  .more { font-size: 15px; color: var(--label); }
+  .more:hover { color: var(--accent); }
+
+  /* carousel */
+  .carousel { position: relative; }
+  .track { display: grid; grid-auto-flow: column; grid-auto-columns: min(78%, 900px); gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px; }
+  .track::-webkit-scrollbar { display: none; }
+  .slide { scroll-snap-align: start; display: grid; gap: 12px; margin: 0; }
+  .frame { position: relative; aspect-ratio: 16 / 9; border-radius: 20px; overflow: hidden; background: #e6e6e3; box-shadow: var(--hairline); }
+  .frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
+  .slide figcaption { display: flex; gap: 10px; font-size: 16px; line-height: 1.35; color: var(--text); }
+  .slide figcaption i { font-style: normal; color: var(--label); font-variant-numeric: tabular-nums; }
+  .nav-btns { display: flex; gap: 6px; }
+  .nav-btns button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--panel); box-shadow: var(--hairline); font: inherit; font-size: 18px; color: var(--ink); cursor: pointer; transition: transform .15s ease, opacity .2s; }
+  .nav-btns button:active { transform: scale(.94); }
+  .nav-btns button:disabled { opacity: .35; cursor: default; }
+
+  /* cases */
+  .cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .case { display: grid; gap: 14px; align-content: start; }
+  .case .frame { transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s; }
+  .case:hover .frame { transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 24px 40px -24px rgba(0,0,0,.3); }
+  .case .frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .case .type { position: absolute; inset: 0; display: grid; place-items: center; font-family: "Antonio", sans-serif; font-size: clamp(56px, 8vw, 112px); letter-spacing: -0.03em; }
+  .case h3 { font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; }
+  .case p { font-size: 16px; line-height: 1.4; color: var(--label); margin-top: 4px; }
+
+  /* experience */
+  .jobs { background: var(--panel); border-radius: 24px; box-shadow: var(--hairline); padding: 8px 28px; }
+  .job { display: grid; grid-template-columns: 200px minmax(0, 1fr) 200px; gap: 16px; align-items: baseline; padding: 20px 0; border-top: 1px solid var(--line); }
+  .job:first-child { border-top: 0; }
+  .job b { font-weight: 400; font-size: 22px; letter-spacing: -0.02em; }
+  .job span { font-size: 17px; color: var(--text); }
+  .job span small { display: block; margin-top: 4px; font-size: 15px; color: var(--label); }
+  .job time { font-size: 15px; color: var(--label); text-align: right; }
+  .job a b:hover, a.job:hover b { color: var(--accent); }
+  .sub { margin: 28px 0 12px; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--label); }
+  .awards { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+
+  footer { padding: 72px 0 96px; border-top: 1px solid var(--line); }
+  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
+  footer h2 { font-family: "Antonio", sans-serif; font-size: 56px; line-height: 1; letter-spacing: -0.04em; }
+  footer .links { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; font-size: 16px; }
+  footer .links a:not(.btn):hover { color: var(--accent); }
+
+  @media (max-width: 900px) {
+    .facts { grid-template-columns: 1fr; }
+    .p-head { grid-template-columns: 1fr; }
+    .p-head .tags { grid-column: 1; grid-row: auto; justify-content: flex-start; }
+    .track { grid-auto-columns: 86%; }
+    .nav-btns { display: none; }
+    .cases { grid-template-columns: 1fr; }
+    .job { grid-template-columns: 1fr; gap: 4px; }
+    .job time { text-align: left; }
+  }
+  @media (max-width: 560px) {
+    :root { --gutter: 16px; }
+    nav .me span { display: none; }
+    nav .links { gap: 14px; }
+    .hero { padding-top: 32px; padding-bottom: 56px; }
+    .hero .lead { font-size: 19px; }
+    .feed-head h2, footer h2 { font-size: 44px; }
+    .p-head h3 { font-size: 28px; }
+    .p-head p { font-size: 17px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .case .frame { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a class="me" href="#top"><img src="/assets/images/FiP6oEtyN03kkZ008gtP2OjQz7A.jpg" alt=""><span>Slava Lukin</span></a>
+    <div class="links">
+      <a href="https://t.me/slavanotes">Channel</a>
+      <a href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>
+      <a class="btn" href="https://t.me/lukinslava">Connect</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero wrap" id="top">
+  <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay aria-hidden="true"></video>
+  <p class="hi">Hey, I'm Slava</p>
+  <h1>design leader</h1>
+  <p class="lead">I build and grow design teams — and design and ship AI products myself.</p>
+  <div class="facts">
+    <div class="fact"><b>Teams of up to 30 designers</b><span>Hiring, growth, processes that make designers stronger</span></div>
+    <div class="fact"><b>Design tied to business</b><span>Metrics, product partnership, decisions defended at the C-level</span></div>
+    <div class="fact"><b>AI products, built end-to-end</b><span>From idea to production with Claude Code — no dev team</span></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="ai">
+    <div class="feed-head"><h2>AI products</h2></div>
+
+    <article class="project">
+      <div class="p-head">
+        <h3>AI Match</h3>
+        <p>Internal tool at Pragmatica: turns a base of 5,000+ designers into a shortlist of 30–60 per role.</p>
+        <div class="tags"><span class="tag">Design lead · product, design and build</span><span class="tag">Live in production · 2026</span></div>
+      </div>
+      <div class="carousel">
+        <div class="track">
+          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-vacancy.mp4" poster="/assets/case/home/aim-vacancy.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>01</i>A vacancy from a call recording</figcaption></figure>
+          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>02</i>AI reads the base: 5,000+ → 30</figcaption></figure>
+          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-pipeline.mp4" poster="/assets/case/home/aim-pipeline.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>03</i>Candidates move through the hiring pipeline</figcaption></figure>
+          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-funnel.mp4" poster="/assets/case/home/aim-funnel.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>04</i>How the funnel narrows</figcaption></figure>
+          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-roast.mp4" poster="/assets/case/home/aim-roast.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>05</i>The Roast — a public portfolio review for designers</figcaption></figure>
+        </div>
+      </div>
+      <div class="p-foot"><a class="more" href="/ai-match">Full case, with access code →</a></div>
+    </article>
+
+    <article class="project">
+      <div class="p-head">
+        <h3>Quack</h3>
+        <p>A macOS app that lives in the notch: clipboard, screenshots, desktop cleanup — and a duck that tells you when Claude is waiting.</p>
+        <div class="tags"><span class="tag">Side project · design and build</span><span class="tag">Swift + Claude Code</span><span class="tag">Duck drawn by me</span></div>
+      </div>
+      <div class="carousel">
+        <div class="track">
+          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>01</i>Lives in the notch</figcaption></figure>
+          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/quack-panel.mp4" poster="/assets/case/home/quack-panel.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>02</i>Clipboard, screenshots and links on hover</figcaption></figure>
+          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/quack-cleanup.mp4" poster="/assets/case/home/quack-cleanup.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>03</i>Desktop cleanup in one click</figcaption></figure>
+          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/quack-claude.mp4" poster="/assets/case/home/quack-claude.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>04</i>A green dot when Claude is waiting for you</figcaption></figure>
+        </div>
+      </div>
+      <div class="p-foot"><a class="more" href="/quack">More about Quack →</a></div>
+    </article>
+  </section>
+
+  <section id="cases">
+    <div class="feed-head"><h2>Cases</h2></div>
+    <div class="cases">
+      <a class="case" href="/lead-case">
+        <div class="frame" style="background:#ffd500"><div class="type">2 → 5</div></div>
+        <div><h3>Team restructuring: from 2 to 5 designers</h3><p>Yandex Market, logistics</p></div>
+      </a>
+      <a class="case" href="/process">
+        <div class="frame"><img src="/assets/images/WkQsAE4zE4Qe1QHpyDU7IT8Ugk.png" alt="" loading="lazy"></div>
+        <div><h3>The process that makes designers stronger</h3><p>How designers stopped being just a pair of hands</p></div>
+      </a>
+      <a class="case" href="/mind-case">
+        <div class="frame" style="background:#00965a;color:#fff"><div class="type">Mindbox</div></div>
+        <div><h3>From one-week planning to product thinking</h3><p>Design process at Mindbox</p></div>
+      </a>
+      <a class="case" href="/autodraw">
+        <div class="frame"><img src="/assets/images/sVWbB4XPldNIvLajuW47KdBU.png" alt="" loading="lazy"></div>
+        <div><h3>Autodraw</h3><p>AI shape recognition for the RingCentral whiteboard · ~$700K projected revenue</p></div>
+      </a>
+    </div>
+  </section>
+
+  <section id="experience">
+    <div class="feed-head"><h2>Experience</h2><span class="quiet">in design since 2018</span></div>
+    <div class="jobs">
+      <div class="job"><b>Pragmatica</b><span>Outstaff Design Lead<small>Matching and growing designers for big tech and startups</small></span><time>Dec 2025 — now</time></div>
+      <div class="job"><b>Looch</b><span>Product Design Lead<small>Product studio — #1 UX and research in Russia</small></span><time>Nov 2023 — Oct 2025</time></div>
+      <div class="job"><b>RingCentral</b><span>Senior Product Designer<small>#1 global UCaaS and CCaaS solution</small></span><time>Dec 2021 — Jul 2023</time></div>
+    </div>
+    <p class="sub">Side projects</p>
+    <div class="jobs">
+      <a class="job" href="https://aleria.ai/"><b>Aleria</b><span>Head of Design<small>Several products built on proprietary AI</small></span><time>aleria.ai ↗</time></a>
+      <a class="job" href="https://phygital.plus/"><b>Phygital+</b><span>Product Designer<small>First-session experience for a generative AI workspace</small></span><time>2024 · phygital.plus ↗</time></a>
+    </div>
+    <div class="awards"><span class="tag">WDA 24</span><span class="tag">WDA 25</span><span class="tag">Tagline Awards</span><span class="tag">Golden Site Award</span></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <h2>Let's talk</h2>
+    <div class="links">
+      <a href="https://t.me/slavanotes">Channel</a>
+      <a href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>
+      <a class="btn" href="https://t.me/lukinslava">Connect</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Carousels: each video loads when its slide comes near, plays while mostly visible, pauses otherwise.
+// With reduced motion nothing autoplays: the poster stays, a click plays or pauses.
+(() => {
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const load = (v) => { if (!v.src) { v.src = v.dataset.src; v.preload = "auto"; } };
+
+  const near = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && load(e.target)), { rootMargin: "300px" });
+  const seen = new IntersectionObserver((es) => es.forEach(({ target: v, isIntersecting }) => {
+    if (isIntersecting) { load(v); v.play().catch(() => {}); } else v.pause();
+  }), { threshold: 0.6 });
+
+  for (const v of document.querySelectorAll("video[data-src]")) {
+    near.observe(v);
+    if (still) v.closest(".frame").addEventListener("click", () => { load(v); v.paused ? v.play() : v.pause(); });
+    else seen.observe(v);
+  }
+
+  for (const car of document.querySelectorAll(".carousel")) {
+    const track = car.querySelector(".track");
+    const btns = document.createElement("div");
+    btns.className = "nav-btns";
+    btns.innerHTML = '<button type="button" aria-label="Previous">←</button><button type="button" aria-label="Next">→</button>';
+    car.closest(".project").querySelector(".p-foot").append(btns);
+    const [prev, next] = btns.children;
+    const step = () => track.querySelector(".slide").getBoundingClientRect().width + 16;
+    prev.onclick = () => track.scrollBy({ left: -step(), behavior: still ? "auto" : "smooth" });
+    next.onclick = () => track.scrollBy({ left: step(), behavior: still ? "auto" : "smooth" });
+    const sync = () => {
+      prev.disabled = track.scrollLeft < 4;
+      next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4;
+    };
+    track.addEventListener("scroll", sync, { passive: true });
+    addEventListener("resize", sync);
+    sync();
+  }
+})();
+</script>
+</body>
+</html>
