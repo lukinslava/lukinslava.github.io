@@ -61,10 +61,10 @@ design engineer — как отдельная колонка «AI Experiments & 
 **Отдельные страницы:**
 - `/ai-match` — кейс под паролем, собственная вёрстка;
 - `/home-next` — черновик новой главной (`tools/case/home-next.html`,
-  `noindex`, никуда не связан): своя вёрстка вне Framer. Шапка: один акцент —
-  заголовок Antonio в две строки, «Hey, I'm Slava» чёрным и «design leader»
-  оранжевым (роль должна читаться с первого взгляда — без неё автор сказал
-  «непонятно, кто я»); под ним две колонки одним стилем (серая подпись +
+  `noindex`, никуда не связан): своя вёрстка вне Framer. Шапка: над именем —
+  оранжевая роль «Design leader» (Antonio 32px), крупно «Hey, I'm Slava»
+  (роль должна читаться с первого взгляда; вариант с ролью второй оранжевой
+  строкой заголовка автор отклонил — «ещё хуже»); под ним две колонки одним стилем (серая подпись +
   текст 22px): «Teams — I build and grow design teams — up to 40 designers»
   (на живой главной ещё 30) и «AI products — Software designer focused on
   AI-native products, built end-to-end with Claude Code». Оранжевая роль,
