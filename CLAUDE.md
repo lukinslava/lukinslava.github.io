@@ -84,8 +84,10 @@ design engineer — как отдельная колонка «AI Experiments & 
   «an executor» зачёркивается в «the author», точка проходит Brief → Research →
   Drafts → Hand-off → Retro, синий неба с фото-обложки; mind-case — «Mindbox»
   уходит наверх, считаются −8% churn, +12 CSAT, −20% UI/UX tickets; autodraw —
-  кривые наброски на доске превращаются в ровные двухцветные фигуры, радиальное
-  меню, «~$700K projected revenue»; проекты `prototypes/*-cover/`, ролики
+  настоящая GIF-запись прототипа из кейса (набросок глаза → меню Keep / Off
+  magic pen → ровная иконка), ускоренная до 8 с, плюс «~$700K projected
+  revenue» в момент появления иконки; первый вариант с набросками, нарисованными
+  кодом, автор отклонил — «рисунки совсем плохие»; проекты `prototypes/*-cover/`, ролики
   `tools/case/media/home/*-cover.mp4`, постер — кадр на 6,5 с), затем Experience одним списком, Aleria и Phygital+ — как side
   projects, награды строкой. Ролики Quack — `tools/case/media/home/`, нарезаны
   ffmpeg из `notch-duck/reel.mp4` (русские подписи в углу затёрты `delogo`). Первая попытка — копия главной Framer с патчами — отброшена:
