@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1600, height=900" />
+    <title>The process — cover loop</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Antonio"; src: url("assets/fonts/antonio.woff2") format("woff2"); font-weight: 400; }
+
+      /* the sky and the flowers of the case's photo cover */
+      :root { --sky: #0059a4; --white: #ffffff; --dim: rgba(255, 255, 255, 0.72); --flower: #f97029; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1600px; height: 900px; overflow: hidden; background: var(--sky); }
+
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: var(--sky); color: var(--white); font-family: "Antonio", sans-serif; }
+
+      /* "designer as executor" → "author" */
+      #as { position: absolute; left: 120px; top: 92px; font-size: 56px; line-height: 1; color: var(--dim); }
+      #words { position: absolute; left: 112px; top: 150px; width: 1300px; height: 300px; overflow: hidden; }
+      .word { position: absolute; left: 0; top: 0; font-size: 260px; line-height: 1.1; letter-spacing: -0.02em; white-space: nowrap; }
+      #author { opacity: 0; }
+      #strike { position: absolute; left: 0; top: 152px; width: 820px; height: 16px; border-radius: 8px; background: var(--flower); transform-origin: 0 50%; }
+
+      /* the task workflow, brief to retrospective */
+      #track { position: absolute; left: 160px; top: 640px; width: 1280px; height: 4px; background: rgba(255, 255, 255, 0.3); }
+      #fill { position: absolute; inset: 0; background: var(--white); transform-origin: 0 50%; }
+      .node { position: absolute; top: 626px; width: 32px; height: 32px; margin-left: -16px; border-radius: 50%; border: 4px solid var(--white); background: var(--sky); }
+      .step { position: absolute; top: 680px; font-size: 44px; line-height: 1; translate: -50% 0; white-space: nowrap; color: var(--white); opacity: 0.55; }
+      #runner { position: absolute; left: 160px; top: 620px; width: 44px; height: 44px; margin-left: -22px; border-radius: 50%; background: var(--flower); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-fps="30" data-width="1600" data-height="900">
+      <section id="stage" class="clip" data-start="0" data-duration="8" data-track-index="0" data-layout-allow-overflow="true">
+        <div id="as">a designer as</div>
+        <div id="words" data-layout-allow-overlap="true">
+          <div class="word" id="executor" data-layout-allow-overlap="true">an executor</div>
+          <div class="word" id="author" data-layout-allow-overlap="true">the author</div>
+          <div id="strike"></div>
+        </div>
+
+        <div id="track"><div id="fill"></div></div>
+        <div class="node" id="n0" style="left: 160px"></div>
+        <div class="node" id="n1" style="left: 480px"></div>
+        <div class="node" id="n2" style="left: 800px"></div>
+        <div class="node" id="n3" style="left: 1120px"></div>
+        <div class="node" id="n4" style="left: 1440px"></div>
+        <div class="step" id="s0" style="left: 160px">Brief</div>
+        <div class="step" id="s1" style="left: 480px">Research</div>
+        <div class="step" id="s2" style="left: 800px">Drafts</div>
+        <div class="step" id="s3" style="left: 1120px">Hand-off</div>
+        <div class="step" id="s4" style="left: 1440px">Retro</div>
+        <div id="runner"></div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const STEP = 320; // px between workflow stages
+
+      tl.set(["#strike", "#fill"], { scaleX: 0 }, 0);
+
+      // 1. "an executor" gets struck through and gives way to "the author"
+      tl.fromTo("#strike", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.inOut" }, 0.6);
+      tl.to(["#executor", "#strike"], { yPercent: 40, opacity: 0, duration: 0.4, ease: "power2.in" }, 1.35);
+      tl.fromTo("#author", { yPercent: -40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 1.6);
+
+      // 2. the author walks the whole task workflow, stage by stage
+      tl.to("#s0", { opacity: 1, duration: 0.25 }, 2.1);
+      tl.to("#n0", { backgroundColor: "#ffffff", duration: 0.25 }, 2.1);
+      for (let i = 1; i <= 4; i++) {
+        const t = 2.3 + (i - 1) * 0.9;
+        tl.to("#runner", { x: STEP * i, duration: 0.7, ease: "power2.inOut" }, t);
+        tl.to("#fill", { scaleX: i / 4, duration: 0.7, ease: "power2.inOut" }, t);
+        tl.to(`#n${i}`, { backgroundColor: "#ffffff", duration: 0.2 }, t + 0.6);
+        tl.to(`#s${i}`, { opacity: 1, duration: 0.25 }, t + 0.55);
+        tl.fromTo(`#n${i}`, { scale: 1 }, { scale: 1.35, duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1 }, t + 0.6);
+      }
+
+      // 3. hold, then back to the opening frame for a seamless loop
+      tl.to("#author", { opacity: 0, duration: 0.4, ease: "power2.in" }, 7.3);
+      tl.set("#strike", { scaleX: 0 }, 7.7);
+      tl.to(["#executor", "#strike"], { yPercent: 0, opacity: 1, duration: 0.3, ease: "power2.out" }, 7.7);
+      tl.to("#runner", { x: 0, duration: 0.6, ease: "power3.inOut" }, 7.3);
+      tl.to("#fill", { scaleX: 0, duration: 0.6, ease: "power3.inOut" }, 7.3);
+      tl.to(".node", { backgroundColor: "#0059a4", duration: 0.4 }, 7.3);
+      tl.to(".step", { opacity: 0.55, duration: 0.4 }, 7.3);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

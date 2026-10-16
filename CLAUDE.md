@@ -80,8 +80,13 @@ design engineer — как отдельная колонка «AI Experiments & 
   `cover-ai-match-ui.mp4`, делить на части автор не хочет; Quack — карусель
   из четырёх роликов по функциям), Cases (lead-case — видео-обложка `team-cover.mp4`:
   двое под стопками задач выше линии capacity → пятеро с ровной нагрузкой,
-  «1-week → 3-month planning», проект `prototypes/team-cover/`; process,
-  mind-case, autodraw), затем Experience одним списком, Aleria и Phygital+ — как side
+  «1-week → 3-month planning», проект `prototypes/team-cover/`; process —
+  «an executor» зачёркивается в «the author», точка проходит Brief → Research →
+  Drafts → Hand-off → Retro, синий неба с фото-обложки; mind-case — «Mindbox»
+  уходит наверх, считаются −8% churn, +12 CSAT, −20% UI/UX tickets; autodraw —
+  кривые наброски на доске превращаются в ровные двухцветные фигуры, радиальное
+  меню, «~$700K projected revenue»; проекты `prototypes/*-cover/`, ролики
+  `tools/case/media/home/*-cover.mp4`, постер — кадр на 6,5 с), затем Experience одним списком, Aleria и Phygital+ — как side
   projects, награды строкой. Ролики Quack — `tools/case/media/home/`, нарезаны
   ffmpeg из `notch-duck/reel.mp4` (русские подписи в углу затёрты `delogo`). Первая попытка — копия главной Framer с патчами — отброшена:
   ленту с каруселями патчами Framer не собрать.
@@ -215,7 +220,7 @@ Framer — только полным адресом (`https://lukinslava.github.
 - **Новая главная** (`/home-next`) — замечания автора: меньше текста, только
   то, что продаёт (лид, AI, опыт); упор на интерфейсы и видео; лента работ.
   Открыто: оставлять ли у AI-продуктов внутренние страницы (пока тихая
-  ссылка под каруселью), видео-обложки для кейсов (сейчас картинки), интерфейс
+  ссылка под каруселью), интерфейс
   AI Match в роликах на русском.
 
 ## Следующие шаги
