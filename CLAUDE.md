@@ -61,14 +61,15 @@ design engineer — как отдельная колонка «AI Experiments & 
 **Отдельные страницы:**
 - `/ai-match` — кейс под паролем, собственная вёрстка;
 - `/home-next` — черновик новой главной (`tools/case/home-next.html`,
-  `noindex`, никуда не связан): своя вёрстка вне Framer, лента работ. Сверху
-  AI-продукты (AI Match, Quack) — подпись, теги и карусель коротких роликов
-  по функциям, ниже Cases (lead-case, process, mind-case, autodraw) крупными
-  обложками, затем Experience одним списком, Aleria и Phygital+ — как side
-  projects, награды строкой. Ролики — `tools/case/media/home/`, нарезаны
-  ffmpeg из `cover-ai-match-ui.mp4`, `02-pain-funnel.mp4`, `05-public-flow.mp4`
-  и `notch-duck/reel.mp4` (русские подписи в углу ролика Quack затёрты
-  `delogo`). Первая попытка — копия главной Framer с патчами — отброшена:
+  `noindex`, никуда не связан): своя вёрстка вне Framer. Шапка: роль
+  «Design leader & design engineer» над именем, одна строка «I build and grow
+  design teams. I make AI products.», три коротких тезиса. Дальше плитки
+  одного размера по две в ряд: AI products (AI Match — один ролик
+  `cover-ai-match-ui.mp4`, делить на части автор не хочет; Quack — карусель
+  из четырёх роликов по функциям), Cases (lead-case, process, mind-case,
+  autodraw), затем Experience одним списком, Aleria и Phygital+ — как side
+  projects, награды строкой. Ролики Quack — `tools/case/media/home/`, нарезаны
+  ffmpeg из `notch-duck/reel.mp4` (русские подписи в углу затёрты `delogo`). Первая попытка — копия главной Framer с патчами — отброшена:
   ленту с каруселями патчами Framer не собрать.
 - `/little-museum` — кейс домашнего приложения; опубликован, но с главной
   пока не связан (см. «В работе»).

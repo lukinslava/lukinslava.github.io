@@ -53,40 +53,34 @@
   .feed-head h2 { font-family: "Antonio", sans-serif; font-size: 56px; line-height: 1; letter-spacing: -0.04em; }
   section { padding-bottom: 96px; }
 
-  .project { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; padding: 28px 0 40px; border-top: 1px solid var(--line); }
-  .project:first-of-type { border-top: 0; padding-top: 0; }
-  .p-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px 24px; align-items: end; }
-  .p-head h3 { font-size: 32px; line-height: 1.1; letter-spacing: -0.03em; }
-  .p-head p { grid-column: 1; font-size: 18px; line-height: 1.45; color: var(--body); max-width: 680px; }
-  .p-head .tags { grid-column: 2; grid-row: 1 / span 2; align-self: end; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; max-width: 420px; }
-  .tag { font-size: 13px; line-height: 1; padding: 7px 10px; border-radius: 999px; background: var(--panel); box-shadow: var(--hairline); color: var(--text); white-space: nowrap; }
-  .p-foot { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 40px; }
-  .more { font-size: 15px; color: var(--label); }
+  /* tiles: AI products and cases share one size */
+  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 16px; }
+  .tile { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; }
+  .frame { position: relative; aspect-ratio: 16 / 9; border-radius: 20px; overflow: hidden; background: #e6e6e3; box-shadow: var(--hairline); }
+  .frame img, .frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .frame video { object-position: center top; }
+  .frame .type { position: absolute; inset: 0; display: grid; place-items: center; font-family: "Antonio", sans-serif; font-size: clamp(56px, 8vw, 112px); letter-spacing: -0.03em; }
+  a.tile .frame { transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s; }
+  a.tile:hover .frame { transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 24px 40px -24px rgba(0,0,0,.3); }
+  .t-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+  .tile h3 { font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; }
+  .tile p { font-size: 16px; line-height: 1.4; color: var(--label); margin-top: 4px; }
+  .tile p.meta { font-size: 14px; color: var(--label); opacity: .85; }
+  .more { flex: none; font-size: 15px; color: var(--label); }
   .more:hover { color: var(--accent); }
 
-  /* carousel */
-  .carousel { position: relative; }
-  .track { display: grid; grid-auto-flow: column; grid-auto-columns: min(78%, 900px); gap: 16px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding-bottom: 4px; }
+  /* carousel inside a tile: one clip at a time, label and arrows over the video */
+  .track { position: absolute; inset: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
   .track::-webkit-scrollbar { display: none; }
-  .slide { scroll-snap-align: start; display: grid; gap: 12px; margin: 0; }
-  .frame { position: relative; aspect-ratio: 16 / 9; border-radius: 20px; overflow: hidden; background: #e6e6e3; box-shadow: var(--hairline); }
-  .frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-  .slide figcaption { display: flex; gap: 10px; font-size: 16px; line-height: 1.35; color: var(--text); }
-  .slide figcaption i { font-style: normal; color: var(--label); font-variant-numeric: tabular-nums; }
+  .slide { position: relative; scroll-snap-align: start; }
+  .overlay { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; pointer-events: none; }
+  .overlay > * { pointer-events: auto; }
+  .label { min-width: 0; padding: 7px 12px; border-radius: 999px; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font-size: 13px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .label i { font-style: normal; opacity: .6; margin-right: 6px; font-variant-numeric: tabular-nums; }
   .nav-btns { display: flex; gap: 6px; }
-  .nav-btns button { width: 40px; height: 40px; border: 0; border-radius: 50%; background: var(--panel); box-shadow: var(--hairline); font: inherit; font-size: 18px; color: var(--ink); cursor: pointer; transition: transform .15s ease, opacity .2s; }
-  .nav-btns button:active { transform: scale(.94); }
+  .nav-btns button { width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font: inherit; font-size: 15px; cursor: pointer; transition: transform .15s ease, opacity .2s; }
+  .nav-btns button:active { transform: scale(.92); }
   .nav-btns button:disabled { opacity: .35; cursor: default; }
-
-  /* cases */
-  .cases { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .case { display: grid; gap: 14px; align-content: start; }
-  .case .frame { transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s; }
-  .case:hover .frame { transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 24px 40px -24px rgba(0,0,0,.3); }
-  .case .frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .case .type { position: absolute; inset: 0; display: grid; place-items: center; font-family: "Antonio", sans-serif; font-size: clamp(56px, 8vw, 112px); letter-spacing: -0.03em; }
-  .case h3 { font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; }
-  .case p { font-size: 16px; line-height: 1.4; color: var(--label); margin-top: 4px; }
 
   /* experience */
   .jobs { background: var(--panel); border-radius: 24px; box-shadow: var(--hairline); padding: 8px 28px; }
@@ -99,6 +93,7 @@
   .job a b:hover, a.job:hover b { color: var(--accent); }
   .sub { margin: 28px 0 12px; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--label); }
   .awards { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
+  .tag { font-size: 13px; line-height: 1; padding: 7px 10px; border-radius: 999px; background: var(--panel); box-shadow: var(--hairline); color: var(--text); white-space: nowrap; }
 
   footer { padding: 72px 0 96px; border-top: 1px solid var(--line); }
   footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
@@ -108,11 +103,7 @@
 
   @media (max-width: 900px) {
     .facts { grid-template-columns: 1fr; }
-    .p-head { grid-template-columns: 1fr; }
-    .p-head .tags { grid-column: 1; grid-row: auto; justify-content: flex-start; }
-    .track { grid-auto-columns: 86%; }
-    .nav-btns { display: none; }
-    .cases { grid-template-columns: 1fr; }
+    .tiles { grid-template-columns: minmax(0, 1fr); }
     .job { grid-template-columns: 1fr; gap: 4px; }
     .job time { text-align: left; }
   }
@@ -121,14 +112,13 @@
     nav .me span { display: none; }
     nav .links { gap: 14px; }
     .hero { padding-top: 32px; padding-bottom: 56px; }
+    .hero .hi { font-size: 24px; }
     .hero .lead { font-size: 19px; }
     .feed-head h2, footer h2 { font-size: 44px; }
-    .p-head h3 { font-size: 28px; }
-    .p-head p { font-size: 17px; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .case .frame { transition: none; }
+    a.tile .frame { transition: none; }
   }
 </style>
 </head>
@@ -147,9 +137,9 @@
 
 <header class="hero wrap" id="top">
   <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay aria-hidden="true"></video>
-  <p class="hi">Hey, I'm Slava</p>
-  <h1>design leader</h1>
-  <p class="lead">I build and grow design teams — and design and ship AI products myself.</p>
+  <p class="hi">Design leader &amp; design engineer</p>
+  <h1>Slava Lukin</h1>
+  <p class="lead">I build and grow design teams. I make AI products.</p>
   <div class="facts">
     <div class="fact"><b>Teams of up to 30 designers</b><span>Hiring, growth, processes that make designers stronger</span></div>
     <div class="fact"><b>Design tied to business</b><span>Metrics, product partnership, decisions defended at the C-level</span></div>
@@ -161,59 +151,50 @@
 
   <section id="ai">
     <div class="feed-head"><h2>AI products</h2></div>
-
-    <article class="project">
-      <div class="p-head">
-        <h3>AI Match</h3>
-        <p>Internal tool at Pragmatica: turns a base of 5,000+ designers into a shortlist of 30–60 per role.</p>
-        <div class="tags"><span class="tag">Design lead · product, design and build</span><span class="tag">Live in production · 2026</span></div>
-      </div>
-      <div class="carousel">
-        <div class="track">
-          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-vacancy.mp4" poster="/assets/case/home/aim-vacancy.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>01</i>A vacancy from a call recording</figcaption></figure>
-          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>02</i>AI reads the base: 5,000+ → 30</figcaption></figure>
-          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-pipeline.mp4" poster="/assets/case/home/aim-pipeline.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>03</i>Candidates move through the hiring pipeline</figcaption></figure>
-          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-funnel.mp4" poster="/assets/case/home/aim-funnel.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>04</i>How the funnel narrows</figcaption></figure>
-          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/aim-roast.mp4" poster="/assets/case/home/aim-roast.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>05</i>The Roast — a public portfolio review for designers</figcaption></figure>
+    <div class="tiles">
+      <article class="tile">
+        <div class="frame"><video data-src="/assets/images/cover-ai-match-ui.mp4" poster="/assets/images/cover-ai-match-ui-poster.jpg" muted loop playsinline preload="none"></video></div>
+        <div>
+          <div class="t-head"><h3>AI Match</h3><a class="more" href="/ai-match">Case →</a></div>
+          <p>Internal tool at Pragmatica: 5,000+ designers in the base, a shortlist of 30–60 per role</p>
+          <p class="meta">Product, design and build · live in production, 2026</p>
         </div>
-      </div>
-      <div class="p-foot"><a class="more" href="/ai-match">Full case, with access code →</a></div>
-    </article>
-
-    <article class="project">
-      <div class="p-head">
-        <h3>Quack</h3>
-        <p>A macOS app that lives in the notch: clipboard, screenshots, desktop cleanup — and a duck that tells you when Claude is waiting.</p>
-        <div class="tags"><span class="tag">Side project · design and build</span><span class="tag">Swift + Claude Code</span><span class="tag">Duck drawn by me</span></div>
-      </div>
-      <div class="carousel">
-        <div class="track">
-          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>01</i>Lives in the notch</figcaption></figure>
-          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/quack-panel.mp4" poster="/assets/case/home/quack-panel.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>02</i>Clipboard, screenshots and links on hover</figcaption></figure>
-          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/quack-cleanup.mp4" poster="/assets/case/home/quack-cleanup.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>03</i>Desktop cleanup in one click</figcaption></figure>
-          <figure class="slide"><div class="frame"><video data-src="/assets/case/home/quack-claude.mp4" poster="/assets/case/home/quack-claude.jpg" muted loop playsinline preload="none"></video></div><figcaption><i>04</i>A green dot when Claude is waiting for you</figcaption></figure>
+      </article>
+      <article class="tile">
+        <div class="frame carousel">
+          <div class="track">
+            <div class="slide" data-label="Lives in the notch"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
+            <div class="slide" data-label="Clipboard, screenshots and links"><video data-src="/assets/case/home/quack-panel.mp4" poster="/assets/case/home/quack-panel.jpg" muted loop playsinline preload="none"></video></div>
+            <div class="slide" data-label="Desktop cleanup in one click"><video data-src="/assets/case/home/quack-cleanup.mp4" poster="/assets/case/home/quack-cleanup.jpg" muted loop playsinline preload="none"></video></div>
+            <div class="slide" data-label="A green dot when Claude is waiting"><video data-src="/assets/case/home/quack-claude.mp4" poster="/assets/case/home/quack-claude.jpg" muted loop playsinline preload="none"></video></div>
+          </div>
+          <div class="overlay"><span class="label"></span><div class="nav-btns"><button type="button" aria-label="Previous">←</button><button type="button" aria-label="Next">→</button></div></div>
         </div>
-      </div>
-      <div class="p-foot"><a class="more" href="/quack">More about Quack →</a></div>
-    </article>
+        <div>
+          <div class="t-head"><h3>Quack</h3><a class="more" href="/quack">Case →</a></div>
+          <p>macOS app in the notch, with a duck that tells you when Claude is waiting</p>
+          <p class="meta">Side project · Swift, built with Claude Code</p>
+        </div>
+      </article>
+    </div>
   </section>
 
   <section id="cases">
     <div class="feed-head"><h2>Cases</h2></div>
-    <div class="cases">
-      <a class="case" href="/lead-case">
+    <div class="tiles">
+      <a class="tile" href="/lead-case">
         <div class="frame" style="background:#ffd500"><div class="type">2 → 5</div></div>
         <div><h3>Team restructuring: from 2 to 5 designers</h3><p>Yandex Market, logistics</p></div>
       </a>
-      <a class="case" href="/process">
+      <a class="tile" href="/process">
         <div class="frame"><img src="/assets/images/WkQsAE4zE4Qe1QHpyDU7IT8Ugk.png" alt="" loading="lazy"></div>
         <div><h3>The process that makes designers stronger</h3><p>How designers stopped being just a pair of hands</p></div>
       </a>
-      <a class="case" href="/mind-case">
+      <a class="tile" href="/mind-case">
         <div class="frame" style="background:#00965a;color:#fff"><div class="type">Mindbox</div></div>
         <div><h3>From one-week planning to product thinking</h3><p>Design process at Mindbox</p></div>
       </a>
-      <a class="case" href="/autodraw">
+      <a class="tile" href="/autodraw">
         <div class="frame"><img src="/assets/images/sVWbB4XPldNIvLajuW47KdBU.png" alt="" loading="lazy"></div>
         <div><h3>Autodraw</h3><p>AI shape recognition for the RingCentral whiteboard · ~$700K projected revenue</p></div>
       </a>
@@ -249,7 +230,7 @@
 </footer>
 
 <script>
-// Carousels: each video loads when its slide comes near, plays while mostly visible, pauses otherwise.
+// Videos load when their tile comes near and play while mostly visible; in the Quack carousel only the current clip.
 // With reduced motion nothing autoplays: the poster stays, a click plays or pauses.
 (() => {
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -262,23 +243,25 @@
 
   for (const v of document.querySelectorAll("video[data-src]")) {
     near.observe(v);
-    if (still) v.closest(".frame").addEventListener("click", () => { load(v); v.paused ? v.play() : v.pause(); });
+    if (still) v.parentElement.addEventListener("click", () => { load(v); v.paused ? v.play() : v.pause(); });
     else seen.observe(v);
   }
 
   for (const car of document.querySelectorAll(".carousel")) {
     const track = car.querySelector(".track");
-    const btns = document.createElement("div");
-    btns.className = "nav-btns";
-    btns.innerHTML = '<button type="button" aria-label="Previous">←</button><button type="button" aria-label="Next">→</button>';
-    car.closest(".project").querySelector(".p-foot").append(btns);
-    const [prev, next] = btns.children;
-    const step = () => track.querySelector(".slide").getBoundingClientRect().width + 16;
-    prev.onclick = () => track.scrollBy({ left: -step(), behavior: still ? "auto" : "smooth" });
-    next.onclick = () => track.scrollBy({ left: step(), behavior: still ? "auto" : "smooth" });
+    const slides = [...track.children];
+    const label = car.querySelector(".label");
+    const [prev, next] = car.querySelectorAll(".nav-btns button");
+    const at = () => Math.min(slides.length - 1, Math.round(track.scrollLeft / track.clientWidth) || 0);
+    const go = (i) => track.scrollTo({ left: i * track.clientWidth, behavior: still ? "auto" : "smooth" });
+    prev.onclick = () => go(at() - 1);
+    next.onclick = () => go(at() + 1);
     const sync = () => {
-      prev.disabled = track.scrollLeft < 4;
-      next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4;
+      const i = at();
+      label.innerHTML = `<i>${String(i + 1).padStart(2, "0")}/${String(slides.length).padStart(2, "0")}</i>`;
+      label.append(slides[i].dataset.label);
+      prev.disabled = i === 0;
+      next.disabled = i === slides.length - 1;
     };
     track.addEventListener("scroll", sync, { passive: true });
     addEventListener("resize", sync);
