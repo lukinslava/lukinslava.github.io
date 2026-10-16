@@ -67,7 +67,7 @@ design engineer — как отдельная колонка «AI Experiments & 
   строкой заголовка автор отклонил — «ещё хуже»); под ним две колонки одним стилем (серая подпись +
   текст 22px): «Teams — I build and grow design teams — up to 40 designers»
   (на живой главной ещё 30) и «AI products — Software designer focused on
-  AI-native products, built end-to-end with Claude Code». Оранжевая роль,
+  AI-native products». Оранжевая роль,
   отдельная строка-лид, крупные тезисы и белые карточки в шапке автор
   отклонил: «визуальное месиво, много текстовых стилей». В плитках — только
   заголовок и одна серая строка. Дальше плитки
