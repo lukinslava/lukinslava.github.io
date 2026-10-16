@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1600, height=900" />
+    <title>Mindbox — cover loop</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Antonio"; src: url("assets/fonts/antonio.woff2") format("woff2"); font-weight: 400; }
+
+      :root { --green: #00965a; --white: #ffffff; --dim: #ffffff; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1600px; height: 900px; overflow: hidden; background: var(--green); }
+
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: var(--green); color: var(--white); font-family: "Antonio", sans-serif; }
+
+      /* the wordmark of the static cover, centred; it steps aside for the results */
+      #mark { position: absolute; left: 0; top: 300px; width: 1600px; text-align: center; font-size: 300px; line-height: 1; letter-spacing: -0.02em; white-space: nowrap; transform-origin: 50% 0; }
+
+      /* three results of the case, counted up */
+      .stat { position: absolute; top: 330px; width: 440px; opacity: 0; }
+      .num { font-size: 200px; line-height: 1; letter-spacing: -0.03em; white-space: nowrap; }
+      .lab { margin-top: 14px; font-size: 48px; line-height: 1.1; color: var(--dim); }
+      #plan { position: absolute; left: 130px; top: 790px; font-size: 44px; line-height: 1; color: var(--dim); opacity: 0; white-space: nowrap; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-fps="30" data-width="1600" data-height="900">
+      <section id="stage" class="clip" data-start="0" data-duration="8" data-track-index="0" data-layout-allow-overflow="true">
+        <div id="mark" data-layout-allow-overlap="true">Mindbox</div>
+        <div class="stat" id="st1" style="left: 130px"><div class="num" id="v1">−0%</div><div class="lab">client churn</div></div>
+        <div class="stat" id="st2" style="left: 590px"><div class="num" id="v2">+0</div><div class="lab">points of CSAT</div></div>
+        <div class="stat" id="st3" style="left: 1050px"><div class="num" id="v3">−0%</div><div class="lab">UI and UX support tickets</div></div>
+        <div id="plan">1-week → 3-month planning</div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // counters are seek-safe: the text is derived from a tweened number on every update
+      const counter = (id, to, fmt, at) => {
+        const o = { v: 0 };
+        const el = document.getElementById(id);
+        el.textContent = fmt(0);
+        tl.to(o, { v: to, duration: 1.1, ease: "power3.out", onUpdate: () => (el.textContent = fmt(Math.round(o.v))) }, at);
+      };
+
+      // 1. the wordmark, centred like the static cover, shrinks to the top (transforms only)
+      tl.to("#mark", { y: -230, scale: 0.4, duration: 0.8, ease: "expo.inOut" }, 0.5);
+
+      // 2. the results arrive and count up one after another
+      ["#st1", "#st2", "#st3"].forEach((id, k) => {
+        tl.fromTo(id, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.55, ease: "expo.out" }, 1.25 + k * 0.35);
+      });
+      counter("v1", 8, (n) => `−${n}%`, 1.3);
+      counter("v2", 12, (n) => `+${n}`, 1.65);
+      counter("v3", 20, (n) => `−${n}%`, 2.0);
+      tl.fromTo("#plan", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: "expo.out" }, 2.9);
+
+      // 3. hold, then back to the centred wordmark for a seamless loop
+      tl.to([".stat", "#plan"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 7.2);
+      tl.to("#mark", { y: 0, scale: 1, duration: 0.6, ease: "expo.inOut" }, 7.35);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
