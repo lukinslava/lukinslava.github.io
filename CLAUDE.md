@@ -65,7 +65,8 @@ design engineer — как отдельная колонка «AI Experiments & 
   как на текущей главной»): белая панель навигации 64px — логотип 24px,
   «tg-channel», «CV» (Helvetica Neue 16px), «Connect» (Antonio 16px, оранжевый,
   радиус 8); по центру кружок-видео 200px, оранжевое «Hey, I'm Slava» Antonio
-  64px, «design leader» Antonio 116px. Прежние варианты — роль мелко над
+  52px, «design leader» Antonio 96px (на живой главной 64 и 116 — автор
+  попросил чуть мельче), текст колонок 19px. Прежние варианты — роль мелко над
   именем, роль второй оранжевой строкой, всё по левому краю — отклонены;
   под ним две колонки одним стилем (серая подпись +
   текст 22px): «Teams — I build and grow design teams — up to 40 designers»
