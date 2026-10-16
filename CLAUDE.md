@@ -62,9 +62,10 @@ design engineer — как отдельная колонка «AI Experiments & 
 - `/ai-match` — кейс под паролем, собственная вёрстка;
 - `/home-next` — черновик новой главной (`tools/case/home-next.html`,
   `noindex`, никуда не связан): своя вёрстка вне Framer. Шапка: оранжевая
-  роль «Design leader», крупно «Hey, I'm Slava», под ним «Software designer
-  focused on AI-native products» и строка «I build and grow design teams.
-  I make AI products.», затем три коротких тезиса. Дальше плитки
+  роль «Design leader», крупно «Hey, I'm Slava», строка «I build and grow
+  design teams. I make AI products.», затем три карточки: команды до 40
+  дизайнеров (число обновилось — на живой главной ещё 30), «Software
+  designer focused on AI-native products», дизайн-процессы. Дальше плитки
   одного размера по две в ряд: AI products (AI Match — один ролик
   `cover-ai-match-ui.mp4`, делить на части автор не хочет; Quack — карусель
   из четырёх роликов по функциям), Cases (lead-case, process, mind-case,
