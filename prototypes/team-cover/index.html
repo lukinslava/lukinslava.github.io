@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1600, height=900" />
+    <title>Team restructuring — cover loop</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Antonio"; src: url("assets/fonts/antonio.woff2") format("woff2"); font-weight: 400; }
+
+      :root { --yellow: #ffd500; --ink: #111110; --soft: rgba(17, 17, 16, 0.6); }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1600px; height: 900px; overflow: hidden; background: var(--yellow); }
+
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+      #stage { position: absolute; inset: 0; overflow: hidden; background: var(--yellow); color: var(--ink); font-family: "Antonio", sans-serif; }
+
+      /* "2 → 5", the same lockup as the static cover; the 2 starts centred */
+      .big { position: absolute; top: 56px; font-size: 240px; line-height: 1; letter-spacing: -0.02em; translate: -50% 0; }
+      #n2 { left: 800px; }
+      #arrow { left: 800px; opacity: 0; }
+      #n5 { left: 990px; opacity: 0; }
+
+      /* designers (head + shoulders) and the tasks stacked on them */
+      .person { position: absolute; top: 710px; width: 76px; margin-left: -38px; }
+      .head { width: 40px; height: 40px; margin: 0 auto 6px; border-radius: 50%; background: var(--ink); }
+      .body { width: 76px; height: 44px; border-radius: 38px 38px 8px 8px; background: var(--ink); }
+      .chip { position: absolute; width: 76px; height: 18px; border-radius: 5px; background: var(--ink); opacity: 0; }
+      #cap { position: absolute; left: 480px; top: 580px; width: 640px; border-top: 3px dashed var(--soft); }
+      #capLabel { position: absolute; left: 1136px; top: 562px; font-size: 32px; color: var(--soft); }
+
+      /* planning horizon, bottom-left like a caption */
+      #plan { position: absolute; left: 72px; top: 800px; height: 56px; width: 600px; overflow: hidden; }
+      .plan { position: absolute; left: 0; top: 0; font-size: 44px; line-height: 56px; white-space: nowrap; }
+      #planB { opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="8" data-fps="30" data-width="1600" data-height="900">
+      <section id="stage" class="clip" data-start="0" data-duration="8" data-track-index="0" data-layout-allow-overflow="true">
+        <div class="big" id="n2">2</div>
+        <div class="big" id="arrow">→</div>
+        <div class="big" id="n5">5</div>
+
+        <div id="cap"></div>
+        <div id="capLabel">capacity</div>
+        <div id="chips" data-layout-allow-overlap="true"></div>
+
+        <!-- people sit at their final slots; the first two start shifted right, next to each other -->
+        <div class="person" id="p1" style="left: 560px"><div class="head"></div><div class="body"></div></div>
+        <div class="person" id="p2" style="left: 680px"><div class="head"></div><div class="body"></div></div>
+        <div class="person" id="p3" style="left: 800px; opacity: 0"><div class="head"></div><div class="body"></div></div>
+        <div class="person" id="p4" style="left: 920px; opacity: 0"><div class="head"></div><div class="body"></div></div>
+        <div class="person" id="p5" style="left: 1040px; opacity: 0"><div class="head"></div><div class="body"></div></div>
+
+        <div id="plan" data-layout-allow-overlap="true">
+          <div class="plan" id="planA" data-layout-allow-overlap="true">1-week planning</div>
+          <div class="plan" id="planB" data-layout-allow-overlap="true">3-month planning</div>
+        </div>
+      </section>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      const SLOTS = [560, 680, 800, 920, 1040];
+      const START = [740, 860];            // where the first two people stand before the team grows
+      const SHIFT = START[0] - SLOTS[0];   // 180
+      const chipTop = (level) => 682 - level * 24;
+
+      // 20 tasks: placed at their final spot (4 per person), offset by transform to the two overloaded stacks
+      const chips = [];
+      for (let c = 0; c < 20; c++) {
+        const person = Math.floor(c / 4), level = c % 4;
+        const s = c % 2, startLevel = Math.floor(c / 2);
+        const el = document.createElement("div");
+        el.className = "chip";
+        el.style.left = SLOTS[person] - 38 + "px";
+        el.style.top = chipTop(level) + "px";
+        document.getElementById("chips").append(el);
+        chips.push({ el, dx: START[s] - SLOTS[person], dy: chipTop(startLevel) - chipTop(level), startLevel });
+      }
+      const byStartLevel = [...chips].sort((a, b) => a.startLevel - b.startLevel);
+
+      // 0. opening frame: two people side by side, no tasks yet
+      tl.set(["#p1", "#p2"], { x: SHIFT }, 0);
+      chips.forEach(({ el, dx, dy }) => tl.set(el, { x: dx, y: dy, opacity: 0 }, 0));
+
+      // 1. tasks pile onto two designers, far past capacity
+      byStartLevel.forEach(({ el, dy }, i) => {
+        tl.fromTo(el, { y: dy - 70, opacity: 0 }, { y: dy, opacity: 1, duration: 0.35, ease: "power2.out" }, 0.2 + i * 0.06);
+      });
+
+      // 2. the lockup: 2 moves left, the arrow and the 5 arrive
+      tl.to("#n2", { x: -190, duration: 0.6, ease: "expo.inOut" }, 1.9);
+      tl.fromTo("#arrow", { opacity: 0, x: -50 }, { opacity: 1, x: 0, duration: 0.5, ease: "expo.out" }, 2.2);
+      tl.fromTo("#n5", { opacity: 0, yPercent: 30 }, { opacity: 1, yPercent: 0, duration: 0.6, ease: "back.out(2)" }, 2.4);
+
+      // 3. five designers, one per product area; the tasks spread evenly under capacity
+      tl.to(["#p1", "#p2"], { x: 0, duration: 0.7, ease: "power3.inOut" }, 2.6);
+      [["#p3", -120 + SHIFT], ["#p4", -240 + SHIFT], ["#p5", -360 + SHIFT]].forEach(([id, from], k) => {
+        tl.fromTo(id, { opacity: 0, scale: 0.5, x: from }, { opacity: 1, scale: 1, x: 0, duration: 0.7, ease: "back.out(1.6)" }, 2.7 + k * 0.08);
+      });
+      [...chips].reverse().forEach(({ el }, i) => {
+        tl.to(el, { x: 0, y: 0, duration: 0.75, ease: "power3.inOut" }, 2.85 + i * 0.025);
+      });
+
+      // 4. the planning horizon stretches from a week to three months
+      tl.to("#planA", { yPercent: -110, opacity: 0, duration: 0.3, ease: "power2.in" }, 3.9);
+      tl.fromTo("#planB", { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.55, ease: "expo.out" }, 4.05);
+
+      // 5. hold, then fold back to the opening frame so the loop is seamless
+      tl.to(chips.map((c) => c.el), { opacity: 0, duration: 0.4, ease: "power2.in" }, 7.3);
+      tl.to(["#arrow", "#n5", "#planB", "#p3", "#p4", "#p5"], { opacity: 0, duration: 0.4, ease: "power2.in" }, 7.3);
+      tl.to("#n2", { x: 0, duration: 0.6, ease: "expo.inOut" }, 7.35);
+      tl.to(["#p1", "#p2"], { x: SHIFT, duration: 0.6, ease: "power3.inOut" }, 7.35);
+      tl.to("#planA", { yPercent: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 7.55);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
