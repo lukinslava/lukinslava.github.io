@@ -40,13 +40,12 @@
   /* hero */
   .hero { padding-top: 56px; padding-bottom: 72px; }
   .hero .avatar { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; margin-bottom: 20px; background: #e6e6e3; }
-  .hero .hi { font-family: "Antonio", sans-serif; font-size: 32px; color: var(--accent); letter-spacing: -0.02em; }
-  .hero h1 { font-family: "Antonio", sans-serif; font-size: clamp(64px, 11vw, 144px); line-height: .92; letter-spacing: -0.045em; margin-top: 6px; }
-  .hero .lead { margin-top: 24px; max-width: 640px; font-size: 22px; line-height: 1.4; color: var(--text); }
-  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; margin-top: 48px; max-width: 920px; }
-  .fact { display: grid; gap: 10px; align-content: start; padding-top: 20px; border-top: 1px solid var(--ink); }
-  .fact b { font-family: "Antonio", sans-serif; font-weight: 400; font-size: 56px; line-height: 1; letter-spacing: -0.04em; color: var(--ink); }
-  .fact span { font-size: 18px; line-height: 1.4; color: var(--body); }
+  /* one accent (the name in Antonio); everything else is body text or a quiet label */
+  .hero h1 { font-family: "Antonio", sans-serif; font-size: clamp(64px, 11vw, 144px); line-height: 1; letter-spacing: -0.045em; }
+  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; margin-top: 40px; max-width: 920px; }
+  .fact { display: grid; gap: 8px; align-content: start; padding-top: 16px; border-top: 1px solid var(--line); }
+  .fact b { font-weight: 400; font-size: 15px; line-height: 1.3; color: var(--label); }
+  .fact span { font-size: 22px; line-height: 1.4; color: var(--ink); letter-spacing: -0.01em; }
 
   /* feed */
   .feed-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
@@ -65,7 +64,6 @@
   .t-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
   .tile h3 { font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; }
   .tile p { font-size: 16px; line-height: 1.4; color: var(--label); margin-top: 4px; }
-  .tile p.meta { font-size: 14px; color: var(--label); opacity: .85; }
   .more { flex: none; font-size: 15px; color: var(--label); }
   .more:hover { color: var(--accent); }
 
@@ -113,9 +111,7 @@
     nav .me span { display: none; }
     nav .links { gap: 14px; }
     .hero { padding-top: 32px; padding-bottom: 56px; }
-    .hero .hi { font-size: 24px; }
-    .hero .lead { font-size: 19px; }
-    .fact b { font-size: 44px; }
+    .fact span { font-size: 19px; }
     .feed-head h2, footer h2 { font-size: 44px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -139,12 +135,10 @@
 
 <header class="hero wrap" id="top">
   <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay aria-hidden="true"></video>
-  <p class="hi">Design leader</p>
   <h1>Hey, I'm Slava</h1>
-  <p class="lead">I build and grow design teams. I make AI products.</p>
   <div class="facts">
-    <div class="fact"><b>Up to 40</b><span>designers in the teams I've built and led</span></div>
-    <div class="fact"><b>AI-native</b><span>Software designer focused on AI-native products, built end-to-end with Claude Code</span></div>
+    <div class="fact"><b>Design leader</b><span>I build and grow design teams — up to 40 designers</span></div>
+    <div class="fact"><b>Software designer</b><span>I make AI-native products end-to-end, with Claude Code</span></div>
   </div>
 </header>
 
@@ -157,8 +151,7 @@
         <div class="frame"><video data-src="/assets/images/cover-ai-match-ui.mp4" poster="/assets/images/cover-ai-match-ui-poster.jpg" muted loop playsinline preload="none"></video></div>
         <div>
           <div class="t-head"><h3>AI Match</h3><a class="more" href="/ai-match">Case →</a></div>
-          <p>Internal tool at Pragmatica: 5,000+ designers in the base, a shortlist of 30–60 per role</p>
-          <p class="meta">Product, design and build · live in production, 2026</p>
+          <p>Internal tool at Pragmatica: 5,000+ designers → a shortlist of 30–60 per role. Live in production</p>
         </div>
       </article>
       <article class="tile">
@@ -173,8 +166,7 @@
         </div>
         <div>
           <div class="t-head"><h3>Quack</h3><a class="more" href="/quack">Case →</a></div>
-          <p>macOS app in the notch, with a duck that tells you when Claude is waiting</p>
-          <p class="meta">Side project · Swift, built with Claude Code</p>
+          <p>Side project: a macOS app in the notch, built with Claude Code</p>
         </div>
       </article>
     </div>
