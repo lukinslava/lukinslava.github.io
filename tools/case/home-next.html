@@ -68,18 +68,20 @@
   .tile p { font-size: 16px; line-height: 1.4; color: var(--label); margin-top: 4px; }
   .tile h3 a { color: inherit; }
 
-  /* carousel inside a tile: one clip at a time, label and arrows over the video */
-  .track { position: absolute; inset: 0; display: grid; grid-auto-flow: column; grid-auto-columns: 100%; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
-  .track::-webkit-scrollbar { display: none; }
-  .slide { position: relative; scroll-snap-align: start; }
-  .overlay { position: absolute; left: 12px; right: 12px; bottom: 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px; pointer-events: none; }
-  .overlay > * { pointer-events: auto; }
-  .label { min-width: 0; padding: 7px 12px; border-radius: 999px; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font-size: 13px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* Quack: a deck of clips; a click sends the top card to the back and the next clip plays */
+  .deck { position: relative; aspect-ratio: 16 / 9; margin-top: 42px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .card { position: absolute; inset: 0; border-radius: 20px; overflow: hidden; background: #e6e6e3; transform-origin: 50% 0;
+          box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 18px 32px -20px rgba(0,0,0,.35);
+          transition: transform .5s cubic-bezier(.2,.75,.2,1), opacity .4s ease, filter .5s ease; }
+  .card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .card[data-pos="0"] { z-index: 4; transform: none; }
+  .card[data-pos="1"] { z-index: 3; transform: translateY(-14px) scale(.95); filter: brightness(.95); }
+  .card[data-pos="2"] { z-index: 2; transform: translateY(-28px) scale(.9); filter: brightness(.9); }
+  .card[data-pos="3"] { z-index: 1; transform: translateY(-42px) scale(.85); filter: brightness(.85); }
+  .card.out { z-index: 5; transform: translateY(14%) rotate(-3deg); opacity: 0; }
+  .deck:hover .card[data-pos="0"]:not(.out) { transform: translateY(-3px); }
+  .label { position: absolute; left: 12px; bottom: 12px; z-index: 6; max-width: calc(100% - 24px); padding: 7px 12px; border-radius: 999px; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font-size: 13px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
   .label i { font-style: normal; opacity: .6; margin-right: 6px; font-variant-numeric: tabular-nums; }
-  .nav-btns { display: flex; gap: 6px; }
-  .nav-btns button { width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font: inherit; font-size: 15px; cursor: pointer; transition: transform .15s ease, opacity .2s; }
-  .nav-btns button:active { transform: scale(.92); }
-  .nav-btns button:disabled { opacity: .35; cursor: default; }
 
   /* experience */
   .jobs { background: var(--panel); border-radius: 24px; box-shadow: var(--hairline); padding: 8px 28px; }
@@ -119,7 +121,7 @@
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .tile .frame { transition: none; }
+    .tile .frame, .card { transition: none; }
   }
 </style>
 </head>
@@ -158,18 +160,16 @@
           <p>Internal tool at Pragmatica: 5,000+ designers → a shortlist of 30–60 per role. Live in production</p>
         </div>
       </article>
-      <article class="tile" data-href="/quack">
-        <div class="frame carousel">
-          <div class="track">
-            <div class="slide" data-label="Lives in the notch"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
-            <div class="slide" data-label="Clipboard, screenshots and links"><video data-src="/assets/case/home/quack-panel.mp4" poster="/assets/case/home/quack-panel.jpg" muted loop playsinline preload="none"></video></div>
-            <div class="slide" data-label="Desktop cleanup in one click"><video data-src="/assets/case/home/quack-cleanup.mp4" poster="/assets/case/home/quack-cleanup.jpg" muted loop playsinline preload="none"></video></div>
-            <div class="slide" data-label="A green dot when Claude is waiting"><video data-src="/assets/case/home/quack-claude.mp4" poster="/assets/case/home/quack-claude.jpg" muted loop playsinline preload="none"></video></div>
-          </div>
-          <div class="overlay"><span class="label"></span><div class="nav-btns"><button type="button" aria-label="Previous">←</button><button type="button" aria-label="Next">→</button></div></div>
+      <article class="tile">
+        <div class="deck" role="button" tabindex="0" aria-label="Next Quack feature">
+          <div class="card" data-pos="0" data-label="Lives in the notch"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="card" data-pos="1" data-label="Clipboard, screenshots and links"><video data-src="/assets/case/home/quack-panel.mp4" poster="/assets/case/home/quack-panel.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="card" data-pos="2" data-label="Desktop cleanup in one click"><video data-src="/assets/case/home/quack-cleanup.mp4" poster="/assets/case/home/quack-cleanup.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="card" data-pos="3" data-label="A green dot when Claude is waiting"><video data-src="/assets/case/home/quack-claude.mp4" poster="/assets/case/home/quack-claude.jpg" muted loop playsinline preload="none"></video></div>
+          <span class="label"></span>
         </div>
         <div>
-          <div class="t-head"><h3><a href="/quack">Quack</a></h3></div>
+          <h3>Quack</h3>
           <p>Side project: a macOS app in the notch, built with Claude Code</p>
         </div>
       </article>
@@ -241,37 +241,47 @@
 
   for (const v of document.querySelectorAll("video[data-src]")) {
     near.observe(v);
+    if (v.closest(".deck")) continue; // the deck plays only its top card, below
     if (still) v.parentElement.addEventListener("click", () => { load(v); v.paused ? v.play() : v.pause(); });
     else seen.observe(v);
   }
 
-  // AI product tiles open their case on a click anywhere but the carousel arrows
-  // (they hold buttons, so they can't be one <a>); with reduced motion a click on the video plays it instead
+  // AI product tiles with a case page open it on a click anywhere; with reduced motion a click on the video plays it
   for (const tile of document.querySelectorAll(".tile[data-href]")) {
     tile.addEventListener("click", (e) => {
-      if (e.target.closest("button, a") || (still && e.target.closest(".frame"))) return;
+      if (e.target.closest("a") || (still && e.target.closest(".frame"))) return;
       location.href = tile.dataset.href;
     });
   }
 
-  for (const car of document.querySelectorAll(".carousel")) {
-    const track = car.querySelector(".track");
-    const slides = [...track.children];
-    const label = car.querySelector(".label");
-    const [prev, next] = car.querySelectorAll(".nav-btns button");
-    const at = () => Math.min(slides.length - 1, Math.round(track.scrollLeft / track.clientWidth) || 0);
-    const go = (i) => track.scrollTo({ left: i * track.clientWidth, behavior: still ? "auto" : "smooth" });
-    prev.onclick = () => go(at() - 1);
-    next.onclick = () => go(at() + 1);
+  // the Quack deck: a click (or Enter / Space) sends the top card to the back; only the top clip plays
+  for (const deck of document.querySelectorAll(".deck")) {
+    const cards = [...deck.querySelectorAll(".card")];
+    const label = deck.querySelector(".label");
+    const n = cards.length;
+    let onScreen = false, busy = false;
+    const top = () => cards.find((c) => c.dataset.pos === "0");
     const sync = () => {
-      const i = at();
-      label.innerHTML = `<i>${String(i + 1).padStart(2, "0")}/${String(slides.length).padStart(2, "0")}</i>`;
-      label.append(slides[i].dataset.label);
-      prev.disabled = i === 0;
-      next.disabled = i === slides.length - 1;
+      const t = top();
+      label.innerHTML = `<i>${String(cards.indexOf(t) + 1).padStart(2, "0")}/${String(n).padStart(2, "0")}</i>`;
+      label.append(t.dataset.label);
+      for (const c of cards) {
+        const v = c.querySelector("video");
+        if (c === t && onScreen && !still) { load(v); v.play().catch(() => {}); } else v.pause();
+      }
     };
-    track.addEventListener("scroll", sync, { passive: true });
-    addEventListener("resize", sync);
+    const next = () => {
+      if (busy) return;
+      const t = top();
+      const shift = () => { for (const c of cards) c.dataset.pos = String((+c.dataset.pos - 1 + n) % n); sync(); };
+      if (still) { shift(); return; }
+      busy = true;
+      t.classList.add("out");
+      setTimeout(() => { shift(); t.classList.remove("out"); busy = false; }, 280);
+    };
+    deck.addEventListener("click", next);
+    deck.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); next(); } });
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; sync(); }, { threshold: 0.5 }).observe(deck);
     sync();
   }
 })();
