@@ -26,24 +26,23 @@
   .antonio { font-family: "Antonio", sans-serif; letter-spacing: -0.03em; }
   .quiet { color: var(--label); }
 
-  /* nav */
-  nav { position: sticky; top: 0; z-index: 10; background: rgba(245,245,245,.86); backdrop-filter: blur(10px); }
-  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
-  nav .me { display: flex; align-items: center; gap: 10px; font-size: 15px; }
-  nav .me img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
-  nav .links { display: flex; align-items: center; gap: 22px; font-size: 15px; }
+  /* nav, as on the live homepage */
+  nav { position: sticky; top: 0; z-index: 10; background: #fff; }
+  nav .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 32px; }
+  nav .me img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
+  nav .links { display: flex; align-items: center; gap: 20px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 16px; letter-spacing: -0.01em; }
   nav .links a:not(.btn):hover { color: var(--accent); }
-  .btn { display: inline-flex; align-items: center; height: 36px; padding: 0 16px; border-radius: 10px; background: var(--accent); color: #fff; font-size: 15px; transition: transform .15s ease, filter .15s ease; }
+  .btn { display: inline-flex; align-items: center; padding: 8px; border-radius: 8px; background: var(--accent); color: #fff; font-family: "Antonio", sans-serif; font-size: 16px; line-height: 1.2; letter-spacing: 0; transition: transform .15s ease, filter .15s ease; }
   .btn:hover { filter: brightness(1.06); }
   .btn:active { transform: scale(.97); }
 
   /* hero */
-  .hero { padding-top: 64px; padding-bottom: 88px; display: grid; justify-items: center; text-align: center; }
-  .hero .avatar { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; margin-bottom: 24px; background: #e6e6e3; }
+  .hero { padding-top: 126px; padding-bottom: 88px; display: grid; justify-items: center; text-align: center; }
+  .hero .avatar { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; margin-bottom: 16px; background: #e6e6e3; }
   /* one accent (the name in Antonio); everything else is body text or a quiet label */
-  .hero .hi { font-family: "Antonio", sans-serif; font-size: 32px; color: var(--accent); letter-spacing: -0.02em; }
-  .hero h1 { font-family: "Antonio", sans-serif; font-size: clamp(64px, 11vw, 144px); line-height: 1; letter-spacing: -0.045em; margin-top: 6px; }
-  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; margin-top: 40px; width: 100%; max-width: 860px; }
+  .hero .hi { font-family: "Antonio", sans-serif; font-size: 64px; line-height: 1.2; color: var(--accent); letter-spacing: -0.04em; }
+  .hero h1 { font-family: "Antonio", sans-serif; font-size: clamp(72px, 8vw, 116px); line-height: .9; letter-spacing: -0.04em; }
+  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; margin-top: 56px; width: 100%; max-width: 860px; }
   .fact { display: grid; gap: 8px; align-content: start; padding-top: 16px; border-top: 1px solid var(--line); }
   .fact b { font-weight: 400; font-size: 15px; line-height: 1.3; color: var(--label); }
   .fact span { font-size: 22px; line-height: 1.4; color: var(--ink); letter-spacing: -0.01em; }
@@ -109,11 +108,11 @@
   }
   @media (max-width: 560px) {
     :root { --gutter: 16px; }
-    nav .me span { display: none; }
+    nav .bar { padding: 0 16px; }
     nav .links { gap: 14px; }
-    .hero { padding-top: 32px; padding-bottom: 56px; }
-    .hero .hi { font-size: 24px; }
-    .hero .avatar { width: 120px; height: 120px; }
+    .hero { padding-top: 48px; padding-bottom: 56px; }
+    .hero .hi { font-size: 40px; }
+    .hero .avatar { width: 140px; height: 140px; }
     .fact span { font-size: 19px; }
     .feed-head h2, footer h2 { font-size: 44px; }
   }
@@ -126,10 +125,10 @@
 <body>
 
 <nav>
-  <div class="wrap">
-    <a class="me" href="#top"><img src="/assets/images/FiP6oEtyN03kkZ008gtP2OjQz7A.jpg" alt=""><span>Slava Lukin</span></a>
+  <div class="bar">
+    <a class="me" href="#top" aria-label="Slava Lukin"><img src="/assets/images/FiP6oEtyN03kkZ008gtP2OjQz7A.jpg" alt=""></a>
     <div class="links">
-      <a href="https://t.me/slavanotes">Channel</a>
+      <a href="https://t.me/slavanotes">tg-channel</a>
       <a href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>
       <a class="btn" href="https://t.me/lukinslava">Connect</a>
     </div>
@@ -138,8 +137,8 @@
 
 <header class="hero wrap" id="top">
   <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay aria-hidden="true"></video>
-  <p class="hi">Design leader</p>
-  <h1>Hey, I'm Slava</h1>
+  <p class="hi">Hey, I'm Slava</p>
+  <h1>design leader</h1>
   <div class="facts">
     <div class="fact"><b>Teams</b><span>I build and grow design teams — up to 40 designers</span></div>
     <div class="fact"><b>AI products</b><span>Software designer focused on AI-native products</span></div>
