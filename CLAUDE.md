@@ -91,8 +91,9 @@ design engineer — как отдельная колонка «AI Experiments & 
   веер — пробовали, автор выбрал эту); клик по колоде уводит верхнюю назад и
   включает следующий ролик, стрелок нет — по образцу card-deck-carousel с
   21st.dev; Call planner — веб-приложение «When do we meet?»
-  (mplan-tau.vercel.app), только видео `tools/case/media/home/mplan.mp4` из
-  записи автора, без перехода; роль и как сделано — спросить автора), Cases (lead-case — видео-обложка `team-cover.mp4`:
+  (mplan-tau.vercel.app), видео `tools/case/media/home/mplan.mp4` из записи
+  автора; клик по карточке открывает живое приложение в новой вкладке; роль и как
+  сделано — спросить автора), Cases (lead-case — видео-обложка `team-cover.mp4`:
   двое под стопками задач выше линии capacity → пятеро с ровной нагрузкой,
   «1-week → 3-month planning», проект `prototypes/team-cover/`; process —
   «an executor» зачёркивается в «the author», точка проходит Brief → Research →
@@ -236,7 +237,8 @@ Framer — только полным адресом (`https://lukinslava.github.
 - **Новая главная** (`/home-next`) — замечания автора: меньше текста, только
   то, что продаёт (лид, AI, опыт); упор на интерфейсы и видео; лента работ.
   Переход в кейс — кликом по всей карточке (кнопки «Case →» автор убрал;
-  у AI Match это `data-href` + JS; у Quack перехода нет).
+  у AI Match и Call planner это `data-href` + JS, внешние адреса — в новой
+  вкладке; у Quack перехода нет).
   Открыто: интерфейс
   AI Match в роликах на русском.
 
