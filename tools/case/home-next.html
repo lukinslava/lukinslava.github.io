@@ -179,10 +179,10 @@
           <p>Side project: a macOS app in the notch, built with Claude Code</p>
         </div>
       </article>
-      <article class="tile">
+      <article class="tile" data-href="https://mplan-tau.vercel.app/">
         <div class="frame" style="background:#f3f5f9"><video data-src="/assets/case/home/mplan.mp4" poster="/assets/case/home/mplan.jpg" muted loop playsinline preload="none"></video></div>
         <div>
-          <h3>Call planner</h3>
+          <h3><a href="https://mplan-tau.vercel.app/" target="_blank" rel="noopener">Call planner ↗</a></h3>
           <p>A link instead of a long chat: everyone paints the hours that suit them, and the best slots come out on top</p>
         </div>
       </article>
@@ -263,7 +263,9 @@
   for (const tile of document.querySelectorAll(".tile[data-href]")) {
     tile.addEventListener("click", (e) => {
       if (e.target.closest("a") || (still && e.target.closest(".frame"))) return;
-      location.href = tile.dataset.href;
+      const href = tile.dataset.href;
+      // other sites (a live app) open in a new tab, so the portfolio stays where it was
+      if (/^https?:/.test(href)) window.open(href, "_blank", "noopener"); else location.href = href;
     });
   }
 
