@@ -69,18 +69,22 @@
   .tile h3 a { color: inherit; }
 
   /* Quack: a deck of clips; a click sends the top card to the back and the next clip plays */
-  .deck { position: relative; aspect-ratio: 16 / 9; margin-top: 48px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .deck { position: relative; aspect-ratio: 16 / 9; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .card { position: absolute; inset: 0; border-radius: 20px; overflow: hidden; background: #e6e6e3; transform-origin: 50% 50%;
           box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 18px 32px -20px rgba(0,0,0,.35);
           transition: transform .5s cubic-bezier(.2,.75,.2,1), opacity .4s ease, filter .5s ease; }
   .card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .card[data-pos="0"] { z-index: 4; transform: none; }
-  /* the cards behind lie askew, like a loose deck: one shows its left corner, the next its right */
-  .card[data-pos="1"] { z-index: 3; transform: translate(-10px, -22px) rotate(-3deg) scale(.97); filter: brightness(.96); }
-  .card[data-pos="2"] { z-index: 2; transform: translate(12px, -30px) rotate(3.5deg) scale(.95); filter: brightness(.92); }
-  .card[data-pos="3"] { z-index: 1; transform: translate(-4px, -36px) rotate(-1.5deg) scale(.93); filter: brightness(.88); }
-  .card.out { z-index: 5; transform: translateY(14%) rotate(-3deg); opacity: 0; }
-  .deck:hover .card[data-pos="0"]:not(.out) { transform: translateY(-3px); }
+  /* a straight stack of pages, like "By criteria" in the AI Match review: the cards behind show only as thin
+     edges on the right, each a little shorter and darker */
+  .card[data-pos="1"] { z-index: 3; transform: translateX(7px) scaleY(.965); filter: brightness(.9); }
+  .card[data-pos="2"] { z-index: 2; transform: translateX(14px) scaleY(.93); filter: brightness(.8); }
+  .card[data-pos="3"] { z-index: 1; transform: translateX(21px) scaleY(.895); filter: brightness(.7); }
+  .card.out { z-index: 5; transform: translateX(-10%); opacity: 0; }
+  .deck:hover .card[data-pos="0"]:not(.out) { transform: translateX(-3px); }
+  .dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
+  .dots i { width: 6px; height: 6px; border-radius: 3px; background: #cfcdc7; transition: width .3s ease, background-color .3s ease; }
+  .dots i.on { width: 18px; background: var(--accent); }
   .label { position: absolute; left: 12px; bottom: 12px; z-index: 6; max-width: calc(100% - 24px); padding: 7px 12px; border-radius: 999px; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font-size: 13px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
   .label i { font-style: normal; opacity: .6; margin-right: 6px; font-variant-numeric: tabular-nums; }
 
@@ -169,6 +173,7 @@
           <div class="card" data-pos="3" data-label="A green dot when Claude is waiting"><video data-src="/assets/case/home/quack-claude.mp4" poster="/assets/case/home/quack-claude.jpg" muted loop playsinline preload="none"></video></div>
           <span class="label"></span>
         </div>
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <div>
           <h3>Quack</h3>
           <p>Side project: a macOS app in the notch, built with Claude Code</p>
@@ -266,6 +271,7 @@
   for (const deck of document.querySelectorAll(".deck")) {
     const cards = [...deck.querySelectorAll(".card")];
     const label = deck.querySelector(".label");
+    const dots = [...deck.parentElement.querySelectorAll(".dots i")];
     const n = cards.length;
     let onScreen = false, busy = false;
     const top = () => cards.find((c) => c.dataset.pos === "0");
@@ -273,6 +279,7 @@
       const t = top();
       label.innerHTML = `<i>${String(cards.indexOf(t) + 1).padStart(2, "0")}/${String(n).padStart(2, "0")}</i>`;
       label.append(t.dataset.label);
+      dots.forEach((d, i) => d.classList.toggle("on", i === cards.indexOf(t)));
       for (const c of cards) {
         const v = c.querySelector("video");
         if (c === t && onScreen && !still) { load(v); v.play().catch(() => {}); } else v.pause();
