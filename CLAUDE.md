@@ -88,7 +88,9 @@ design engineer — как отдельная колонка «AI Experiments & 
   функциям, лежащих друг на друге вразброс (задние повёрнуты то влево, то
   вправо, видны углы — ровная стопка вверх автору не понравилась); клик по колоде уводит верхнюю назад и
   включает следующий ролик, стрелок нет — по образцу card-deck-carousel с
-  21st.dev), Cases (lead-case — видео-обложка `team-cover.mp4`:
+  21st.dev; Call planner — веб-приложение «When do we meet?»
+  (mplan-tau.vercel.app), только видео `tools/case/media/home/mplan.mp4` из
+  записи автора, без перехода; роль и как сделано — спросить автора), Cases (lead-case — видео-обложка `team-cover.mp4`:
   двое под стопками задач выше линии capacity → пятеро с ровной нагрузкой,
   «1-week → 3-month planning», проект `prototypes/team-cover/`; process —
   «an executor» зачёркивается в «the author», точка проходит Brief → Research →
