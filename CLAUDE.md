@@ -63,10 +63,10 @@ design engineer — как отдельная колонка «AI Experiments & 
 - `/home-next` — черновик новой главной (`tools/case/home-next.html`,
   `noindex`, никуда не связан): своя вёрстка вне Framer. Шапка повторяет живую главную (просьба автора «повтори шапку
   как на текущей главной»): белая панель навигации 64px — логотип 24px,
-  «tg-channel», «CV» (IBM Plex Mono 16px), «Connect» (Antonio 16px, оранжевый,
+  «tg-channel», «CV» (Helvetica Neue 16px), «Connect» (Antonio 16px, оранжевый,
   радиус 8); по центру кружок-видео 200px, оранжевое «design leader» Antonio
   52px, под ним «Hey, I'm Slava» Antonio 96px (на живой главной наоборот и
-  крупнее, 64 и 116 — автор попросил чуть мельче и поменять строки местами), текст колонок 19px. Весь текст, кроме заголовков Antonio, — IBM Plex Mono 400 (`tools/case/media/fonts/`, из @fontsource, OFL); Inter и Helvetica автор заменил на него. Прежние варианты — роль мелко над
+  крупнее, 64 и 116 — автор попросил чуть мельче и поменять строки местами), текст колонок 19px. Прежние варианты — роль мелко над
   именем, роль второй оранжевой строкой, всё по левому краю — отклонены;
   под ним две колонки текстом 19px без подписей и линий (серые
   «Teams» / «AI products» и полоски над колонками автор убрал как лишние): «I build and grow design
@@ -93,7 +93,7 @@ design engineer — как отдельная колонка «AI Experiments & 
   21st.dev; Call planner — веб-приложение «When do we meet?»
   (mplan-tau.vercel.app), видео `tools/case/media/home/mplan.mp4` из записи
   автора; клик по карточке открывает живое приложение в новой вкладке; роль и как
-  сделано — спросить автора; Travel journal — запись автора с телефона (вертикальная, «Тбилиси», доска поездки с лампой «подсветить»), уложена в 16:9 на фоне #161318 с растушёванными краями, `tools/case/media/home/trip.mp4`; колода из трёх роликов как у Quack — «Light up the board» (`trip.mp4`), «Add a photo» (`trip-photo.mp4`), «Record a voice note» (`trip-voice.mp4`, фон #151218); подписи карточек придуманы по роликам; только заголовок, без серой строки — так решил автор), Cases (lead-case — видео-обложка `team-cover.mp4`:
+  сделано — спросить автора; Travel journal — запись автора с телефона (вертикальная, «Тбилиси», доска поездки с лампой «подсветить»), уложена в 16:9 на фоне #161318 с растушёванными краями, `tools/case/media/home/trip.mp4`; колода из трёх роликов как у Quack — «Light up the board» (`trip.mp4`), «Add a photo» (`trip-photo.mp4`), «Record a voice note» (`trip-voice.mp4`, фон #151218); подписи карточек придуманы по роликам; только заголовок, без серой строки — так решил автор; у тёмной колоды класс `dark`: задние карточки светлее, а не темнее, иначе их не видно). IBM Plex Mono вместо Inter и Helvetica пробовали и откатили по просьбе автора), Cases (lead-case — видео-обложка `team-cover.mp4`:
   двое под стопками задач выше линии capacity → пятеро с ровной нагрузкой,
   «1-week → 3-month planning», проект `prototypes/team-cover/`; process —
   «an executor» зачёркивается в «the author», точка проходит Brief → Research →
