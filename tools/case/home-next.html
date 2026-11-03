@@ -39,16 +39,14 @@
   .hero { padding-top: 126px; padding-bottom: 88px; display: grid; justify-items: center; text-align: center; }
   .hero .avatar { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; margin-bottom: 16px; background: #e6e6e3; }
   /* one accent (the name in Antonio); everything else is body text or a quiet label */
-  .hero .hi { font-family: "Antonio", sans-serif; font-size: 52px; line-height: 1.2; color: var(--accent); letter-spacing: -0.04em; }
   .hero h1 { font-family: "Antonio", sans-serif; font-size: clamp(64px, 6.7vw, 96px); line-height: .9; letter-spacing: -0.04em; }
-  .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 48px; margin-top: 56px; width: 100%; max-width: 860px; }
-  .fact { display: grid; gap: 8px; align-content: start; }
-  .fact b { font-weight: 400; font-size: 15px; line-height: 1.3; color: var(--label); }
-  .fact span { font-size: 19px; line-height: 1.4; color: var(--ink); letter-spacing: -0.01em; }
+  /* one line under the name: the role reads first by contrast, not by colour */
+  .lead { margin-top: 28px; max-width: 620px; font-size: 21px; line-height: 1.4; letter-spacing: -0.01em; color: var(--label); text-wrap: balance; }
+  .lead b { font-weight: 400; color: var(--ink); }
 
   /* feed */
   .feed-head { display: flex; align-items: baseline; justify-content: center; gap: 16px; margin-bottom: 32px; text-align: center; }
-  .feed-head h2 { font-family: "Antonio", sans-serif; font-size: 56px; line-height: 1; letter-spacing: -0.04em; }
+  .feed-head h2 { font-family: "Antonio", sans-serif; font-size: 40px; line-height: 1; letter-spacing: -0.04em; }
   section { padding-bottom: 96px; }
 
   /* tiles: AI products and cases share one size */
@@ -111,7 +109,6 @@
   footer .links a:not(.btn):hover { color: var(--accent); }
 
   @media (max-width: 900px) {
-    .facts { grid-template-columns: 1fr; }
     .tiles { grid-template-columns: minmax(0, 1fr); }
     .job { grid-template-columns: 1fr; gap: 4px; }
     .job time { text-align: left; }
@@ -121,10 +118,10 @@
     nav .bar { padding: 0 16px; }
     nav .links { gap: 14px; }
     .hero { padding-top: 48px; padding-bottom: 56px; }
-    .hero .hi { font-size: 34px; }
     .hero .avatar { width: 140px; height: 140px; }
-    .fact span { font-size: 17px; }
-    .feed-head h2, footer h2 { font-size: 44px; }
+    .lead { font-size: 18px; margin-top: 20px; }
+    .feed-head h2 { font-size: 32px; }
+    footer h2 { font-size: 44px; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -147,12 +144,8 @@
 
 <header class="hero wrap" id="top">
   <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay aria-hidden="true"></video>
-  <p class="hi">design leader</p>
   <h1>Hey, I'm Slava</h1>
-  <div class="facts">
-    <div class="fact"><span>I build and grow design teams — up to 40 designers</span></div>
-    <div class="fact"><span>I also design and ship AI products myself</span></div>
-  </div>
+  <p class="lead"><b>Design leader.</b> I build design teams of up to 40 designers and ship AI products myself</p>
 </header>
 
 <main class="wrap">
