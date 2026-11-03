@@ -9,7 +9,7 @@
 <!-- Draft of the homepage redesign: a feed of work, minimum text. Not linked anywhere. -->
 <style>
   @font-face { font-family: "Antonio"; src: url("/assets/fonts/antonio/v22/gNMEW3NwSYq_9WD3yHQiFQ.woff2") format("woff2"); font-display: swap; }
-  @font-face { font-family: "IBM Plex Mono"; src: url("/assets/case/fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Inter"; src: url("/assets/files/GrgcKwrN6d3Uz8EwcLHZxwEfC4.woff2") format("woff2"); font-weight: 400; font-display: swap; unicode-range: U+0000-00FF, U+2013-2014, U+2192; }
   :root {
     --bg: #f5f5f5; --panel: #fff; --ink: #111110; --text: #2f2f2d; --body: #55544f; --label: #8a8984;
     --line: rgba(0,0,0,.08); --accent: rgb(249, 112, 41);
@@ -18,7 +18,7 @@
   }
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; -webkit-font-smoothing: antialiased; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
   img, video { display: block; max-width: 100%; }
   a { color: inherit; text-decoration: none; }
   h1, h2, h3, p { margin: 0; font-weight: 400; }
@@ -30,7 +30,7 @@
   nav { position: sticky; top: 0; z-index: 10; background: #fff; }
   nav .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 32px; }
   nav .me img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
-  nav .links { display: flex; align-items: center; gap: 20px; font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace; font-size: 16px; letter-spacing: -0.01em; }
+  nav .links { display: flex; align-items: center; gap: 20px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 16px; letter-spacing: -0.01em; }
   nav .links a:not(.btn):hover { color: var(--accent); }
   .btn { display: inline-flex; align-items: center; padding: 8px; border-radius: 8px; background: var(--accent); color: #fff; font-family: "Antonio", sans-serif; font-size: 16px; line-height: 1.2; letter-spacing: 0; transition: transform .15s ease, filter .15s ease; }
   .btn:hover { filter: brightness(1.06); }
@@ -80,6 +80,9 @@
   .card[data-pos="1"] { z-index: 3; transform: translateX(7px) scaleY(.965); filter: brightness(.9); }
   .card[data-pos="2"] { z-index: 2; transform: translateX(14px) scaleY(.93); filter: brightness(.8); }
   .card[data-pos="3"] { z-index: 1; transform: translateX(21px) scaleY(.895); filter: brightness(.7); }
+  /* on a dark deck darker edges vanish, so the cards behind get lighter instead */
+  .deck.dark .card[data-pos="1"] { filter: brightness(2.8); }
+  .deck.dark .card[data-pos="2"] { filter: brightness(4.6); }
   .card.out { z-index: 5; transform: translateX(-10%); opacity: 0; }
   .deck:hover .card[data-pos="0"]:not(.out) { transform: translateX(-3px); }
   .dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
@@ -187,7 +190,7 @@
         </div>
       </article>
       <article class="tile">
-        <div class="deck" role="button" tabindex="0" aria-label="Next Travel journal feature">
+        <div class="deck dark" role="button" tabindex="0" aria-label="Next Travel journal feature">
           <div class="card" data-pos="0" data-label="Light up the board" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
           <div class="card" data-pos="1" data-label="Add a photo" style="background:#151218"><video data-src="/assets/case/home/trip-photo.mp4" poster="/assets/case/home/trip-photo.jpg" muted loop playsinline preload="none"></video></div>
           <div class="card" data-pos="2" data-label="Record a voice note" style="background:#151218"><video data-src="/assets/case/home/trip-voice.mp4" poster="/assets/case/home/trip-voice.jpg" muted loop playsinline preload="none"></video></div>
