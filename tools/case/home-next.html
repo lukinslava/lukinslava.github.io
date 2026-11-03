@@ -68,7 +68,7 @@
   .tile p { font-size: 16px; line-height: 1.4; color: var(--label); margin-top: 4px; }
   .tile h3 a { color: inherit; }
 
-  /* Quack: a deck of clips; a click sends the top card to the back and the next clip plays */
+  /* Quack and Travel journal: a deck of clips; a click sends the top card to the back and the next clip plays */
   .deck { position: relative; aspect-ratio: 16 / 9; cursor: pointer; -webkit-tap-highlight-color: transparent; }
   .card { position: absolute; inset: 0; border-radius: 20px; overflow: hidden; background: #e6e6e3; transform-origin: 50% 50%;
           box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 18px 32px -20px rgba(0,0,0,.35);
@@ -187,7 +187,13 @@
         </div>
       </article>
       <article class="tile">
-        <div class="frame" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="deck" role="button" tabindex="0" aria-label="Next Travel journal feature">
+          <div class="card" data-pos="0" data-label="Light up the board" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="card" data-pos="1" data-label="Add a photo" style="background:#151218"><video data-src="/assets/case/home/trip-photo.mp4" poster="/assets/case/home/trip-photo.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="card" data-pos="2" data-label="Record a voice note" style="background:#151218"><video data-src="/assets/case/home/trip-voice.mp4" poster="/assets/case/home/trip-voice.jpg" muted loop playsinline preload="none"></video></div>
+          <span class="label"></span>
+        </div>
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
         <div>
           <h3>Travel journal</h3>
         </div>
@@ -275,7 +281,7 @@
     });
   }
 
-  // the Quack deck: a click (or Enter / Space) sends the top card to the back; only the top clip plays
+  // the decks (Quack, Travel journal): a click (or Enter / Space) sends the top card to the back; only the top clip plays
   for (const deck of document.querySelectorAll(".deck")) {
     const cards = [...deck.querySelectorAll(".card")];
     const label = deck.querySelector(".label");
