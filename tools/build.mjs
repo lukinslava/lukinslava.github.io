@@ -326,6 +326,7 @@ if (SITE_URL) {
 }
 // Отдельные страницы вне Framer (кейс AI Match): свой HTML, медиа готовит
 // tools/case-media.mjs — зашифрованные кадры в docs/assets/case/.
+// tools/case/index.html — главная: она перезаписывает главную Framer, собранную выше.
 for (const file of await fs.readdir(path.resolve("tools/case")).catch(() => [])) {
   if (file.endsWith(".html")) await write(file, await fs.readFile(path.resolve("tools/case", file)));
 }
