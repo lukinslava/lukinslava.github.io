@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Hero variants — draft</title>
+<link rel="icon" href="/assets/icons/default-favicon-light.v1.png">
+<!-- Eight ways to calm the /home-next hero. Not linked anywhere. Only two families: Antonio and Helvetica Neue. -->
+<style>
+  @font-face { font-family: "Antonio"; src: url("/assets/fonts/antonio/v22/gNMEW3NwSYq_9WD3yHQiFQ.woff2") format("woff2"); font-display: swap; }
+  :root { --bg: #f5f5f5; --ink: #111110; --body: #55544f; --label: #8a8984; --accent: rgb(249, 112, 41); }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  h1, h2, p { margin: 0; font-weight: 400; }
+  .A { font-family: "Antonio", sans-serif; letter-spacing: -0.04em; }
+  .accent { color: var(--accent); }
+  .grey { color: var(--label); }
+
+  /* the strip that names each variant */
+  .tag { position: sticky; top: 0; z-index: 5; display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; padding: 12px 24px; background: #fff; border-bottom: 1px solid rgba(0,0,0,.08); font-size: 14px; line-height: 1.4; }
+  .tag b { font-weight: 500; }
+  .tag span { color: var(--label); }
+  .intro { max-width: 760px; margin: 0 auto; padding: 48px 24px 24px; font-size: 17px; line-height: 1.5; color: var(--body); }
+  .intro h1 { font-size: 28px; color: var(--ink); margin-bottom: 8px; }
+
+  .v { border-bottom: 8px solid #e6e6e3; }
+  .hero { display: grid; justify-items: center; text-align: center; padding: 88px 24px 72px; }
+  .avatar { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; background: #e6e6e3; margin-bottom: 16px; }
+  .name { font-size: clamp(64px, 6.7vw, 96px); line-height: .9; }
+  .line { font-size: 21px; line-height: 1.4; letter-spacing: -0.01em; max-width: 620px; margin-top: 28px; text-wrap: balance; }
+  .next { text-align: center; padding: 0 24px 56px; }
+  .next h2 { font-size: 40px; line-height: 1; }
+  .next .tile { width: min(720px, 100%); aspect-ratio: 16 / 5; margin: 24px auto 0; border-radius: 20px 20px 0 0; background: #fff url("/assets/case/home/aim-full.jpg") center top / cover; box-shadow: 0 0 0 1px rgba(0,0,0,.05); }
+
+  /* 3: role at the size of section heads */
+  .v3 .role { font-size: 56px; line-height: 1.2; }
+  .v3 .next h2 { font-size: 56px; }
+  /* 5: the avatar sits inside the name like a letter */
+  .v5 .name { display: flex; align-items: center; justify-content: center; gap: .18em; flex-wrap: wrap; }
+  .v5 .inline { width: .82em; height: .82em; border-radius: 50%; object-fit: cover; background: #e6e6e3; }
+  /* 6: positioning is the headline, the name is a quiet line */
+  .v6 .name { max-width: 900px; }
+  .v6 .who { font-size: 17px; color: var(--label); margin-bottom: 20px; }
+  /* 8: Antonio only */
+  .v8 .line { font-family: "Antonio", sans-serif; font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; color: var(--label); }
+  @media (max-width: 600px) {
+    .hero { padding: 56px 16px 48px; }
+    .avatar { width: 140px; height: 140px; }
+    .line { font-size: 18px; }
+    .v3 .role, .v3 .next h2 { font-size: 40px; }
+    .next h2 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="intro">
+  <h1>Hero: eight variants</h1>
+  <p>Each one keeps two families at most (Antonio and Helvetica) and drops the two-column text. Section heads below are 40px instead of 56, so they stop competing with the name; variant 3 keeps 56 to show the smallest change.</p>
+</div>
+
+<section class="v v1">
+  <div class="tag"><b>01 · Name and one line</b><span>2 styles. The role moves into the sentence</span></div>
+  <div class="hero">
+    <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video>
+    <h1 class="A name">Hey, I'm Slava</h1>
+    <p class="line">Design leader. I build design teams of up to 40 designers and ship AI products myself</p>
+  </div>
+  <div class="next"><h2 class="A">AI products</h2><div class="tile"></div></div>
+</section>
+
+<section class="v v2">
+  <div class="tag"><b>02 · Name and role in one line</b><span>2 styles. Orange stays, but in the same size as the name</span></div>
+  <div class="hero">
+    <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video>
+    <h1 class="A name">Slava, <span class="accent">design leader</span></h1>
+    <p class="line">I build design teams of up to 40 designers and ship AI products myself</p>
+  </div>
+  <div class="next"><h2 class="A">AI products</h2><div class="tile"></div></div>
+</section>
+
+<section class="v v3">
+  <div class="tag"><b>03 · Smallest change</b><span>3 styles. Role and section heads share one size, columns become one line</span></div>
+  <div class="hero">
+    <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video>
+    <p class="A role accent">design leader</p>
+    <h1 class="A name">Hey, I'm Slava</h1>
+    <p class="line">I build design teams of up to 40 designers and ship AI products myself</p>
+  </div>
+  <div class="next"><h2 class="A">AI products</h2><div class="tile"></div></div>
+</section>
+
+<section class="v v4">
+  <div class="tag"><b>04 · Orange word in the sentence</b><span>2 styles. Antonio only for the name; the accent lives in the text</span></div>
+  <div class="hero">
+    <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video>
+    <h1 class="A name">Hey, I'm Slava</h1>
+    <p class="line"><span class="accent">Design leader</span> who builds teams of up to 40 designers and ships AI products himself</p>
+  </div>
+  <div class="next"><h2 class="A">AI products</h2><div class="tile"></div></div>
+</section>
+
+<section class="v v5">
+  <div class="tag"><b>05 · Avatar inside the name</b><span>2 styles. The big circle goes; the face becomes part of the headline</span></div>
+  <div class="hero">
+    <h1 class="A name">Hey, I'm <video class="inline" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video> Slava</h1>
+    <p class="line">Design leader. I build design teams of up to 40 designers and ship AI products myself</p>
+  </div>
+  <div class="next"><h2 class="A">AI products</h2><div class="tile"></div></div>
+</section>
+
+<section class="v v6">
+  <div class="tag"><b>06 · Positioning as the headline</b><span>2 styles. The big words say what you do; the name is a quiet line</span></div>
+  <div class="hero">
+    <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video>
+    <p class="who">Slava Lukin, design leader</p>
+    <h1 class="A name">I lead design teams and ship AI products</h1>
+  </div>
+  <div class="next"><h2 class="A">AI products</h2><div class="tile"></div></div>
+</section>
+
+<section class="v v7">
+  <div class="tag"><b>07 · Two lines, one size, grey second line</b><span>1 style plus colour. No body text in the hero</span></div>
+  <div class="hero">
+    <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video>
+    <h1 class="A name">Hey, I'm Slava<br><span class="grey">design leader</span></h1>
+  </div>
+  <div class="next"><h2 class="A">AI products</h2><div class="tile"></div></div>
+</section>
+
+<section class="v v8">
+  <div class="tag"><b>08 · Antonio only</b><span>1 family in the hero. The sentence is Antonio too, smaller and grey</span></div>
+  <div class="hero">
+    <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video>
+    <h1 class="A name">Hey, I'm Slava</h1>
+    <p class="line">Design leader. I build teams of up to 40 designers and ship AI products myself</p>
+  </div>
+  <div class="next"><h2 class="A">AI products</h2><div class="tile"></div></div>
+</section>
+
+</body>
+</html>
