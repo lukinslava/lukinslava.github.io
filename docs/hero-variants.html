@@ -45,16 +45,16 @@
   /* 8: Antonio only */
   .v8 .line { font-family: "Antonio", sans-serif; font-size: 30px; line-height: 1.15; letter-spacing: -0.02em; color: var(--label); }
   /* 01 a/b/c side by side: the same hero, only the orange moves */
-  .trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; background: #e6e6e3; }
-  .trio .col { background: var(--bg); margin: 0 4px; }
-  .trio .col:first-child { margin-left: 0; } .trio .col:last-child { margin-right: 0; }
+  .trio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; background: #e6e6e3; }
+  .trio .col { background: var(--bg); }
+  .trio .quiet { color: var(--label); } .trio .quiet b { font-weight: 400; color: var(--ink); }
   .trio .tag { position: static; }
   .trio .hero { padding: 64px 16px 48px; }
   .trio .avatar { width: 140px; height: 140px; }
   .trio .name { font-size: clamp(44px, 4.2vw, 64px); }
   .trio .line { font-size: 17px; margin-top: 20px; }
   .trio .next h2 { font-size: 32px; }
-  @media (max-width: 900px) { .trio { grid-template-columns: minmax(0, 1fr); } .trio .col { margin: 0 0 8px; } }
+  @media (max-width: 900px) { .trio { grid-template-columns: minmax(0, 1fr); } }
   @media (max-width: 600px) {
     .hero { padding: 56px 16px 48px; }
     .avatar { width: 140px; height: 140px; }
@@ -68,7 +68,7 @@
 
 <div class="intro">
   <h1>Hero: eight variants</h1>
-  <p style="margin-bottom:12px">On top: variant 01 three ways, side by side, scaled down to fit. Full-size variants follow.</p>
+  <p style="margin-bottom:12px">On top: variant 01 four ways, side by side, scaled down to fit. Full-size variants follow.</p>
   <p>Each one keeps two families at most (Antonio and Helvetica) and drops the two-column text. Section heads below are 40px instead of 56, so they stop competing with the name; variant 3 keeps 56 to show the smallest change.</p>
 </div>
 
@@ -97,6 +97,15 @@
       <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video>
       <h1 class="A name">Hey, I'm Slava</h1>
       <p class="line"><span class="accent">Design leader.</span> I build design teams of up to 40 designers and ship AI products myself</p>
+    </div>
+    <div class="next"><h2 class="A">AI products</h2></div>
+  </div>
+  <div class="col">
+    <div class="tag"><b>01d · Role by contrast</b><span>“Design leader.” near-black, the rest grey</span></div>
+    <div class="hero">
+      <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay></video>
+      <h1 class="A name">Hey, I'm Slava</h1>
+      <p class="line quiet"><b>Design leader.</b> I build design teams of up to 40 designers and ship AI products myself</p>
     </div>
     <div class="next"><h2 class="A">AI products</h2></div>
   </div>
