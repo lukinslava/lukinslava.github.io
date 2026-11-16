@@ -21,7 +21,7 @@
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.6 "IBM Plex Mono", ui-monospace, Menlo, monospace; letter-spacing: 0.008em; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.6 "IBM Plex Mono", ui-monospace, Menlo, monospace; letter-spacing: 0.008em; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
   a { color: inherit; }
   h1, h2, h3, p { margin: 0; font-size: inherit; font-weight: 400; }
   video, img { display: block; }
@@ -36,13 +36,13 @@
   @media (min-width: 960px) { .top-inner .theme { position: absolute; right: -60px; top: 16px; } }
 
   /* bio */
-  .avatar { display: block; width: 96px; height: 96px; margin-top: 72px; border-radius: 50%; object-fit: cover; background: #e6e6e3; }
-  .bio { margin-top: 28px; font-size: 14px; line-height: 1.85; }
+  .avatar { display: block; width: 144px; height: 144px; margin: 72px auto 0; border-radius: 50%; object-fit: cover; background: #e6e6e3; }
+  .bio { margin-top: 28px; font-size: 16px; line-height: 1.85; }
   .bio p + p { margin-top: 22px; }
 
   /* tabs */
   .tabs { display: flex; gap: 6px; margin-top: 72px; }
-  .tab { font: inherit; font-size: 13px; border: 0; background: none; color: var(--muted); padding: 8px 16px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s; }
+  .tab { font: inherit; font-size: 14px; border: 0; background: none; color: var(--muted); padding: 8px 16px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s; }
   .tab:hover { color: var(--strong); }
   .tab[aria-selected="true"] { background: var(--pill); color: var(--strong); }
   .panel { margin-top: 20px; }
@@ -81,8 +81,8 @@
   @media (max-width: 640px) {
     .top-inner { padding: 16px 16px 0; }
     .page { padding: 0 16px 48px; }
-    .avatar { width: 80px; height: 80px; margin-top: 48px; }
-    .bio { margin-top: 24px; font-size: 13px; line-height: 1.8; }
+    .avatar { width: 120px; height: 120px; margin-top: 48px; }
+    .bio { margin-top: 24px; font-size: 16px; line-height: 1.8; }
     .tabs { margin-top: 48px; }
     .grid { grid-template-columns: 1fr; }
   }
