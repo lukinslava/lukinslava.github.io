@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Slava Lukin — minimal draft</title>
+<link rel="icon" href="/assets/icons/default-favicon-light.v1.png">
+<!-- Homepage prototype in a quiet, narrow-column style (reference: jakubantalik.com). Not linked anywhere. -->
+<style>
+  :root {
+    --bg: #fff; --card: #f5f5f4; --ink: #111; --muted: #8b8b88; --line: rgba(0,0,0,.07);
+    --r: 16px; --r-in: 11px; --col: 640px; --accent: rgb(249, 112, 41);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.55 "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.003em; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3, p { margin: 0; font-size: inherit; font-weight: inherit; }
+  video, img { display: block; width: 100%; }
+  .page { max-width: calc(var(--col) + 48px); margin: 0 auto; padding: 96px 24px 64px; }
+  .muted { color: var(--muted); }
+  .link { color: var(--muted); transition: color .15s; }
+  .link:hover { color: var(--ink); }
+
+  /* intro */
+  .me { display: flex; align-items: center; gap: 12px; }
+  .me video { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--card); }
+  .me h1 { font-weight: 500; }
+  .bio { margin-top: 24px; max-width: 520px; }
+  .bio p + p { margin-top: 12px; }
+  .links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 20px; }
+
+  /* sections */
+  section { margin-top: 72px; }
+  .head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 16px; }
+  .head h2 { font-weight: 500; }
+
+  /* cards */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid .wide { grid-column: 1 / -1; }
+  .card { display: block; background: var(--card); border-radius: var(--r); padding: 6px; transition: transform .25s cubic-bezier(.2,.7,.2,1), background .2s; }
+  .card[href]:hover, .card.click:hover { background: #efefed; }
+  .card[href]:active, .card.click:active { transform: scale(.985); }
+  .media { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-in); overflow: hidden; background: #e9e9e7; box-shadow: 0 0 0 1px var(--line); }
+  .media video { position: absolute; inset: 0; height: 100%; object-fit: cover; }
+  .meta { padding: 10px 8px 6px; }
+  .meta .row { display: flex; justify-content: space-between; gap: 12px; }
+  .meta h3 { font-weight: 500; }
+  .meta p { color: var(--muted); }
+  .card.click { cursor: pointer; }
+  .count { font-variant-numeric: tabular-nums; }
+
+  /* experience */
+  .list { border-top: 1px solid var(--line); }
+  .item { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .item b { font-weight: 500; }
+  .item .when { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
+  .item .what { grid-column: 1 / -1; color: var(--muted); }
+  .awards { margin-top: 16px; }
+
+  footer { margin-top: 96px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; color: var(--muted); }
+  footer nav { display: flex; gap: 16px; }
+
+  @media (max-width: 560px) {
+    .page { padding: 64px 16px 48px; }
+    .grid { grid-template-columns: 1fr; }
+    section { margin-top: 56px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <header>
+    <div class="me">
+      <video src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay aria-hidden="true"></video>
+      <div><h1>Slava Lukin</h1><p class="muted">Design Lead</p></div>
+    </div>
+    <div class="bio">
+      <p>I build design teams and ship AI products myself. 8 years in product design: Pragmatica, Looch, RingCentral, Yandex Market, Mindbox.</p>
+      <p class="muted">Based in Georgia, working remotely.</p>
+    </div>
+    <div class="links">
+      <a class="link" href="https://t.me/lukinslava">Telegram</a>
+      <a class="link" href="https://t.me/slavanotes">Channel</a>
+      <a class="link" href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>
+    </div>
+  </header>
+
+  <section>
+    <div class="head"><h2>AI products</h2><span class="muted">Designed and built hands-on</span></div>
+    <div class="grid">
+      <div class="card wide">
+        <div class="media"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="meta"><div class="row"><h3>AI Match</h3><span class="muted">7 of 10 approved by client</span></div><p>Internal tool at Pragmatica: 6,000+ designers → a shortlist of 30–60 per role</p></div>
+      </div>
+      <div class="card click" data-clips="quack-hello,quack-panel,quack-claude,quack-cleanup" role="button" tabindex="0" aria-label="Next Quack clip">
+        <div class="media"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="meta"><div class="row"><h3>Quack</h3><span class="muted count">1 / 4</span></div><p>macOS app in the notch, built with Claude Code</p></div>
+      </div>
+      <a class="card" href="https://mplan-tau.vercel.app/" target="_blank" rel="noopener">
+        <div class="media"><video data-src="/assets/case/home/mplan.mp4" poster="/assets/case/home/mplan.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="meta"><div class="row"><h3>Call planner</h3><span class="muted">↗</span></div><p>Everyone paints the hours that suit them</p></div>
+      </a>
+      <div class="card click wide" data-clips="trip,trip-photo,trip-voice" role="button" tabindex="0" aria-label="Next Travel journal clip">
+        <div class="media" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="meta"><div class="row"><h3>Travel journal</h3><span class="muted count">1 / 3</span></div><p>A trip board with photos and voice notes</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="head"><h2>Cases</h2><span class="muted">Leading design teams</span></div>
+    <div class="grid">
+      <a class="card" href="/lead-case">
+        <div class="media"><video data-src="/assets/case/home/team-cover.mp4" poster="/assets/case/home/team-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="meta"><h3>Team from 2 to 5 designers</h3><p>Yandex Market, logistics</p></div>
+      </a>
+      <a class="card" href="/process">
+        <div class="media"><video data-src="/assets/case/home/process-cover.mp4" poster="/assets/case/home/process-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="meta"><h3>The process that makes designers stronger</h3><p>Yandex Market, logistics</p></div>
+      </a>
+      <a class="card" href="/mind-case">
+        <div class="media"><video data-src="/assets/case/home/mindbox-cover.mp4" poster="/assets/case/home/mindbox-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="meta"><h3>From one-week planning to product thinking</h3><p>Mindbox</p></div>
+      </a>
+      <a class="card" href="/autodraw">
+        <div class="media"><video data-src="/assets/case/home/autodraw-demo-cover.mp4" poster="/assets/case/home/autodraw-demo-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="meta"><div class="row"><h3>Autodraw</h3><span class="muted">~$700K projected</span></div><p>AI shape recognition, RingCentral</p></div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="head"><h2>Experience</h2><span class="muted">Since 2018</span></div>
+    <div class="list">
+      <div class="item"><b>Pragmatica · Design Lead</b><span class="when">2025 — now</span><span class="what">Outstaff unit: matching and growing 40 designers</span></div>
+      <div class="item"><b>Looch · Product Design Lead</b><span class="when">2023 — 2025</span><span class="what">Product studio, team up to 12 designers</span></div>
+      <div class="item"><b>Phygital+ · Product Designer</b><span class="when">2024</span><span class="what">Generative AI workspace</span></div>
+      <div class="item"><b>RingCentral · Senior Product Designer</b><span class="when">2021 — 2023</span><span class="what">Video meetings and whiteboard</span></div>
+      <div class="item"><b>Superlive · Product Designer</b><span class="when">2020 — 2021</span><span class="what">B2B sports betting products</span></div>
+    </div>
+    <p class="awards muted">WDA 24 · WDA 25 · Tagline Awards · Golden Site</p>
+  </section>
+
+  <footer>
+    <span>© 2026 Slava Lukin</span>
+    <nav><a class="link" href="https://t.me/lukinslava">Telegram</a><a class="link" href="https://t.me/slavanotes">Channel</a><a class="link" href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a></nav>
+  </footer>
+</main>
+
+<script>
+  // Videos load and play only while on screen.
+  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      const v = e.target;
+      if (e.isIntersecting) {
+        if (still) return;
+        if (!v.src && v.dataset.src) v.src = v.dataset.src;
+        v.play().catch(() => {});
+      } else v.pause();
+    }
+  }, { rootMargin: "200px" });
+  document.querySelectorAll("video[data-src]").forEach((v) => io.observe(v));
+
+  // Cards with several clips: a click shows the next one.
+  document.querySelectorAll("[data-clips]").forEach((card) => {
+    const clips = card.dataset.clips.split(","), v = card.querySelector("video"), n = card.querySelector(".count");
+    let i = 0;
+    const next = () => {
+      i = (i + 1) % clips.length;
+      v.poster = `/assets/case/home/${clips[i]}.jpg`;
+      v.src = v.dataset.src = `/assets/case/home/${clips[i]}.mp4`;
+      if (!still) v.play().catch(() => {});
+      n.textContent = `${i + 1} / ${clips.length}`;
+    };
+    card.addEventListener("click", next);
+    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); next(); } });
+  });
+</script>
+</body>
+</html>
