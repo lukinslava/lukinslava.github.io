@@ -9,176 +9,191 @@
 <!-- Homepage prototype in a quiet, narrow-column style (reference: jakubantalik.com). Not linked anywhere. -->
 <style>
   :root {
-    --bg: #fff; --card: #f5f5f4; --ink: #111; --muted: #8b8b88; --line: rgba(0,0,0,.07);
-    --r: 16px; --r-in: 11px; --col: 640px; --accent: rgb(249, 112, 41);
+    --bg: #fcfcfc; --panel: #fff; --ink: #2a2a2a; --strong: #111; --muted: #8c8c8c;
+    --line: #ececec; --pill: #efefef; --tile: #f7f7f7;
+    --col: 690px; --r: 20px;
+  }
+  :root[data-theme="dark"] {
+    --bg: #111; --panel: #181818; --ink: #d6d6d6; --strong: #f2f2f2; --muted: #7d7d7d;
+    --line: #262626; --pill: #222; --tile: #1f1f1f;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.55 "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; letter-spacing: -0.003em; }
-  a { color: inherit; text-decoration: none; }
-  h1, h2, h3, p { margin: 0; font-size: inherit; font-weight: inherit; }
-  video, img { display: block; width: 100%; }
-  .page { max-width: calc(var(--col) + 48px); margin: 0 auto; padding: 96px 24px 64px; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 Georgia, "Times New Roman", serif; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
+  a { color: inherit; }
+  h1, h2, h3, p { margin: 0; font-size: inherit; font-weight: 400; }
+  video, img { display: block; }
+  .u { color: var(--strong); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); transition: text-decoration-color .15s; }
+  .u:hover { text-decoration-color: currentColor; }
   .muted { color: var(--muted); }
-  .link { color: var(--muted); transition: color .15s; }
-  .link:hover { color: var(--ink); }
 
-  /* intro */
-  .me { display: flex; align-items: center; gap: 12px; }
-  .me video { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; background: var(--card); }
-  .me h1 { font-weight: 500; }
-  .bio { margin-top: 24px; max-width: 520px; }
-  .bio p + p { margin-top: 12px; }
-  .links { display: flex; flex-wrap: wrap; gap: 4px 16px; margin-top: 20px; }
+  .theme { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--pill); color: var(--strong); display: grid; place-items: center; cursor: pointer; }
+  .theme svg { width: 16px; height: 16px; }
+  .page { max-width: calc(var(--col) + 48px); margin: 0 auto; padding: 0 24px 64px; }
+  .top-inner { position: relative; display: flex; justify-content: space-between; align-items: center; max-width: calc(var(--col) + 48px); margin: 0 auto; padding: 20px 24px 0; }
+  @media (min-width: 960px) { .top-inner .theme { position: absolute; right: -60px; top: 16px; } }
 
-  /* sections */
-  section { margin-top: 72px; }
-  .head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 16px; }
-  .head h2 { font-weight: 500; }
+  /* bio */
+  .bio { margin-top: 88px; font-size: 16px; line-height: 1.9; }
+  .bio p + p { margin-top: 22px; }
+
+  /* tabs */
+  .tabs { display: flex; gap: 6px; margin-top: 72px; }
+  .tab { font: inherit; font-size: 15px; border: 0; background: none; color: var(--muted); padding: 8px 16px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s; }
+  .tab:hover { color: var(--strong); }
+  .tab[aria-selected="true"] { background: var(--pill); color: var(--strong); }
+  .panel { margin-top: 20px; }
+  .panel[hidden] { display: none; }
 
   /* cards */
-  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .grid .wide { grid-column: 1 / -1; }
-  .card { display: block; background: var(--card); border-radius: var(--r); padding: 6px; transition: transform .25s cubic-bezier(.2,.7,.2,1), background .2s; }
-  .card[href]:hover, .card.click:hover { background: #efefed; }
-  .card[href]:active, .card.click:active { transform: scale(.985); }
-  .media { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-in); overflow: hidden; background: #e9e9e7; box-shadow: 0 0 0 1px var(--line); }
-  .media video { position: absolute; inset: 0; height: 100%; object-fit: cover; }
-  .meta { padding: 10px 8px 6px; }
-  .meta .row { display: flex; justify-content: space-between; gap: 12px; }
-  .meta h3 { font-weight: 500; }
-  .meta p { color: var(--muted); }
-  .card.click { cursor: pointer; }
-  .count { font-variant-numeric: tabular-nums; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .card { position: relative; display: block; text-decoration: none; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; transition: border-color .2s, transform .25s cubic-bezier(.2,.7,.2,1); }
+  .card:hover { border-color: color-mix(in srgb, var(--line) 50%, var(--muted)); }
+  .card:active { transform: scale(.99); }
+  .card .stat { position: absolute; top: 18px; right: 18px; font-size: 13px; color: var(--muted); }
+  .tile { width: 56px; height: 56px; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px rgba(0,0,0,.04); }
+  .tile video { width: 100%; height: 100%; object-fit: cover; }
+  .card h3 { margin-top: 22px; color: var(--strong); }
+  .card p { color: var(--muted); line-height: 1.55; margin-top: 2px; }
+
+  /* case cards: the cover is the point, so it gets the room */
+  .shot { aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: inset 0 0 0 1px var(--line); }
+  .shot video { width: 100%; height: 100%; object-fit: cover; }
+  .case h3 { margin-top: 16px; }
 
   /* experience */
-  .list { border-top: 1px solid var(--line); }
-  .item { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
-  .item b { font-weight: 500; }
-  .item .when { color: var(--muted); font-variant-numeric: tabular-nums; text-align: right; }
-  .item .what { grid-column: 1 / -1; color: var(--muted); }
-  .awards { margin-top: 16px; }
+  .list { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 6px 18px; }
+  .row { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .row b { font-weight: 400; color: var(--strong); }
+  .row .when { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; padding-top: 2px; }
+  .row .what { grid-column: 1 / -1; color: var(--muted); }
 
-  footer { margin-top: 96px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; color: var(--muted); }
-  footer nav { display: flex; gap: 16px; }
+  footer { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 56px; color: var(--muted); }
+  footer a { color: var(--muted); }
+  footer span { margin-right: 10px; }
 
-  @media (max-width: 560px) {
-    .page { padding: 64px 16px 48px; }
+  @media (max-width: 640px) {
+    .top-inner { padding: 16px 16px 0; }
+    .page { padding: 0 16px 48px; }
+    .bio { margin-top: 56px; font-size: 15px; line-height: 1.8; }
+    .tabs { margin-top: 48px; }
     .grid { grid-template-columns: 1fr; }
-    section { margin-top: 56px; }
   }
-  @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
 </style>
 </head>
 <body>
+<div class="top-inner">
+  <a class="name" href="#" style="color:var(--strong);text-decoration:none">Slava Lukin</a>
+  <button class="theme" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"/></svg></button>
+</div>
+
 <main class="page">
+  <div class="bio">
+    <p>I'm a design lead who builds design teams and ships AI products myself. Now I lead design at Pragmatica; before that I led a team at Looch and worked at RingCentral, Yandex Market and Mindbox.</p>
+    <p>You can find me on <a class="u" href="https://t.me/lukinslava">Telegram</a>, read my <a class="u" href="https://t.me/slavanotes">channel</a>, or look at my <a class="u" href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>.</p>
+  </div>
 
-  <header>
-    <div class="me">
-      <video src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay aria-hidden="true"></video>
-      <div><h1>Slava Lukin</h1><p class="muted">Design Lead</p></div>
-    </div>
-    <div class="bio">
-      <p>I build design teams and ship AI products myself. 8 years in product design: Pragmatica, Looch, RingCentral, Yandex Market, Mindbox.</p>
-      <p class="muted">Based in Georgia, working remotely.</p>
-    </div>
-    <div class="links">
-      <a class="link" href="https://t.me/lukinslava">Telegram</a>
-      <a class="link" href="https://t.me/slavanotes">Channel</a>
-      <a class="link" href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>
-    </div>
-  </header>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" aria-controls="p-ai">AI products</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-cases">Cases</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-exp">Experience</button>
+  </div>
 
-  <section>
-    <div class="head"><h2>AI products</h2><span class="muted">Designed and built hands-on</span></div>
+  <div class="panel" id="p-ai" role="tabpanel">
     <div class="grid">
-      <div class="card wide">
-        <div class="media"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div>
-        <div class="meta"><div class="row"><h3>AI Match</h3><span class="muted">7 of 10 approved by client</span></div><p>Internal tool at Pragmatica: 6,000+ designers → a shortlist of 30–60 per role</p></div>
+      <div class="card">
+        <div class="tile"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div>
+        <span class="stat">7 of 10 approved</span>
+        <h3>AI Match</h3>
+        <p>6,000+ designers narrowed to a shortlist of 30–60 per role.</p>
       </div>
-      <div class="card click" data-clips="quack-hello,quack-panel,quack-claude,quack-cleanup" role="button" tabindex="0" aria-label="Next Quack clip">
-        <div class="media"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
-        <div class="meta"><div class="row"><h3>Quack</h3><span class="muted count">1 / 4</span></div><p>macOS app in the notch, built with Claude Code</p></div>
+      <div class="card">
+        <div class="tile"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
+        <span class="stat">macOS</span>
+        <h3>Quack</h3>
+        <p>A macOS app in the notch, built with Claude Code.</p>
       </div>
       <a class="card" href="https://mplan-tau.vercel.app/" target="_blank" rel="noopener">
-        <div class="media"><video data-src="/assets/case/home/mplan.mp4" poster="/assets/case/home/mplan.jpg" muted loop playsinline preload="none"></video></div>
-        <div class="meta"><div class="row"><h3>Call planner</h3><span class="muted">↗</span></div><p>Everyone paints the hours that suit them</p></div>
+        <div class="tile"><video data-src="/assets/case/home/mplan.mp4" poster="/assets/case/home/mplan.jpg" muted loop playsinline preload="none"></video></div>
+        <span class="stat">Web ↗</span>
+        <h3>Call planner</h3>
+        <p>Everyone paints the hours that suit them; the best slots come out on top.</p>
       </a>
-      <div class="card click wide" data-clips="trip,trip-photo,trip-voice" role="button" tabindex="0" aria-label="Next Travel journal clip">
-        <div class="media" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
-        <div class="meta"><div class="row"><h3>Travel journal</h3><span class="muted count">1 / 3</span></div><p>A trip board with photos and voice notes</p></div>
+      <div class="card">
+        <div class="tile" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
+        <span class="stat">Mobile</span>
+        <h3>Travel journal</h3>
+        <p>A trip board with photos and voice notes.</p>
       </div>
     </div>
-  </section>
+  </div>
 
-  <section>
-    <div class="head"><h2>Cases</h2><span class="muted">Leading design teams</span></div>
+  <div class="panel" id="p-cases" role="tabpanel" hidden>
     <div class="grid">
-      <a class="card" href="/lead-case">
-        <div class="media"><video data-src="/assets/case/home/team-cover.mp4" poster="/assets/case/home/team-cover.jpg" muted loop playsinline preload="none"></video></div>
-        <div class="meta"><h3>Team from 2 to 5 designers</h3><p>Yandex Market, logistics</p></div>
+      <a class="card case" href="/lead-case">
+        <div class="shot"><video data-src="/assets/case/home/team-cover.mp4" poster="/assets/case/home/team-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <h3>Team from 2 to 5 designers</h3><p>Yandex Market, logistics</p>
       </a>
-      <a class="card" href="/process">
-        <div class="media"><video data-src="/assets/case/home/process-cover.mp4" poster="/assets/case/home/process-cover.jpg" muted loop playsinline preload="none"></video></div>
-        <div class="meta"><h3>The process that makes designers stronger</h3><p>Yandex Market, logistics</p></div>
+      <a class="card case" href="/process">
+        <div class="shot"><video data-src="/assets/case/home/process-cover.mp4" poster="/assets/case/home/process-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <h3>The process that makes designers stronger</h3><p>Yandex Market, logistics</p>
       </a>
-      <a class="card" href="/mind-case">
-        <div class="media"><video data-src="/assets/case/home/mindbox-cover.mp4" poster="/assets/case/home/mindbox-cover.jpg" muted loop playsinline preload="none"></video></div>
-        <div class="meta"><h3>From one-week planning to product thinking</h3><p>Mindbox</p></div>
+      <a class="card case" href="/mind-case">
+        <div class="shot"><video data-src="/assets/case/home/mindbox-cover.mp4" poster="/assets/case/home/mindbox-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <h3>From one-week planning to product thinking</h3><p>Mindbox</p>
       </a>
-      <a class="card" href="/autodraw">
-        <div class="media"><video data-src="/assets/case/home/autodraw-demo-cover.mp4" poster="/assets/case/home/autodraw-demo-cover.jpg" muted loop playsinline preload="none"></video></div>
-        <div class="meta"><div class="row"><h3>Autodraw</h3><span class="muted">~$700K projected</span></div><p>AI shape recognition, RingCentral</p></div>
+      <a class="card case" href="/autodraw">
+        <div class="shot"><video data-src="/assets/case/home/autodraw-demo-cover.mp4" poster="/assets/case/home/autodraw-demo-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <h3>Autodraw</h3><p>AI shape recognition at RingCentral · ~$700K projected</p>
       </a>
     </div>
-  </section>
+  </div>
 
-  <section>
-    <div class="head"><h2>Experience</h2><span class="muted">Since 2018</span></div>
+  <div class="panel" id="p-exp" role="tabpanel" hidden>
     <div class="list">
-      <div class="item"><b>Pragmatica · Design Lead</b><span class="when">2025 — now</span><span class="what">Outstaff unit: matching and growing 40 designers</span></div>
-      <div class="item"><b>Looch · Product Design Lead</b><span class="when">2023 — 2025</span><span class="what">Product studio, team up to 12 designers</span></div>
-      <div class="item"><b>Phygital+ · Product Designer</b><span class="when">2024</span><span class="what">Generative AI workspace</span></div>
-      <div class="item"><b>RingCentral · Senior Product Designer</b><span class="when">2021 — 2023</span><span class="what">Video meetings and whiteboard</span></div>
-      <div class="item"><b>Superlive · Product Designer</b><span class="when">2020 — 2021</span><span class="what">B2B sports betting products</span></div>
+      <div class="row"><b>Pragmatica · Design Lead</b><span class="when">2025 — now</span><span class="what">Outstaff unit: matching and growing 40 designers</span></div>
+      <div class="row"><b>Looch · Product Design Lead</b><span class="when">2023 — 2025</span><span class="what">Product studio, teams of up to 12 designers</span></div>
+      <div class="row"><b>Phygital+ · Product Designer</b><span class="when">2024</span><span class="what">Generative AI workspace</span></div>
+      <div class="row"><b>RingCentral · Senior Product Designer</b><span class="when">2021 — 2023</span><span class="what">Video meetings and whiteboard</span></div>
+      <div class="row"><b>Superlive · Product Designer</b><span class="when">2020 — 2021</span><span class="what">B2B sports betting products</span></div>
+      <div class="row"><b>Awards</b><span class="when"></span><span class="what">WDA 24 · WDA 25 · Tagline Awards · Golden Site</span></div>
     </div>
-    <p class="awards muted">WDA 24 · WDA 25 · Tagline Awards · Golden Site</p>
-  </section>
+  </div>
 
   <footer>
     <span>© 2026 Slava Lukin</span>
-    <nav><a class="link" href="https://t.me/lukinslava">Telegram</a><a class="link" href="https://t.me/slavanotes">Channel</a><a class="link" href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a></nav>
+    <a class="u" style="color:var(--muted)" href="https://t.me/lukinslava">Telegram</a>
+    <a class="u" style="color:var(--muted)" href="https://t.me/slavanotes">Channel</a>
+    <a class="u" style="color:var(--muted)" href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>
   </footer>
 </main>
 
 <script>
-  // Videos load and play only while on screen.
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const io = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      const v = e.target;
-      if (e.isIntersecting) {
-        if (still) return;
-        if (!v.src && v.dataset.src) v.src = v.dataset.src;
-        v.play().catch(() => {});
-      } else v.pause();
+    for (const { target: v, isIntersecting } of entries) {
+      if (isIntersecting && !still) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); }
+      else v.pause();
     }
-  }, { rootMargin: "200px" });
+  }, { rootMargin: "100px" });
   document.querySelectorAll("video[data-src]").forEach((v) => io.observe(v));
 
-  // Cards with several clips: a click shows the next one.
-  document.querySelectorAll("[data-clips]").forEach((card) => {
-    const clips = card.dataset.clips.split(","), v = card.querySelector("video"), n = card.querySelector(".count");
-    let i = 0;
-    const next = () => {
-      i = (i + 1) % clips.length;
-      v.poster = `/assets/case/home/${clips[i]}.jpg`;
-      v.src = v.dataset.src = `/assets/case/home/${clips[i]}.mp4`;
-      if (!still) v.play().catch(() => {});
-      n.textContent = `${i + 1} / ${clips.length}`;
-    };
-    card.addEventListener("click", next);
-    card.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); next(); } });
+  const tabs = [...document.querySelectorAll(".tab")];
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    tabs.forEach((x) => {
+      const on = x === t;
+      x.setAttribute("aria-selected", on);
+      document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+    });
+  }));
+
+  const root = document.documentElement;
+  try { if (localStorage.getItem("mini-theme") === "dark") root.dataset.theme = "dark"; } catch {}
+  document.querySelector(".theme").addEventListener("click", () => {
+    const dark = root.dataset.theme !== "dark";
+    if (dark) root.dataset.theme = "dark"; else delete root.dataset.theme;
+    try { localStorage.setItem("mini-theme", dark ? "dark" : "light"); } catch {}
   });
 </script>
 </body>
