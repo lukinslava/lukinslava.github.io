@@ -50,6 +50,8 @@
 
   /* cards */
   .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid.one { grid-template-columns: 1fr; gap: 16px; }
+  .grid.one .shot { aspect-ratio: 16 / 9; }
   .card { position: relative; display: block; text-decoration: none; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; transition: border-color .2s, transform .25s cubic-bezier(.2,.7,.2,1); }
   .card:hover { border-color: color-mix(in srgb, var(--line) 50%, var(--muted)); }
   .card:active { transform: scale(.99); }
@@ -108,7 +110,7 @@
   </div>
 
   <div class="panel" id="p-ai" role="tabpanel">
-    <div class="grid">
+    <div class="grid one">
       <div class="card case">
         <div class="shot"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div>
         <div class="title"><h3>AI Match</h3></div>
