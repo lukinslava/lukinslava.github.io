@@ -21,7 +21,7 @@
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.6 "IBM Plex Mono", ui-monospace, Menlo, monospace; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.6 "IBM Plex Mono", ui-monospace, Menlo, monospace; letter-spacing: 0.8px; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
   a { color: inherit; }
   h1, h2, h3, p { margin: 0; font-size: inherit; font-weight: 400; }
   video, img { display: block; }
@@ -52,7 +52,9 @@
   .card { position: relative; display: block; text-decoration: none; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; transition: border-color .2s, transform .25s cubic-bezier(.2,.7,.2,1); }
   .card:hover { border-color: color-mix(in srgb, var(--line) 50%, var(--muted)); }
   .card:active { transform: scale(.99); }
-  .card .stat { position: absolute; top: 18px; right: 18px; font-size: 12px; color: var(--muted); }
+  .card .title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 16px; }
+  .card .title h3 { margin-top: 0; }
+  .card .stat { flex: none; font-size: 12px; color: var(--muted); }
   .tile { width: 56px; height: 56px; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px rgba(0,0,0,.04); }
   .tile video { width: 100%; height: 100%; object-fit: cover; }
   .card h3 { margin-top: 22px; color: var(--strong); font-weight: 500; }
@@ -104,28 +106,24 @@
 
   <div class="panel" id="p-ai" role="tabpanel">
     <div class="grid">
-      <div class="card">
-        <div class="tile"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div>
-        <span class="stat">7 of 10 approved</span>
-        <h3>AI Match</h3>
+      <div class="card case">
+        <div class="shot"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="title"><h3>AI Match</h3><span class="stat">7 of 10 approved</span></div>
         <p>6,000+ designers narrowed to a shortlist of 30–60 per role.</p>
       </div>
-      <div class="card">
-        <div class="tile"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
-        <span class="stat">macOS</span>
-        <h3>Quack</h3>
+      <div class="card case">
+        <div class="shot"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="title"><h3>Quack</h3><span class="stat">macOS</span></div>
         <p>A macOS app in the notch, built with Claude Code.</p>
       </div>
-      <a class="card" href="https://mplan-tau.vercel.app/" target="_blank" rel="noopener">
-        <div class="tile"><video data-src="/assets/case/home/mplan.mp4" poster="/assets/case/home/mplan.jpg" muted loop playsinline preload="none"></video></div>
-        <span class="stat">Web ↗</span>
-        <h3>Call planner</h3>
+      <a class="card case" href="https://mplan-tau.vercel.app/" target="_blank" rel="noopener">
+        <div class="shot"><video data-src="/assets/case/home/mplan.mp4" poster="/assets/case/home/mplan.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="title"><h3>Call planner</h3><span class="stat">Web ↗</span></div>
         <p>Everyone paints the hours that suit them; the best slots come out on top.</p>
       </a>
-      <div class="card">
-        <div class="tile" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
-        <span class="stat">Mobile</span>
-        <h3>Travel journal</h3>
+      <div class="card case">
+        <div class="shot" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="title"><h3>Travel journal</h3><span class="stat">Mobile</span></div>
         <p>A trip board with photos and voice notes.</p>
       </div>
     </div>
