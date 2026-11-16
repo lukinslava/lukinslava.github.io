@@ -8,6 +8,8 @@
 <link rel="icon" href="/assets/icons/default-favicon-light.v1.png">
 <!-- Homepage prototype in a quiet, narrow-column style (reference: jakubantalik.com). Not linked anywhere. -->
 <style>
+  @font-face { font-family: "IBM Plex Mono"; src: url("/assets/case/fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("/assets/case/fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-display: swap; }
   :root {
     --bg: #fcfcfc; --panel: #fff; --ink: #2a2a2a; --strong: #111; --muted: #8c8c8c;
     --line: #ececec; --pill: #efefef; --tile: #f7f7f7;
@@ -19,7 +21,7 @@
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.6 Georgia, "Times New Roman", serif; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 13px/1.6 "IBM Plex Mono", ui-monospace, Menlo, monospace; letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
   a { color: inherit; }
   h1, h2, h3, p { margin: 0; font-size: inherit; font-weight: 400; }
   video, img { display: block; }
@@ -34,12 +36,12 @@
   @media (min-width: 960px) { .top-inner .theme { position: absolute; right: -60px; top: 16px; } }
 
   /* bio */
-  .bio { margin-top: 88px; font-size: 16px; line-height: 1.9; }
+  .bio { margin-top: 88px; font-size: 14px; line-height: 1.85; }
   .bio p + p { margin-top: 22px; }
 
   /* tabs */
   .tabs { display: flex; gap: 6px; margin-top: 72px; }
-  .tab { font: inherit; font-size: 15px; border: 0; background: none; color: var(--muted); padding: 8px 16px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s; }
+  .tab { font: inherit; font-size: 13px; border: 0; background: none; color: var(--muted); padding: 8px 16px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s; }
   .tab:hover { color: var(--strong); }
   .tab[aria-selected="true"] { background: var(--pill); color: var(--strong); }
   .panel { margin-top: 20px; }
@@ -50,10 +52,10 @@
   .card { position: relative; display: block; text-decoration: none; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; transition: border-color .2s, transform .25s cubic-bezier(.2,.7,.2,1); }
   .card:hover { border-color: color-mix(in srgb, var(--line) 50%, var(--muted)); }
   .card:active { transform: scale(.99); }
-  .card .stat { position: absolute; top: 18px; right: 18px; font-size: 13px; color: var(--muted); }
+  .card .stat { position: absolute; top: 18px; right: 18px; font-size: 12px; color: var(--muted); }
   .tile { width: 56px; height: 56px; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px rgba(0,0,0,.04); }
   .tile video { width: 100%; height: 100%; object-fit: cover; }
-  .card h3 { margin-top: 22px; color: var(--strong); }
+  .card h3 { margin-top: 22px; color: var(--strong); font-weight: 500; }
   .card p { color: var(--muted); line-height: 1.55; margin-top: 2px; }
 
   /* case cards: the cover is the point, so it gets the room */
@@ -65,8 +67,8 @@
   .list { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 6px 18px; }
   .row { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
   .row:last-child { border-bottom: 0; }
-  .row b { font-weight: 400; color: var(--strong); }
-  .row .when { color: var(--muted); font-size: 13px; font-variant-numeric: tabular-nums; padding-top: 2px; }
+  .row b { font-weight: 500; color: var(--strong); }
+  .row .when { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; padding-top: 2px; }
   .row .what { grid-column: 1 / -1; color: var(--muted); }
 
   footer { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 56px; color: var(--muted); }
@@ -76,7 +78,7 @@
   @media (max-width: 640px) {
     .top-inner { padding: 16px 16px 0; }
     .page { padding: 0 16px 48px; }
-    .bio { margin-top: 56px; font-size: 15px; line-height: 1.8; }
+    .bio { margin-top: 56px; font-size: 13px; line-height: 1.8; }
     .tabs { margin-top: 48px; }
     .grid { grid-template-columns: 1fr; }
   }
