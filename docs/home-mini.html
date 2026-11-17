@@ -69,6 +69,27 @@
   .case h3 { margin-top: 16px; }
 
   /* experience */
+  /* Quack and Travel journal: a deck of clips; a click sends the top page to the back (as on the homepage) */
+  .deck { position: relative; aspect-ratio: 16 / 9; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .pg { position: absolute; inset: 0; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: 0 0 0 1px var(--line), 0 14px 24px -18px rgba(0,0,0,.35);
+        transition: transform .5s cubic-bezier(.2,.75,.2,1), opacity .4s ease, filter .5s ease; }
+  .pg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pg[data-pos="0"] { z-index: 4; transform: none; }
+  .pg[data-pos="1"] { z-index: 3; transform: translateX(6px) scaleY(.965); filter: brightness(.9); }
+  .pg[data-pos="2"] { z-index: 2; transform: translateX(12px) scaleY(.93); filter: brightness(.8); }
+  .pg[data-pos="3"] { z-index: 1; transform: translateX(18px) scaleY(.895); filter: brightness(.7); }
+  .deck.dark .pg[data-pos="1"] { filter: brightness(2.8); }
+  .deck.dark .pg[data-pos="2"] { filter: brightness(4.6); }
+  .pg.out { z-index: 5; transform: translateX(-10%); opacity: 0; }
+  .deck:hover .pg[data-pos="0"]:not(.out) { transform: translateX(-3px); }
+  .deck .label { position: absolute; left: 10px; bottom: 10px; z-index: 6; max-width: calc(100% - 20px); padding: 6px 11px; border-radius: 999px; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font-size: 12px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+  .deck .label i { font-style: normal; opacity: .6; margin-right: 8px; }
+  .dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+  .dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: width .3s ease, background-color .3s ease; }
+  .dots i.on { width: 18px; background: var(--strong); }
+  .sub { margin: 28px 0 10px 4px; color: var(--muted); font-size: 12px; }
+  a.row { text-decoration: none; color: inherit; }
+  a.row:hover b { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
   .list { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 6px 18px; }
   .row { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
   .row:last-child { border-bottom: 0; }
@@ -117,7 +138,14 @@
         <p>6,000+ designers narrowed to a shortlist of 30–60 per role.</p>
       </div>
       <div class="card case">
-        <div class="shot"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="deck" role="button" tabindex="0" aria-label="Next Quack feature">
+          <div class="pg" data-pos="0" data-label="Lives in the notch"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="1" data-label="Clipboard, screenshots and links"><video data-src="/assets/case/home/quack-panel.mp4" poster="/assets/case/home/quack-panel.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="2" data-label="Desktop cleanup in one click"><video data-src="/assets/case/home/quack-cleanup.mp4" poster="/assets/case/home/quack-cleanup.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="3" data-label="A green dot when Claude is waiting"><video data-src="/assets/case/home/quack-claude.mp4" poster="/assets/case/home/quack-claude.jpg" muted loop playsinline preload="none"></video></div>
+          <span class="label"></span>
+        </div>
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         <div class="title"><h3>Quack</h3><span class="stat">macOS</span></div>
         <p>A macOS app in the notch, built with Claude Code.</p>
       </div>
@@ -127,7 +155,13 @@
         <p>Everyone paints the hours that suit them; the best slots come out on top.</p>
       </a>
       <div class="card case">
-        <div class="shot" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="deck dark" role="button" tabindex="0" aria-label="Next Travel journal feature">
+          <div class="pg" data-pos="0" data-label="Light up the board" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="1" data-label="Add a photo" style="background:#151218"><video data-src="/assets/case/home/trip-photo.mp4" poster="/assets/case/home/trip-photo.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="2" data-label="Record a voice note" style="background:#151218"><video data-src="/assets/case/home/trip-voice.mp4" poster="/assets/case/home/trip-voice.jpg" muted loop playsinline preload="none"></video></div>
+          <span class="label"></span>
+        </div>
+        <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
         <div class="title"><h3>Travel journal</h3><span class="stat">Mobile</span></div>
         <p>A trip board with photos and voice notes.</p>
       </div>
@@ -159,10 +193,13 @@
     <div class="list">
       <div class="row"><b>Pragmatica · Design Lead</b><span class="when">2025 — now</span><span class="what">Outstaff unit: matching and growing 40 designers</span></div>
       <div class="row"><b>Looch · Product Design Lead</b><span class="when">2023 — 2025</span><span class="what">Product studio, teams of up to 12 designers</span></div>
-      <div class="row"><b>Phygital+ · Product Designer</b><span class="when">2024</span><span class="what">Generative AI workspace</span></div>
       <div class="row"><b>RingCentral · Senior Product Designer</b><span class="when">2021 — 2023</span><span class="what">Video meetings and whiteboard</span></div>
-      <div class="row"><b>Superlive · Product Designer</b><span class="when">2020 — 2021</span><span class="what">B2B sports betting products</span></div>
       <div class="row"><b>Awards</b><span class="when"></span><span class="what">WDA 24 · WDA 25 · Tagline Awards · Golden Site</span></div>
+    </div>
+    <p class="sub">Side projects</p>
+    <div class="list">
+      <a class="row" href="https://aleria.ai/" target="_blank" rel="noopener"><b>Aleria · Head of Design</b><span class="when">aleria.ai ↗</span><span class="what">Several products built on proprietary AI</span></a>
+      <a class="row" href="https://phygital.plus/" target="_blank" rel="noopener"><b>Phygital+ · Product Designer</b><span class="when">2024 · phygital.plus ↗</span><span class="what">First-session experience for a generative AI workspace</span></a>
     </div>
   </div>
 
@@ -182,7 +219,40 @@
       else v.pause();
     }
   }, { rootMargin: "100px" });
-  document.querySelectorAll("video[data-src]").forEach((v) => io.observe(v));
+  document.querySelectorAll("video[data-src]").forEach((v) => { if (!v.closest(".deck")) io.observe(v); });
+
+  // decks (Quack, Travel journal): a click (or Enter / Space) sends the top page to the back; only the top clip plays
+  for (const deck of document.querySelectorAll(".deck")) {
+    const pages = [...deck.querySelectorAll(".pg")];
+    const label = deck.querySelector(".label");
+    const dots = [...deck.parentElement.querySelectorAll(".dots i")];
+    const n = pages.length;
+    let onScreen = false, busy = false;
+    const top = () => pages.find((c) => c.dataset.pos === "0");
+    const sync = () => {
+      const t = top(), k = pages.indexOf(t);
+      label.innerHTML = `<i>${String(k + 1).padStart(2, "0")}/${String(n).padStart(2, "0")}</i>`;
+      label.append(t.dataset.label);
+      dots.forEach((d, i) => d.classList.toggle("on", i === k));
+      for (const c of pages) {
+        const v = c.querySelector("video");
+        if (c === t && onScreen && !still) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); } else v.pause();
+      }
+    };
+    const next = () => {
+      if (busy) return;
+      const shift = () => { for (const c of pages) c.dataset.pos = String((+c.dataset.pos - 1 + n) % n); sync(); };
+      if (still) { shift(); return; }
+      busy = true;
+      const t = top();
+      t.classList.add("out");
+      setTimeout(() => { shift(); t.classList.remove("out"); busy = false; }, 280);
+    };
+    deck.addEventListener("click", next);
+    deck.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); next(); } });
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; sync(); }, { threshold: 0.5 }).observe(deck);
+    sync();
+  }
 
   const tabs = [...document.querySelectorAll(".tab")];
   tabs.forEach((t) => t.addEventListener("click", () => {
