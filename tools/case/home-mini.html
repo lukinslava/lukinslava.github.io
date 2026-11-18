@@ -71,17 +71,14 @@
   /* experience */
   /* Quack and Travel journal: a deck of clips; a click sends the top page to the back (as on the homepage) */
   .deck { position: relative; aspect-ratio: 16 / 9; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .pg { position: absolute; inset: 0; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: 0 0 0 1px var(--line), 0 14px 24px -18px rgba(0,0,0,.35);
+  .pg { position: absolute; inset: 0; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: inset 0 0 0 1px var(--line);
         transition: transform .5s cubic-bezier(.2,.75,.2,1), opacity .4s ease, filter .5s ease; }
   .pg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .pg[data-pos="0"] { z-index: 4; transform: none; }
-  .pg[data-pos="1"] { z-index: 3; transform: translateX(6px) scaleY(.965); filter: brightness(.9); }
-  .pg[data-pos="2"] { z-index: 2; transform: translateX(12px) scaleY(.93); filter: brightness(.8); }
-  .pg[data-pos="3"] { z-index: 1; transform: translateX(18px) scaleY(.895); filter: brightness(.7); }
-  .deck.dark .pg[data-pos="1"] { filter: brightness(2.8); }
-  .deck.dark .pg[data-pos="2"] { filter: brightness(4.6); }
+  /* no stack: the pages behind sit exactly under the top one, so only one clip is visible */
+  .pg[data-pos="1"] { z-index: 3; transform: none; }
+  .pg[data-pos="2"], .pg[data-pos="3"] { z-index: 1; transform: none; opacity: 0; }
   .pg.out { z-index: 5; transform: translateX(-10%); opacity: 0; }
-  .deck:hover .pg[data-pos="0"]:not(.out) { transform: translateX(-3px); }
   .deck .label { position: absolute; left: 10px; bottom: 10px; z-index: 6; max-width: calc(100% - 20px); padding: 6px 11px; border-radius: 999px; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font-size: 12px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
   .deck .label i { font-style: normal; opacity: .6; margin-right: 8px; }
   .dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
