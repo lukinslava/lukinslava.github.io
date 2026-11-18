@@ -44,7 +44,9 @@ node tools/serve.mjs                                     # локальный с
 
 ## Что сейчас на сайте
 
-**С 2026-11-03 главная — бывший черновик `/home-next`** (просьба автора
+**С 2026-11-18 главная — бывший прототип `/home-mini`** (просьба автора «давай сделаем её основной»): `tools/case/index.html`, узкая колонка 690px, IBM Plex Mono, кружок-видео по центру, вкладки AI products / Cases / Experience, AI products по одной карточке в ряд, у Quack и Travel journal колоды без выглядывающих краёв, в Experience отдельный блок Side projects (Aleria, Phygital+). `/home-mini` теперь переадресация на `/`. Прежняя главная (описание ниже) сохранена как `/home-classic` (`tools/case/home-classic.html`, `noindex`).
+
+**С 2026-11-03 по 2026-11-18 главной был бывший черновик `/home-next`** (просьба автора
 «заменяй старую главную на это»). Исходник — `tools/case/index.html`, сборка
 пишет его поверх главной Framer; `/home-next` — переадресация на `/`. Главная
 Framer (Cases / AI & side projects ниже) больше не показывается, но
