@@ -2,313 +2,256 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Lukin Slava</title>
-<meta name="description" content="Design leader â Head of Design / Design Lead. I build design teams and ship AI products myself.">
+<meta name="description" content="Design lead with 8+ years of experience. I build design teams and ship AI products myself.">
 <link rel="canonical" href="https://lukinslava.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://lukinslava.github.io/">
 <meta property="og:title" content="Lukin Slava">
-<meta property="og:description" content="Design leader â Head of Design / Design Lead. I build design teams and ship AI products myself.">
+<meta property="og:description" content="Design lead with 8+ years of experience. I build design teams and ship AI products myself.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Lukin Slava">
-<meta name="twitter:description" content="Design leader â Head of Design / Design Lead. I build design teams and ship AI products myself.">
+<meta name="twitter:description" content="Design lead with 8+ years of experience. I build design teams and ship AI products myself.">
 <link rel="icon" href="/assets/icons/default-favicon-light.v1.png">
 <link rel="apple-touch-icon" href="/assets/icons/default-touch-icon.v3.png">
-<!-- Homepage: a feed of work, minimum text. Standalone, outside Framer; tools/build.mjs writes it over the Framer index. -->
+<!-- Homepage since 2026-11-18 (was the /home-mini prototype): quiet narrow column in IBM Plex Mono, tabs AI products / Cases / Experience.
+     Standalone, outside Framer; tools/build.mjs writes it over the Framer index. The previous homepage is /home-classic. -->
 <style>
-  @font-face { font-family: "Antonio"; src: url("/assets/fonts/antonio/v22/gNMEW3NwSYq_9WD3yHQiFQ.woff2") format("woff2"); font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("/assets/case/fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "IBM Plex Mono"; src: url("/assets/case/fonts/ibm-plex-mono-latin-500-normal.woff2") format("woff2"); font-weight: 500; font-display: swap; }
   :root {
-    --bg: #f5f5f5; --panel: #fff; --ink: #111110; --text: #2f2f2d; --body: #55544f; --label: #8a8984;
-    --line: rgba(0,0,0,.08); --accent: rgb(249, 112, 41);
-    --hairline: 0 0 0 1px rgba(0,0,0,.05), 0 2px 6px -2px rgba(0,0,0,.08);
-    --wrap: 1240px; --gutter: 24px;
+    --bg: #fcfcfc; --panel: #fff; --ink: #2a2a2a; --strong: #111; --muted: #8c8c8c;
+    --line: #ececec; --pill: #efefef; --tile: #f7f7f7;
+    --col: 690px; --r: 20px;
+  }
+  :root[data-theme="dark"] {
+    --bg: #111; --panel: #181818; --ink: #d6d6d6; --strong: #f2f2f2; --muted: #7d7d7d;
+    --line: #262626; --pill: #222; --tile: #1f1f1f;
   }
   * { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-  img, video { display: block; max-width: 100%; }
-  a { color: inherit; text-decoration: none; }
-  h1, h2, h3, p { margin: 0; font-weight: 400; }
-  .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
-  .antonio { font-family: "Antonio", sans-serif; letter-spacing: -0.03em; }
-  .quiet { color: var(--label); }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 14px/1.6 "IBM Plex Mono", ui-monospace, Menlo, monospace; letter-spacing: 0.008em; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
+  a { color: inherit; }
+  h1, h2, h3, p { margin: 0; font-size: inherit; font-weight: 400; }
+  video, img { display: block; }
+  .u { color: var(--strong); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); transition: text-decoration-color .15s; }
+  .u:hover { text-decoration-color: currentColor; }
+  .muted { color: var(--muted); }
 
-  /* nav, as on the live homepage */
-  nav { position: sticky; top: 0; z-index: 10; background: #fff; }
-  nav .bar { display: flex; align-items: center; justify-content: space-between; height: 64px; padding: 0 32px; }
-  nav .me img { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; }
-  nav .links { display: flex; align-items: center; gap: 20px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 16px; letter-spacing: -0.01em; }
-  nav .links a:not(.btn):hover { color: var(--accent); }
-  .btn { display: inline-flex; align-items: center; padding: 8px; border-radius: 8px; background: var(--accent); color: #fff; font-family: "Antonio", sans-serif; font-size: 16px; line-height: 1.2; letter-spacing: 0; transition: transform .15s ease, filter .15s ease; }
-  .btn:hover { filter: brightness(1.06); }
-  .btn:active { transform: scale(.97); }
+  .theme { flex: none; width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--pill); color: var(--strong); display: grid; place-items: center; cursor: pointer; }
+  .theme svg { width: 16px; height: 16px; }
+  .page { max-width: calc(var(--col) + 48px); margin: 0 auto; padding: 0 24px 64px; }
+  .top-inner { position: relative; display: flex; justify-content: space-between; align-items: center; max-width: calc(var(--col) + 48px); margin: 0 auto; padding: 20px 24px 0; }
+  @media (min-width: 960px) { .top-inner .theme { position: absolute; right: -60px; top: 16px; } }
 
-  /* hero */
-  .hero { padding-top: 126px; padding-bottom: 88px; display: grid; justify-items: center; text-align: center; }
-  .hero .avatar { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; margin-bottom: 16px; background: #e6e6e3; }
-  /* one accent (the name in Antonio); everything else is body text or a quiet label */
-  .hero h1 { font-family: "Antonio", sans-serif; font-size: clamp(64px, 6.7vw, 96px); line-height: .9; letter-spacing: -0.04em; }
-  /* one line under the name: the role reads first by contrast, not by colour */
-  .lead { margin-top: 28px; max-width: 620px; font-size: 21px; line-height: 1.4; letter-spacing: -0.01em; color: var(--label); text-wrap: balance; }
-  .lead b { font-weight: 400; color: var(--ink); }
+  /* bio */
+  .avatar { display: block; width: 144px; height: 144px; margin: 72px auto 0; border-radius: 50%; object-fit: cover; background: #e6e6e3; }
+  .bio { margin-top: 28px; font-size: 16px; line-height: 1.85; }
+  .bio p + p { margin-top: 22px; }
 
-  /* feed */
-  .feed-head { display: flex; align-items: baseline; justify-content: center; gap: 16px; margin-bottom: 32px; text-align: center; }
-  .feed-head h2 { font-family: "Antonio", sans-serif; font-size: 40px; line-height: 1; letter-spacing: -0.04em; }
-  section { padding-bottom: 96px; }
+  /* tabs */
+  .tabs { display: flex; gap: 6px; margin-top: 72px; }
+  .tab { font: inherit; font-size: 14px; border: 0; background: none; color: var(--muted); padding: 8px 16px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s; }
+  .tab:hover { color: var(--strong); }
+  .tab[aria-selected="true"] { background: var(--pill); color: var(--strong); }
+  .panel { margin-top: 20px; }
+  .panel[hidden] { display: none; }
 
-  /* tiles: AI products and cases share one size */
-  .tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 16px; }
-  .tiles.stack { grid-template-columns: minmax(0, 1fr); max-width: 720px; margin: 0 auto; gap: 48px; }
-  .tile { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; }
-  .frame { position: relative; aspect-ratio: 16 / 9; border-radius: 20px; overflow: hidden; background: #e6e6e3; box-shadow: var(--hairline); }
-  .frame img, .frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .frame video { object-position: center top; }
-  .frame .type { position: absolute; inset: 0; display: grid; place-items: center; font-family: "Antonio", sans-serif; font-size: clamp(56px, 8vw, 112px); letter-spacing: -0.03em; }
-  .tile[data-href] { cursor: pointer; }
-  .tile .frame { transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s; }
-  a.tile:hover .frame, .tile[data-href]:hover .frame { transform: translateY(-3px); box-shadow: 0 0 0 1px rgba(0,0,0,.05), 0 24px 40px -24px rgba(0,0,0,.3); }
-  .t-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
-  .tile h3 { font-size: 22px; line-height: 1.2; letter-spacing: -0.02em; }
-  .tile p { font-size: 16px; line-height: 1.4; color: var(--label); margin-top: 4px; }
-  .tile h3 a { color: inherit; }
+  /* cards */
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .grid.one { grid-template-columns: 1fr; gap: 16px; }
+  .grid.one .shot { aspect-ratio: 16 / 9; }
+  .card { position: relative; display: block; text-decoration: none; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; transition: border-color .2s, transform .25s cubic-bezier(.2,.7,.2,1); }
+  .card:hover { border-color: color-mix(in srgb, var(--line) 50%, var(--muted)); }
+  .card:active { transform: scale(.99); }
+  .card .title { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 16px; }
+  .card .title h3 { margin-top: 0; }
+  .card .stat { flex: none; font-size: 12px; color: var(--muted); }
+  .tile { width: 56px; height: 56px; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: inset 0 0 0 1px var(--line), 0 1px 2px rgba(0,0,0,.04); }
+  .tile video { width: 100%; height: 100%; object-fit: cover; }
+  .card h3 { margin-top: 22px; color: var(--strong); font-weight: 500; }
+  .card p { color: var(--muted); line-height: 1.55; margin-top: 2px; }
 
-  /* Quack and Travel journal: a deck of clips; a click sends the top card to the back and the next clip plays */
-  .deck { position: relative; aspect-ratio: 16 / 9; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-  .card { position: absolute; inset: 0; border-radius: 20px; overflow: hidden; background: #e6e6e3; transform-origin: 50% 50%;
-          box-shadow: 0 0 0 1px rgba(0,0,0,.06), 0 18px 32px -20px rgba(0,0,0,.35);
-          transition: transform .5s cubic-bezier(.2,.75,.2,1), opacity .4s ease, filter .5s ease; }
-  .card video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-  .card[data-pos="0"] { z-index: 4; transform: none; }
-  /* a straight stack of pages, like "By criteria" in the AI Match review: the cards behind show only as thin
-     edges on the right, each a little shorter and darker */
-  .card[data-pos="1"] { z-index: 3; transform: translateX(7px) scaleY(.965); filter: brightness(.9); }
-  .card[data-pos="2"] { z-index: 2; transform: translateX(14px) scaleY(.93); filter: brightness(.8); }
-  .card[data-pos="3"] { z-index: 1; transform: translateX(21px) scaleY(.895); filter: brightness(.7); }
-  /* on a dark deck darker edges vanish, so the cards behind get lighter instead */
-  .deck.dark .card[data-pos="1"] { filter: brightness(2.8); }
-  .deck.dark .card[data-pos="2"] { filter: brightness(4.6); }
-  .card.out { z-index: 5; transform: translateX(-10%); opacity: 0; }
-  .deck:hover .card[data-pos="0"]:not(.out) { transform: translateX(-3px); }
-  .dots { display: flex; justify-content: center; gap: 6px; margin-top: 14px; }
-  .dots i { width: 6px; height: 6px; border-radius: 3px; background: #cfcdc7; transition: width .3s ease, background-color .3s ease; }
-  .dots i.on { width: 18px; background: var(--accent); }
-  .label { position: absolute; left: 12px; bottom: 12px; z-index: 6; max-width: calc(100% - 24px); padding: 7px 12px; border-radius: 999px; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font-size: 13px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
-  .label i { font-style: normal; opacity: .6; margin-right: 6px; font-variant-numeric: tabular-nums; }
+  /* case cards: the cover is the point, so it gets the room */
+  .shot { aspect-ratio: 16 / 10; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: inset 0 0 0 1px var(--line); }
+  .shot video { width: 100%; height: 100%; object-fit: cover; }
+  .case h3 { margin-top: 16px; }
 
   /* experience */
-  .jobs { background: var(--panel); border-radius: 24px; box-shadow: var(--hairline); padding: 8px 28px; }
-  .job { display: grid; grid-template-columns: 200px minmax(0, 1fr) 200px; gap: 16px; align-items: baseline; padding: 20px 0; border-top: 1px solid var(--line); }
-  .job:first-child { border-top: 0; }
-  .job b { font-weight: 400; font-size: 22px; letter-spacing: -0.02em; }
-  .job span { font-size: 17px; color: var(--text); }
-  .job span small { display: block; margin-top: 4px; font-size: 15px; color: var(--label); }
-  .job time { font-size: 15px; color: var(--label); text-align: right; }
-  .job-more { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0 20px; border-top: 1px solid var(--line); font-size: 15px; color: var(--label); }
-  .job a b:hover, a.job:hover b { color: var(--accent); }
-  .sub { margin: 28px 0 12px; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; color: var(--label); }
-  .awards { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
-  .tag { font-size: 13px; line-height: 1; padding: 7px 10px; border-radius: 999px; background: var(--panel); box-shadow: var(--hairline); color: var(--text); white-space: nowrap; }
+  /* Quack and Travel journal: a deck of clips; a click sends the top page to the back (as on the homepage) */
+  .deck { position: relative; aspect-ratio: 16 / 9; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .pg { position: absolute; inset: 0; border-radius: 12px; overflow: hidden; background: var(--tile); box-shadow: inset 0 0 0 1px var(--line);
+        transition: transform .5s cubic-bezier(.2,.75,.2,1), opacity .4s ease, filter .5s ease; }
+  .pg video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .pg[data-pos="0"] { z-index: 4; transform: none; }
+  /* no stack: the pages behind sit exactly under the top one, so only one clip is visible */
+  .pg[data-pos="1"] { z-index: 3; transform: none; }
+  .pg[data-pos="2"], .pg[data-pos="3"] { z-index: 1; transform: none; opacity: 0; }
+  .pg.out { z-index: 5; transform: translateX(-10%); opacity: 0; }
+  .deck .label { position: absolute; left: 10px; bottom: 10px; z-index: 6; max-width: calc(100% - 20px); padding: 6px 11px; border-radius: 999px; background: rgba(17,17,16,.72); backdrop-filter: blur(8px); color: #fff; font-size: 12px; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+  .deck .label i { font-style: normal; opacity: .6; margin-right: 8px; }
+  .dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+  .dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--line); transition: width .3s ease, background-color .3s ease; }
+  .dots i.on { width: 18px; background: var(--strong); }
+  .sub { margin: 28px 0 10px 4px; color: var(--muted); font-size: 12px; }
+  a.row { text-decoration: none; color: inherit; }
+  a.row:hover b { text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+  .list { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r); padding: 6px 18px; }
+  .row { display: grid; grid-template-columns: 1fr auto; gap: 0 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .row b { font-weight: 500; color: var(--strong); }
+  .row .when { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; padding-top: 2px; }
+  .row .what { grid-column: 1 / -1; color: var(--muted); }
 
-  footer { padding: 72px 0 96px; border-top: 1px solid var(--line); }
-  footer .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
-  footer h2 { font-family: "Antonio", sans-serif; font-size: 56px; line-height: 1; letter-spacing: -0.04em; }
-  footer .links { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; font-size: 16px; }
-  footer .links a:not(.btn):hover { color: var(--accent); }
+  footer { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-top: 56px; color: var(--muted); }
+  footer a { color: var(--muted); }
+  footer span { margin-right: 10px; }
 
-  @media (max-width: 900px) {
-    .tiles { grid-template-columns: minmax(0, 1fr); }
-    .job { grid-template-columns: 1fr; gap: 4px; }
-    .job time { text-align: left; }
-  }
-  @media (max-width: 560px) {
-    :root { --gutter: 16px; }
-    nav .bar { padding: 0 16px; }
-    nav .links { gap: 14px; }
-    .hero { padding-top: 48px; padding-bottom: 56px; }
-    .hero .avatar { width: 140px; height: 140px; }
-    .lead { font-size: 18px; margin-top: 20px; }
-    .feed-head h2 { font-size: 32px; }
-    footer h2 { font-size: 44px; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    .tile .frame, .card { transition: none; }
+  @media (max-width: 640px) {
+    .top-inner { padding: 16px 16px 0; }
+    .page { padding: 0 16px 48px; }
+    .avatar { width: 120px; height: 120px; margin-top: 48px; }
+    .bio { margin-top: 24px; font-size: 16px; line-height: 1.8; }
+    .tabs { margin-top: 48px; }
+    .grid { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
+<div class="top-inner">
+  <a class="name" href="/" style="color:var(--strong);text-decoration:none">Slava Lukin</a>
+  <button class="theme" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1z"/></svg></button>
+</div>
 
-<nav>
-  <div class="bar">
-    <a class="me" href="#top" aria-label="Slava Lukin"><img src="/assets/images/FiP6oEtyN03kkZ008gtP2OjQz7A.jpg" alt=""></a>
-    <div class="links">
-      <a href="https://t.me/slavanotes">tg-channel</a>
-      <a href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>
-      <a class="btn" href="https://t.me/lukinslava">Connect</a>
-    </div>
-  </div>
-</nav>
-
-<header class="hero wrap" id="top">
+<main class="page">
   <video class="avatar" src="/assets/files/imVTXWfHan3JNG5d8rHcxfUPSI.mp4" muted loop playsinline autoplay aria-hidden="true"></video>
-  <h1>Hey, I'm Slava</h1>
-  <p class="lead"><b>Design leader.</b> I build design teams of up to 40 designers and ship AI products myself</p>
-</header>
+  <div class="bio">
+    <p>I'm a design lead with 8+ years of experience. I build design teams and ship AI products myself. Now I lead design at Pragmatica; before that I led a team at Looch and worked at RingCentral, Yandex Market and Mindbox.</p>
+    <p>You can find me on <a class="u" href="https://t.me/lukinslava">Telegram</a>, read my <a class="u" href="https://t.me/slavanotes">channel</a>, or look at my <a class="u" href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>.</p>
+  </div>
 
-<main class="wrap">
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" aria-selected="true" aria-controls="p-ai">AI products</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-cases">Cases</button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="p-exp">Experience</button>
+  </div>
 
-  <section id="ai">
-    <div class="feed-head"><h2>AI products</h2></div>
-    <div class="tiles stack">
-      <article class="tile">
-        <div class="frame" style="background:#fff"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div>
-        <div>
-          <div class="t-head"><h3>AI Match</h3></div>
-          <p>Internal tool at Pragmatica: 6,000+ designers → a shortlist of 30–60 per role</p>
-        </div>
-      </article>
-      <article class="tile">
+  <div class="panel" id="p-ai" role="tabpanel">
+    <div class="grid one">
+      <div class="card case">
+        <div class="shot"><video data-src="/assets/case/home/aim-match.mp4" poster="/assets/case/home/aim-match.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="title"><h3>AI Match</h3></div>
+        <p>6,000+ designers narrowed to a shortlist of 30–60 per role.</p>
+      </div>
+      <div class="card case">
         <div class="deck" role="button" tabindex="0" aria-label="Next Quack feature">
-          <div class="card" data-pos="0" data-label="Lives in the notch"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
-          <div class="card" data-pos="1" data-label="Clipboard, screenshots and links"><video data-src="/assets/case/home/quack-panel.mp4" poster="/assets/case/home/quack-panel.jpg" muted loop playsinline preload="none"></video></div>
-          <div class="card" data-pos="2" data-label="Desktop cleanup in one click"><video data-src="/assets/case/home/quack-cleanup.mp4" poster="/assets/case/home/quack-cleanup.jpg" muted loop playsinline preload="none"></video></div>
-          <div class="card" data-pos="3" data-label="A green dot when Claude is waiting"><video data-src="/assets/case/home/quack-claude.mp4" poster="/assets/case/home/quack-claude.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="0" data-label="Lives in the notch"><video data-src="/assets/case/home/quack-hello.mp4" poster="/assets/case/home/quack-hello.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="1" data-label="Clipboard, screenshots and links"><video data-src="/assets/case/home/quack-panel.mp4" poster="/assets/case/home/quack-panel.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="2" data-label="Desktop cleanup in one click"><video data-src="/assets/case/home/quack-cleanup.mp4" poster="/assets/case/home/quack-cleanup.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="3" data-label="A green dot when Claude is waiting"><video data-src="/assets/case/home/quack-claude.mp4" poster="/assets/case/home/quack-claude.jpg" muted loop playsinline preload="none"></video></div>
           <span class="label"></span>
         </div>
         <div class="dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-        <div>
-          <h3>Quack</h3>
-          <p>Side project: a macOS app in the notch, built with Claude Code</p>
-        </div>
-      </article>
-      <article class="tile" data-href="https://mplan-tau.vercel.app/">
-        <div class="frame" style="background:#f3f5f9"><video data-src="/assets/case/home/mplan.mp4" poster="/assets/case/home/mplan.jpg" muted loop playsinline preload="none"></video></div>
-        <div>
-          <h3><a href="https://mplan-tau.vercel.app/" target="_blank" rel="noopener">Call planner</a></h3>
-          <p>A link instead of a long chat: everyone paints the hours that suit them, and the best slots come out on top</p>
-        </div>
-      </article>
-      <article class="tile">
+        <div class="title"><h3>Quack</h3><span class="stat">macOS</span></div>
+        <p>A macOS app in the notch, built with Claude Code.</p>
+      </div>
+      <a class="card case" href="https://mplan-tau.vercel.app/" target="_blank" rel="noopener">
+        <div class="shot"><video data-src="/assets/case/home/mplan.mp4" poster="/assets/case/home/mplan.jpg" muted loop playsinline preload="none"></video></div>
+        <div class="title"><h3>Call planner</h3><span class="stat">Web / Mobile ↗</span></div>
+        <p>Everyone paints the hours that suit them; the best slots come out on top.</p>
+      </a>
+      <div class="card case">
         <div class="deck dark" role="button" tabindex="0" aria-label="Next Travel journal feature">
-          <div class="card" data-pos="0" data-label="Light up the board" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
-          <div class="card" data-pos="1" data-label="Add a photo" style="background:#151218"><video data-src="/assets/case/home/trip-photo.mp4" poster="/assets/case/home/trip-photo.jpg" muted loop playsinline preload="none"></video></div>
-          <div class="card" data-pos="2" data-label="Record a voice note" style="background:#151218"><video data-src="/assets/case/home/trip-voice.mp4" poster="/assets/case/home/trip-voice.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="0" data-label="Light up the board" style="background:#161318"><video data-src="/assets/case/home/trip.mp4" poster="/assets/case/home/trip.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="1" data-label="Add a photo" style="background:#151218"><video data-src="/assets/case/home/trip-photo.mp4" poster="/assets/case/home/trip-photo.jpg" muted loop playsinline preload="none"></video></div>
+          <div class="pg" data-pos="2" data-label="Record a voice note" style="background:#151218"><video data-src="/assets/case/home/trip-voice.mp4" poster="/assets/case/home/trip-voice.jpg" muted loop playsinline preload="none"></video></div>
           <span class="label"></span>
         </div>
         <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
-        <div>
-          <h3>Travel journal</h3>
-        </div>
-      </article>
-    </div>
-  </section>
-
-  <section id="cases">
-    <div class="feed-head"><h2>Cases</h2></div>
-    <div class="tiles">
-      <a class="tile" href="/lead-case">
-        <div class="frame" style="background:#ffd500"><video data-src="/assets/case/home/team-cover.mp4" poster="/assets/case/home/team-cover.jpg" muted loop playsinline preload="none"></video></div>
-        <div><h3>Team restructuring: from 2 to 5 designers</h3><p>Yandex Market, logistics</p></div>
-      </a>
-      <a class="tile" href="/process">
-        <div class="frame" style="background:#0059a4"><video data-src="/assets/case/home/process-cover.mp4" poster="/assets/case/home/process-cover.jpg" muted loop playsinline preload="none"></video></div>
-        <div><h3>The process that makes designers stronger</h3><p>How designers stopped being just a pair of hands</p></div>
-      </a>
-      <a class="tile" href="/mind-case">
-        <div class="frame" style="background:#00965a"><video data-src="/assets/case/home/mindbox-cover.mp4" poster="/assets/case/home/mindbox-cover.jpg" muted loop playsinline preload="none"></video></div>
-        <div><h3>From one-week planning to product thinking</h3><p>Design process at Mindbox</p></div>
-      </a>
-      <a class="tile" href="/autodraw">
-        <div class="frame" style="background:#fbfbfb"><video data-src="/assets/case/home/autodraw-demo-cover.mp4" poster="/assets/case/home/autodraw-demo-cover.jpg" muted loop playsinline preload="none"></video></div>
-        <div><h3>Autodraw</h3><p>AI shape recognition for the RingCentral whiteboard · ~$700K projected revenue</p></div>
-      </a>
-    </div>
-  </section>
-
-  <section id="experience">
-    <div class="feed-head"><h2>Experience</h2></div>
-    <div class="jobs">
-      <div class="job"><b>Pragmatica</b><span>Design Lead<small>Outstaff unit: matching and growing 40 designers for big tech and startups</small></span><time>Dec 2025 — now</time></div>
-      <div class="job"><b>Looch</b><span>Product Design Lead<small>Product studio — #1 UX and research in Russia</small></span><time>Nov 2023 — Oct 2025</time></div>
-      <div class="job"><b>RingCentral</b><span>Senior Product Designer<small>#1 global UCaaS and CCaaS solution</small></span><time>Dec 2021 — Jul 2023</time></div>
-      <p class="job-more"><span>and other</span><time>since 2018</time></p>
-    </div>
-    <p class="sub">Side projects</p>
-    <div class="jobs">
-      <a class="job" href="https://aleria.ai/"><b>Aleria</b><span>Head of Design<small>Several products built on proprietary AI</small></span><time>aleria.ai ↗</time></a>
-      <a class="job" href="https://phygital.plus/"><b>Phygital+</b><span>Product Designer<small>First-session experience for a generative AI workspace</small></span><time>2024 · phygital.plus ↗</time></a>
-    </div>
-    <div class="awards"><span class="tag">WDA 24</span><span class="tag">WDA 25</span><span class="tag">Tagline Awards</span><span class="tag">Golden Site Award</span></div>
-  </section>
-
-</main>
-
-<footer>
-  <div class="wrap">
-    <h2>Let's talk</h2>
-    <div class="links">
-      <a href="https://t.me/slavanotes">tg-channel</a>
-      <a href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>
-      <a class="btn" href="https://t.me/lukinslava">Connect</a>
+        <div class="title"><h3>Travel journal</h3><span class="stat">Mobile</span></div>
+        <p>A trip board with photos and voice notes.</p>
+      </div>
     </div>
   </div>
-</footer>
+
+  <div class="panel" id="p-cases" role="tabpanel" hidden>
+    <div class="grid">
+      <a class="card case" href="/lead-case">
+        <div class="shot"><video data-src="/assets/case/home/team-cover.mp4" poster="/assets/case/home/team-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <h3>Team from 2 to 5 designers</h3><p>Yandex Market, logistics</p>
+      </a>
+      <a class="card case" href="/process">
+        <div class="shot"><video data-src="/assets/case/home/process-cover.mp4" poster="/assets/case/home/process-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <h3>The process that makes designers stronger</h3><p>Yandex Market, logistics</p>
+      </a>
+      <a class="card case" href="/mind-case">
+        <div class="shot"><video data-src="/assets/case/home/mindbox-cover.mp4" poster="/assets/case/home/mindbox-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <h3>From one-week planning to product thinking</h3><p>Mindbox</p>
+      </a>
+      <a class="card case" href="/autodraw">
+        <div class="shot"><video data-src="/assets/case/home/autodraw-demo-cover.mp4" poster="/assets/case/home/autodraw-demo-cover.jpg" muted loop playsinline preload="none"></video></div>
+        <h3>Autodraw</h3><p>AI shape recognition at RingCentral · ~$700K projected</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="panel" id="p-exp" role="tabpanel" hidden>
+    <div class="list">
+      <div class="row"><b>Pragmatica · Design Lead</b><span class="when">2025 — now</span><span class="what">Outstaff unit: matching and growing 40 designers</span></div>
+      <div class="row"><b>Looch · Product Design Lead</b><span class="when">2023 — 2025</span><span class="what">Product studio, teams of up to 12 designers</span></div>
+      <div class="row"><b>RingCentral · Senior Product Designer</b><span class="when">2021 — 2023</span><span class="what">Video meetings and whiteboard</span></div>
+      <div class="row"><b>Awards</b><span class="when"></span><span class="what">WDA 24 · WDA 25 · Tagline Awards · Golden Site</span></div>
+    </div>
+    <p class="sub">Side projects</p>
+    <div class="list">
+      <a class="row" href="https://aleria.ai/" target="_blank" rel="noopener"><b>Aleria · Head of Design</b><span class="when">aleria.ai ↗</span><span class="what">Several products built on proprietary AI</span></a>
+      <a class="row" href="https://phygital.plus/" target="_blank" rel="noopener"><b>Phygital+ · Product Designer</b><span class="when">2024 · phygital.plus ↗</span><span class="what">First-session experience for a generative AI workspace</span></a>
+    </div>
+  </div>
+
+  <footer>
+    <span>© 2026 Slava Lukin</span>
+    <a class="u" style="color:var(--muted)" href="https://t.me/lukinslava">Telegram</a>
+    <a class="u" style="color:var(--muted)" href="https://t.me/slavanotes">Channel</a>
+    <a class="u" style="color:var(--muted)" href="https://drive.google.com/file/d/14rcB0qsGLvb2FokRsG4dW9SQM8yLdxPu/view?usp=sharing">CV</a>
+  </footer>
+</main>
 
 <script>
-// Videos load when their tile comes near and play while mostly visible; in the Quack carousel only the current clip.
-// With reduced motion nothing autoplays: the poster stays, a click plays or pauses.
-(() => {
   const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const load = (v) => { if (!v.src) { v.src = v.dataset.src; v.preload = "auto"; } };
+  const io = new IntersectionObserver((entries) => {
+    for (const { target: v, isIntersecting } of entries) {
+      if (isIntersecting && !still) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); }
+      else v.pause();
+    }
+  }, { rootMargin: "100px" });
+  document.querySelectorAll("video[data-src]").forEach((v) => { if (!v.closest(".deck")) io.observe(v); });
 
-  const near = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && load(e.target)), { rootMargin: "300px" });
-  const seen = new IntersectionObserver((es) => es.forEach(({ target: v, isIntersecting }) => {
-    if (isIntersecting) { load(v); v.play().catch(() => {}); } else v.pause();
-  }), { threshold: 0.6 });
-
-  for (const v of document.querySelectorAll("video[data-src]")) {
-    near.observe(v);
-    if (v.closest(".deck")) continue; // the deck plays only its top card, below
-    if (still) v.parentElement.addEventListener("click", () => { load(v); v.paused ? v.play() : v.pause(); });
-    else seen.observe(v);
-  }
-
-  // AI product tiles with a case page open it on a click anywhere; with reduced motion a click on the video plays it
-  for (const tile of document.querySelectorAll(".tile[data-href]")) {
-    tile.addEventListener("click", (e) => {
-      if (e.target.closest("a") || (still && e.target.closest(".frame"))) return;
-      const href = tile.dataset.href;
-      // other sites (a live app) open in a new tab, so the portfolio stays where it was
-      if (/^https?:/.test(href)) window.open(href, "_blank", "noopener"); else location.href = href;
-    });
-  }
-
-  // the decks (Quack, Travel journal): a click (or Enter / Space) sends the top card to the back; only the top clip plays
+  // decks (Quack, Travel journal): a click (or Enter / Space) sends the top page to the back; only the top clip plays
   for (const deck of document.querySelectorAll(".deck")) {
-    const cards = [...deck.querySelectorAll(".card")];
+    const pages = [...deck.querySelectorAll(".pg")];
     const label = deck.querySelector(".label");
     const dots = [...deck.parentElement.querySelectorAll(".dots i")];
-    const n = cards.length;
+    const n = pages.length;
     let onScreen = false, busy = false;
-    const top = () => cards.find((c) => c.dataset.pos === "0");
+    const top = () => pages.find((c) => c.dataset.pos === "0");
     const sync = () => {
-      const t = top();
-      label.innerHTML = `<i>${String(cards.indexOf(t) + 1).padStart(2, "0")}/${String(n).padStart(2, "0")}</i>`;
+      const t = top(), k = pages.indexOf(t);
+      label.innerHTML = `<i>${String(k + 1).padStart(2, "0")}/${String(n).padStart(2, "0")}</i>`;
       label.append(t.dataset.label);
-      dots.forEach((d, i) => d.classList.toggle("on", i === cards.indexOf(t)));
-      for (const c of cards) {
+      dots.forEach((d, i) => d.classList.toggle("on", i === k));
+      for (const c of pages) {
         const v = c.querySelector("video");
-        if (c === t && onScreen && !still) { load(v); v.play().catch(() => {}); } else v.pause();
+        if (c === t && onScreen && !still) { if (!v.src) v.src = v.dataset.src; v.play().catch(() => {}); } else v.pause();
       }
     };
     const next = () => {
       if (busy) return;
-      const t = top();
-      const shift = () => { for (const c of cards) c.dataset.pos = String((+c.dataset.pos - 1 + n) % n); sync(); };
+      const shift = () => { for (const c of pages) c.dataset.pos = String((+c.dataset.pos - 1 + n) % n); sync(); };
       if (still) { shift(); return; }
       busy = true;
+      const t = top();
       t.classList.add("out");
       setTimeout(() => { shift(); t.classList.remove("out"); busy = false; }, 280);
     };
@@ -317,7 +260,23 @@
     new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; sync(); }, { threshold: 0.5 }).observe(deck);
     sync();
   }
-})();
+
+  const tabs = [...document.querySelectorAll(".tab")];
+  tabs.forEach((t) => t.addEventListener("click", () => {
+    tabs.forEach((x) => {
+      const on = x === t;
+      x.setAttribute("aria-selected", on);
+      document.getElementById(x.getAttribute("aria-controls")).hidden = !on;
+    });
+  }));
+
+  const root = document.documentElement;
+  try { if (localStorage.getItem("mini-theme") === "dark") root.dataset.theme = "dark"; } catch {}
+  document.querySelector(".theme").addEventListener("click", () => {
+    const dark = root.dataset.theme !== "dark";
+    if (dark) root.dataset.theme = "dark"; else delete root.dataset.theme;
+    try { localStorage.setItem("mini-theme", dark ? "dark" : "light"); } catch {}
+  });
 </script>
 </body>
 </html>
